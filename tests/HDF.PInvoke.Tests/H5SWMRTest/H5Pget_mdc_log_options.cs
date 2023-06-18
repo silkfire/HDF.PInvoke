@@ -13,47 +13,35 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Text;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+
+namespace HDF.PInvoke.Tests;
 
 using hbool_t = System.UInt32;
-using herr_t = System.Int32;
-
-
-#if HDF5_VER1_10
-
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+using System.Text;
+
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5Fget_mdc_log_optionsTestSWMR1()
     {
-        [TestMethod]
-        public void H5Fget_mdc_log_optionsTestSWMR1()
-        {
-            hid_t fapl = H5P.create(H5P.FILE_ACCESS);
-            Assert.IsTrue(fapl >= 0);
+        hid_t fapl = H5P.create(H5P.FILE_ACCESS);
+        Assert.True(fapl >= 0);
 
-            hbool_t is_enabled = 1;
-            string location = "mdc.log";
-            hbool_t start_on_access = 0;
+        hbool_t is_enabled = 1;
+        string location = "mdc.log";
+        hbool_t start_on_access = 0;
 
-            Assert.IsTrue(
-                H5P.set_mdc_log_options(fapl, is_enabled, location,
-                start_on_access) >= 0);
-            
-            StringBuilder sb = new StringBuilder(8);
-            IntPtr size = new IntPtr();
-            Assert.IsTrue(
-                H5P.get_mdc_log_options(fapl, ref is_enabled, sb, ref size,
-                ref start_on_access) >= 0);
+        Assert.True(H5P.set_mdc_log_options(fapl, is_enabled, location, start_on_access) >= 0);
 
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+        StringBuilder sb = new StringBuilder(8);
+        IntPtr size = new IntPtr();
+        Assert.True(H5P.get_mdc_log_options(fapl, ref is_enabled, sb, ref size, ref start_on_access) >= 0);
+
+        Assert.True(H5P.close(fapl) >= 0);
     }
 }
-
-#endif

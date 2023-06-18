@@ -13,119 +13,88 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Collections;
-using System.Text;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
+namespace HDF.PInvoke.Tests;
+
 using hsize_t = System.UInt64;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
+using System;
+using System.Collections;
+using System.Runtime.InteropServices;
+using System.Text;
 
-namespace UnitTests
+public partial class H5LTest
 {
-    public partial class H5LTest
+    [Fact]
+    public void H5Literate_by_nameTest1()
     {
-        [TestMethod]
-        public void H5Literate_by_nameTest1()
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "/A/A", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "/A/B", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "/A/C", H5LFixture.m_lcpl) >= 0);
+
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5LTest.cs
+        H5L.iterate_t cb = H5LFixture.DelegateMethod;
+        Assert.True(H5L.iterate_by_name(m_v0_test_file, "A", H5.index_t.NAME,
+                                          H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 3 elements in the array list
+        Assert.True(al.Count == 3);
+
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "A/A", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "A/B", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "A/C", H5LFixture.m_lcpl) >= 0);
+
+        n = 0;
+        Assert.True(H5L.iterate_by_name(m_v2_test_file, "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 6 (3 + 3) elements in the array list
+        Assert.True(al.Count == 6);
+
+        hnd.Free();
+    }
+
+    [Fact]
+    public void H5Literate_by_nameTest2()
+    {
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5ATest.cs
+        H5L.iterate_t cb = H5LFixture.DelegateMethod;
+
+        Assert.False(H5L.iterate_by_name(Utilities.RandomInvalidHandle(), "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+
+        hnd.Free();
+    }
+
+    [Fact]
+    public void H5Literate_by_nameTest3()
+    {
+        for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v0_test_file, "/A/A", m_lcpl) >= 0);
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v0_test_file, "/A/B", m_lcpl) >= 0);
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v0_test_file, "/A/C", m_lcpl) >= 0);
-            
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5LTest.cs
-            H5L.iterate_t cb = DelegateMethod;
-            Assert.IsTrue(
-                H5L.iterate_by_name(m_v0_test_file, "A", H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 3 elements in the array list
-            Assert.IsTrue(al.Count == 3);
+            Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("this/is/a/soft/link"), m_v0_test_file, Encoding.UTF8.GetBytes(string.Join("/", "A", H5LFixture.m_utf8strings[i])), H5LFixture.m_lcpl_utf8) >= 0);
 
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v2_test_file, "A/A", m_lcpl) >= 0);
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v2_test_file, "A/B", m_lcpl) >= 0);
-            Assert.IsTrue(H5L.create_soft("this/is/a/soft/link",
-                m_v2_test_file, "A/C", m_lcpl) >= 0);
-
-            n = 0;
-            Assert.IsTrue(
-                H5L.iterate_by_name(m_v2_test_file, "A", H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 6 (3 + 3) elements in the array list
-            Assert.IsTrue(al.Count == 6);
-
-            hnd.Free();
+            Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("this/is/a/soft/link"), m_v2_test_file, Encoding.UTF8.GetBytes(string.Join("/", "A", H5LFixture.m_utf8strings[i])), H5LFixture.m_lcpl_utf8) >= 0);
         }
 
-        [TestMethod]
-        public void H5Literate_by_nameTest2()
-        {
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5ATest.cs
-            H5L.iterate_t cb = DelegateMethod;
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5LTest.cs
+        H5L.iterate_t cb = H5LFixture.DelegateMethod;
+        Assert.True(H5L.iterate_by_name(m_v0_test_file, Encoding.ASCII.GetBytes("A"), H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        Assert.True(al.Count == H5LFixture.m_utf8strings.Length);
 
-            Assert.IsFalse(
-                H5L.iterate_by_name(Utilities.RandomInvalidHandle(), "A",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n,
-                cb, op_data) >= 0);
+        n = 0;
+        Assert.True(H5L.iterate_by_name(m_v2_test_file, Encoding.ASCII.GetBytes("A"), H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        Assert.True(al.Count == 2 * H5LFixture.m_utf8strings.Length);
 
-            hnd.Free();
-        }
-
-        [TestMethod]
-        public void H5Literate_by_nameTest3()
-        {
-            for (int i = 0; i < m_utf8strings.Length; ++i)
-            {
-                Assert.IsTrue(H5L.create_soft(
-                    Encoding.ASCII.GetBytes("this/is/a/soft/link"),
-                    m_v0_test_file, Encoding.UTF8.GetBytes(String.Join("/",
-                    "A", m_utf8strings[i])),
-                    m_lcpl_utf8) >= 0);
-
-                Assert.IsTrue(H5L.create_soft(
-                    Encoding.ASCII.GetBytes("this/is/a/soft/link"),
-                    m_v2_test_file, Encoding.UTF8.GetBytes(String.Join("/",
-                    "A", m_utf8strings[i])),
-                    m_lcpl_utf8) >= 0);
-            }
-
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5LTest.cs
-            H5L.iterate_t cb = DelegateMethod;
-            Assert.IsTrue(H5L.iterate_by_name(m_v0_test_file,
-                Encoding.ASCII.GetBytes("A"), H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            Assert.IsTrue(al.Count == m_utf8strings.Length);
-
-            n = 0;
-            Assert.IsTrue(H5L.iterate_by_name(m_v2_test_file,
-                Encoding.ASCII.GetBytes("A"), H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            Assert.IsTrue(al.Count == 2*m_utf8strings.Length);
-            
-            hnd.Free();
-        }
+        hnd.Free();
     }
 }

@@ -13,20 +13,19 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+
+namespace HDF.PInvoke.HDF5;
+
+using size_t = nint;
+
 using System;
 using System.Runtime.InteropServices;
-using System.Security;
 
-using size_t = System.IntPtr;
-
-namespace HDF.PInvoke
+public sealed class H5MM
 {
-    public unsafe sealed class H5MM
-    {
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr allocate_t(size_t size, IntPtr alloc_info);
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate IntPtr allocate_t(size_t size, IntPtr alloc_info);
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate IntPtr free_t(IntPtr mem, IntPtr free_info);
-    }
+    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+    public delegate IntPtr free_t(IntPtr mem, IntPtr free_info);
 }

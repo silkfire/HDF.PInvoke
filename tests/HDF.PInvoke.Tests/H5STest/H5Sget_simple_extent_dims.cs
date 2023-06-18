@@ -13,71 +13,56 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
 using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5STest
 {
-    public partial class H5STest
+    [Fact]
+    public void H5Sget_simple_extent_dimsTest1()
     {
-        [TestMethod]
-        public void H5Sget_simple_extent_dimsTest1()
-        {
-            hsize_t[] dims = { 1, 2, 3 };
-            hid_t space = -1;
-            hsize_t[] dims_out = new hsize_t[3];
+        hsize_t[] dims = { 1, 2, 3 };
+        hid_t space = -1;
+        hsize_t[] dims_out = new hsize_t[3];
 
-            space = H5S.create_simple(dims.Length, dims, dims);
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, (ulong[])null, null) == 3);
+        space = H5S.create_simple(dims.Length, dims, dims);
+        Assert.True(H5S.get_simple_extent_dims(space, (ulong[])null, null) == 3);
 
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, dims_out, null) == 3);
+        Assert.True(H5S.get_simple_extent_dims(space, dims_out, null) == 3);
 
-            Assert.IsTrue(dims_out[2] == 3);
+        Assert.True(dims_out[2] == 3);
 
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, null, dims_out) == 3);
+        Assert.True(H5S.get_simple_extent_dims(space, null, dims_out) == 3);
 
-            Assert.IsTrue(dims_out[0] == 1);
+        Assert.True(dims_out[0] == 1);
 
-            Assert.IsTrue(space > 0);
-            Assert.IsTrue(H5S.close(space) >= 0);
-        }
+        Assert.True(space > 0);
+        Assert.True(H5S.close(space) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Sget_simple_extent_dimsTest2()
-        {
-            hsize_t[] dims = { 1, 2, 3 };
-            hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED, H5S.UNLIMITED };
-            hid_t space = -1;
-            hsize_t[] dims_out = new hsize_t[3];
+    [Fact]
+    public void H5Sget_simple_extent_dimsTest2()
+    {
+        hsize_t[] dims = { 1, 2, 3 };
+        hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED, H5S.UNLIMITED };
+        hid_t space = -1;
+        hsize_t[] dims_out = new hsize_t[3];
 
-            space = H5S.create_simple(dims.Length, dims, max_dims);
-            Assert.IsTrue(
-            H5S.get_simple_extent_dims(space, (ulong[])null, null) == 3);
+        space = H5S.create_simple(dims.Length, dims, max_dims);
+        Assert.True(H5S.get_simple_extent_dims(space, (ulong[])null, null) == 3);
 
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, dims_out, null) == 3);
-            Assert.IsTrue(dims_out[0] == 1);
+        Assert.True(H5S.get_simple_extent_dims(space, dims_out, null) == 3);
+        Assert.True(dims_out[0] == 1);
 
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, null, dims_out) == 3);
-            Assert.IsTrue(dims_out[0] == H5S.UNLIMITED);
+        Assert.True(H5S.get_simple_extent_dims(space, null, dims_out) == 3);
+        Assert.True(dims_out[0] == H5S.UNLIMITED);
 
-            Assert.IsTrue(space > 0);
-            Assert.IsTrue(H5S.close(space) >= 0);
-        }
+        Assert.True(space > 0);
+        Assert.True(H5S.close(space) >= 0);
     }
 }

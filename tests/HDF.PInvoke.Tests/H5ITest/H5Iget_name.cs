@@ -13,60 +13,52 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using ssize_t = System.IntPtr;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
+using ssize_t = nint;
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System.Text;
+
+public partial class H5ITest
 {
-    public partial class H5ITest
+    [Fact]
+    public void H5Iget_nameTest1()
     {
-        [TestMethod]
-        public void H5Iget_nameTest1()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "AAAAAAAAAAAAAAAAAAAAA");
-            Assert.IsTrue(gid > 0);
+        hid_t gid = H5G.create(m_v0_test_file, "AAAAAAAAAAAAAAAAAAAAA");
+        Assert.True(gid > 0);
 
-            ssize_t buf_size = H5I.get_name(gid, (StringBuilder)null,
-                IntPtr.Zero) + 1;
-            Assert.IsTrue(buf_size.ToInt32() > 1);
-            StringBuilder nameBuilder = new StringBuilder(buf_size.ToInt32());
-            IntPtr size = H5I.get_name(gid, nameBuilder, buf_size);
-            Assert.IsTrue(size.ToInt32() > 0);
-            Assert.IsTrue(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
+        ssize_t buf_size = H5I.get_name(gid, (StringBuilder)null,
+                                        ssize_t.Zero) + 1;
+        Assert.True(buf_size.ToInt32() > 1);
+        StringBuilder nameBuilder = new StringBuilder(buf_size.ToInt32());
+        ssize_t size = H5I.get_name(gid, nameBuilder, buf_size);
+        Assert.True(size.ToInt32() > 0);
+        Assert.True(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            gid = H5G.create(m_v2_test_file, "AAAAAAAAAAAAAAAAAAAAA");
-            Assert.IsTrue(gid > 0);
+        gid = H5G.create(m_v2_test_file, "AAAAAAAAAAAAAAAAAAAAA");
+        Assert.True(gid > 0);
 
-            buf_size = H5I.get_name(gid, (StringBuilder)null, IntPtr.Zero) + 1;
-            Assert.IsTrue(buf_size.ToInt32() > 1);
-            nameBuilder = new StringBuilder(buf_size.ToInt32());
-            size = H5I.get_name(gid, nameBuilder, buf_size);
-            Assert.IsTrue(size.ToInt32() > 0);
-            Assert.IsTrue(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
+        buf_size = H5I.get_name(gid, (StringBuilder)null, ssize_t.Zero) + 1;
+        Assert.True(buf_size.ToInt32() > 1);
+        nameBuilder = new StringBuilder(buf_size.ToInt32());
+        size = H5I.get_name(gid, nameBuilder, buf_size);
+        Assert.True(size.ToInt32() > 0);
+        Assert.True(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Iget_nameTest2()
-        {
-            IntPtr size = H5I.get_name(Utilities.RandomInvalidHandle(), null,
-                IntPtr.Zero);
-            Assert.IsFalse(size.ToInt32() >= 0);
-        }
+    [Fact]
+    public void H5Iget_nameTest2()
+    {
+        ssize_t size = H5I.get_name(Utilities.RandomInvalidHandle(), null,
+                                    ssize_t.Zero);
+        Assert.False(size.ToInt32() >= 0);
     }
 }

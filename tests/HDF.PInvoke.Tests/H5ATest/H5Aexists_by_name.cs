@@ -13,40 +13,30 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
 using htri_t = System.Int32;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Aexists_by_nameTest1()
     {
-        [TestMethod]
-        public void H5Aexists_by_nameTest1()
-        {
-            htri_t check = H5A.exists_by_name(m_v0_class_file, ".", ".");
-            Assert.IsTrue(check >= 0);
-            check = H5A.exists_by_name(m_v0_class_file, ".", "NAC");
-            Assert.IsTrue(check >= 0);
-            check = H5A.exists_by_name(m_v2_class_file, ".", "A");
-            Assert.IsTrue(check >= 0);
-        }
+        htri_t check = H5A.exists_by_name(H5AFixture.m_v0_class_file, ".", ".");
+        Assert.True(check >= 0);
+        check = H5A.exists_by_name(H5AFixture.m_v0_class_file, ".", "NAC");
+        Assert.True(check >= 0);
+        check = H5A.exists_by_name(H5AFixture.m_v2_class_file, ".", "A");
+        Assert.True(check >= 0);
+    }
 
-        [TestMethod]
-        public void H5Aexists_by_nameTest2()
-        {
-            Assert.IsFalse(
-                H5A.exists(Utilities.RandomInvalidHandle(), ".") >= 0);
-            Assert.IsFalse(
-                H5A.exists(m_v2_class_file, "") >= 0);
-        }
+    [Fact]
+    public void H5Aexists_by_nameTest2()
+    {
+        Assert.False(H5A.exists(Utilities.RandomInvalidHandle(), ".") >= 0);
+        Assert.False(H5A.exists(H5AFixture.m_v2_class_file, "") >= 0);
     }
 }

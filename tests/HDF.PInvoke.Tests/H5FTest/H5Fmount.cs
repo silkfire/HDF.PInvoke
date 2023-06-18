@@ -13,59 +13,51 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5FmountTest1()
     {
-        [TestMethod]
-        public void H5FmountTest1()
-        {
-            hid_t mount_point = H5G.create(m_v0_class_file, "A");
-            Assert.IsTrue(mount_point >= 0);
-            Assert.IsTrue(H5G.close(mount_point) >= 0);
-            Assert.IsTrue(H5F.mount(m_v0_class_file, "A", m_v0_test_file) >= 0);
+        hid_t mount_point = H5G.create(H5FFixture.m_v0_class_file, "A");
+        Assert.True(mount_point >= 0);
+        Assert.True(H5G.close(mount_point) >= 0);
+        Assert.True(H5F.mount(H5FFixture.m_v0_class_file, "A", m_v0_test_file) >= 0);
 
-            mount_point = H5G.create(m_v0_class_file, "B");
-            Assert.IsTrue(mount_point >= 0);
-            Assert.IsTrue(H5G.close(mount_point) >= 0);
-            Assert.IsTrue(H5F.mount(m_v0_class_file, "B", m_v2_test_file) >= 0);
+        mount_point = H5G.create(H5FFixture.m_v0_class_file, "B");
+        Assert.True(mount_point >= 0);
+        Assert.True(H5G.close(mount_point) >= 0);
+        Assert.True(H5F.mount(H5FFixture.m_v0_class_file, "B", m_v2_test_file) >= 0);
 
-            mount_point = H5G.create(m_v2_class_file, "C");
-            Assert.IsTrue(mount_point >= 0);
-            Assert.IsTrue(H5G.close(mount_point) >= 0);
-            Assert.IsTrue(H5F.mount(m_v2_class_file, "C", m_v0_class_file) >= 0);
+        mount_point = H5G.create(H5FFixture.m_v2_class_file, "C");
+        Assert.True(mount_point >= 0);
+        Assert.True(H5G.close(mount_point) >= 0);
+        Assert.True(H5F.mount(H5FFixture.m_v2_class_file, "C", H5FFixture.m_v0_class_file) >= 0);
 
-            Assert.IsTrue(H5F.unmount(m_v2_class_file, "C") >= 0);
-            Assert.IsTrue(H5F.unmount(m_v0_class_file, "B") >= 0);
-            Assert.IsTrue(H5F.unmount(m_v0_class_file, "A") >= 0);
-        }
+        Assert.True(H5F.unmount(H5FFixture.m_v2_class_file, "C") >= 0);
+        Assert.True(H5F.unmount(H5FFixture.m_v0_class_file, "B") >= 0);
+        Assert.True(H5F.unmount(H5FFixture.m_v0_class_file, "A") >= 0);
+    }
 
-        [TestMethod]
-        public void H5FmountTest2()
-        {
-            hid_t mount_point = H5G.create(m_v0_class_file, "AA");
-            Assert.IsTrue(mount_point >= 0);
-            Assert.IsFalse(H5F.mount(mount_point, "AA",
-                Utilities.RandomInvalidHandle()) >= 0);
-            Assert.IsTrue(H5G.close(mount_point) >= 0);
+    [Fact]
+    public void H5FmountTest2()
+    {
+        hid_t mount_point = H5G.create(H5FFixture.m_v0_class_file, "AA");
+        Assert.True(mount_point >= 0);
+        Assert.False(H5F.mount(mount_point, "AA", Utilities.RandomInvalidHandle()) >= 0);
+        Assert.True(H5G.close(mount_point) >= 0);
 
-            // can't mount a file onto itself
-            mount_point = H5G.create(m_v0_class_file, "BB");
-            Assert.IsTrue(mount_point >= 0);
-            Assert.IsTrue(H5G.close(mount_point) >= 0);
-            Assert.IsFalse(
-                H5F.mount(m_v0_class_file, "BB", m_v0_class_file) >= 0);
-        }
+        // can't mount a file onto itself
+        mount_point = H5G.create(H5FFixture.m_v0_class_file, "BB");
+        Assert.True(mount_point >= 0);
+        Assert.True(H5G.close(mount_point) >= 0);
+        Assert.False(H5F.mount(H5FFixture.m_v0_class_file, "BB", H5FFixture.m_v0_class_file) >= 0);
     }
 }

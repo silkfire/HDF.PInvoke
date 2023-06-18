@@ -13,75 +13,51 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Adelete_by_idxTest1()
     {
-        [TestMethod]
-        public void H5Adelete_by_idxTest1()
-        {
-            // use test-local files, because we don't know what's out there
-            // at the class level, create two attributes in each file
+        // use test-local files, because we don't know what's out there
+        // at the class level, create two attributes in each file
 
-            hid_t att = H5A.create(m_v0_test_file, "DNA", H5T.IEEE_F32BE,
-                m_space_null);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v0_test_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "DNA", H5T.IEEE_F32BE,
-               m_space_null);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "DSA", H5T.IEEE_F32BE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "DSA", H5T.IEEE_F32BE,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            // we have two attributes, delete the one in first position twice
-            Assert.IsTrue(H5A.delete_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, 0) >= 0);
-            Assert.IsTrue(H5A.delete_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, 0) >= 0);
+        // we have two attributes, delete the one in first position twice
+        Assert.True(H5A.delete_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
 
-            // we have two attributes, first delete the one in second position
-            // then the one in first position
-            Assert.IsTrue(H5A.delete_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, 1) >= 0);
-            Assert.IsTrue(H5A.delete_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, 0) >= 0);
-        }
+        // we have two attributes, first delete the one in second position
+        // then the one in first position
+        Assert.True(H5A.delete_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Adelete_by_idxTest2()
-        {
-            Assert.IsFalse(
-                H5A.delete_by_idx(Utilities.RandomInvalidHandle(), ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 10)
-                >= 0);
-            Assert.IsFalse(
-                H5A.delete_by_idx(m_v0_class_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024)
-                >= 0);
-        }
+    [Fact]
+    public void H5Adelete_by_idxTest2()
+    {
+        Assert.False(H5A.delete_by_idx(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 10) >= 0);
+        Assert.False(H5A.delete_by_idx(H5AFixture.m_v0_class_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024) >= 0);
     }
 }

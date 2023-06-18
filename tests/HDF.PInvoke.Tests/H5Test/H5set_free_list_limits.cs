@@ -13,23 +13,18 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5Test
 {
-    public partial class H5Test
+    [Fact]
+    public void H5set_free_list_limitsTest1()
     {
-        [TestMethod]
-        public void H5set_free_list_limitsTest1()
-        {
-            Assert.IsTrue(
-                H5.set_free_list_limits(-1, -1, -1, -1, -1, -1) >= 0);
+        Assert.True(H5.set_free_list_limits(-1, -1, -1, -1, -1, -1) >= 0);
 
-            Assert.IsTrue(
-                H5.set_free_list_limits(1024, -1, 4096, -1, -1, 1024) >= 0);
-        }
+        Assert.True(H5.set_free_list_limits(1024, -1, 4096, -1, -1, 1024) >= 0);
     }
 }

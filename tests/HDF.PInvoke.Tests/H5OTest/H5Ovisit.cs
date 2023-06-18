@@ -13,83 +13,64 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+using Xunit;
 using System;
 using System.Collections;
-using System.Text;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+using System.Text;
 
-using herr_t = System.Int32;
-
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5OvisitTest1()
     {
-        [TestMethod]
-        public void H5OvisitTest1()
-        {
-            Assert.IsTrue(H5G.create(m_v0_test_file, "A/B/C/D", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file,
-                "shortcut") >= 0);
+        Assert.True(H5G.create(m_v0_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
 
-            Assert.IsTrue(H5G.create(m_v2_test_file, "A/B/C/D", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file,
-                "shortcut") >= 0);
-            
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            // the callback is defined in H5LTest.cs
-            H5O.iterate_t cb = DelegateMethod;
+        Assert.True(H5G.create(m_v2_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file, "shortcut") >= 0);
 
-            Assert.IsTrue(H5O.visit(m_v0_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, cb, op_data) >= 0);
-            // we should have 5 elements in the array list
-            Assert.IsTrue(al.Count == 5);
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        // the callback is defined in H5LTest.cs
+        H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
-            Assert.IsTrue(H5O.visit(m_v2_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, cb, op_data) >= 0);
-            // we should have 10 (5 + 5) elements in the array list
-            Assert.IsTrue(al.Count == 10);
+        Assert.True(H5O.visit(m_v0_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        // we should have 5 elements in the array list
+        Assert.True(al.Count == 5);
 
-            hnd.Free();
-        }
+        Assert.True(H5O.visit(m_v2_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        // we should have 10 (5 + 5) elements in the array list
+        Assert.True(al.Count == 10);
 
-        [TestMethod]
-        public void H5OvisitTest2()
-        {
-            string path = String.Join("/", m_utf8strings);
-            Assert.IsTrue(H5G.create(m_v0_test_file,
-                Encoding.UTF8.GetBytes(path), m_lcpl_utf8) >= 0);
-            Assert.IsTrue(H5G.create(m_v2_test_file,
-                Encoding.UTF8.GetBytes(path), m_lcpl_utf8) >= 0);
-           
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            // the callback is defined in H5LTest.cs
-            H5O.iterate_t cb = DelegateMethod;
+        hnd.Free();
+    }
 
-            Assert.IsTrue(H5O.visit(m_v0_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, cb, op_data) >= 0);
-            // we should have 6 elements in the array list
-            Assert.IsTrue(al.Count == 6);
+    [Fact]
+    public void H5OvisitTest2()
+    {
+        string path = string.Join("/", H5OFixture.m_utf8strings);
+        Assert.True(H5G.create(m_v0_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5G.create(m_v2_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
 
-            Assert.IsTrue(H5O.visit(m_v2_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, cb, op_data) >= 0);
-            // we should have 12 (6 + 6) elements in the array list
-            Assert.IsTrue(al.Count == 12);
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        // the callback is defined in H5LTest.cs
+        H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
-            hnd.Free();
-        }
+        Assert.True(H5O.visit(m_v0_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        // we should have 6 elements in the array list
+        Assert.True(al.Count == 6);
+
+        Assert.True(H5O.visit(m_v2_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        // we should have 12 (6 + 6) elements in the array list
+        Assert.True(al.Count == 12);
+
+        hnd.Free();
     }
 }

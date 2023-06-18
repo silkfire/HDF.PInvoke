@@ -13,62 +13,50 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+
+namespace HDF.PInvoke.Tests;
+
+using hid_t = System.Int64;
+
+using HDF5;
+using Xunit;
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using htri_t = System.Int32;
-
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5AwriteTest1()
     {
-        [TestMethod]
-        public void H5AwriteTest1()
-        {
-            double[] x = { Math.PI };
-            IntPtr buf = Marshal.AllocHGlobal(8);
-            Marshal.Copy(x, 0, buf, 1);
+        double[] x = { Math.PI };
+        IntPtr buf = Marshal.AllocHGlobal(8);
+        Marshal.Copy(x, 0, buf, 1);
 
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.write(att, H5T.NATIVE_DOUBLE, buf) >= 0);
-            x[0] = 0.0;
-            Assert.IsTrue(H5A.read(att, H5T.NATIVE_DOUBLE, buf) >= 0);
-            Marshal.Copy(buf, x, 0, 1);
-            Assert.IsTrue(x[0] == Math.PI);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.write(att, H5T.NATIVE_DOUBLE, buf) >= 0);
+        x[0] = 0.0;
+        Assert.True(H5A.read(att, H5T.NATIVE_DOUBLE, buf) >= 0);
+        Marshal.Copy(buf, x, 0, 1);
+        Assert.Equal(Math.PI, x[0]);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.write(att, H5T.NATIVE_DOUBLE, buf) >= 0);
-            x[0] = 0.0;
-            Assert.IsTrue(H5A.read(att, H5T.NATIVE_DOUBLE, buf) >= 0);
-            Marshal.Copy(buf, x, 0, 1);
-            Assert.IsTrue(x[0] == Math.PI);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.write(att, H5T.NATIVE_DOUBLE, buf) >= 0);
+        x[0] = 0.0;
+        Assert.True(H5A.read(att, H5T.NATIVE_DOUBLE, buf) >= 0);
+        Marshal.Copy(buf, x, 0, 1);
+        Assert.Equal(Math.PI, x[0]);
+        Assert.True(H5A.close(att) >= 0);
 
-            Marshal.FreeHGlobal(buf);
-        }
+        Marshal.FreeHGlobal(buf);
+    }
 
-        [TestMethod]
-        public void H5AwriteTest2()
-        {
-            Assert.IsFalse(
-                H5A.write(Utilities.RandomInvalidHandle(),
-                Utilities.RandomInvalidHandle(), IntPtr.Zero) >= 0);
-            Assert.IsFalse(
-                H5A.write(Utilities.RandomInvalidHandle(),
-                H5T.NATIVE_DOUBLE, IntPtr.Zero) >= 0);
-        }
+    [Fact]
+    public void H5AwriteTest2()
+    {
+        Assert.False(H5A.write(Utilities.RandomInvalidHandle(), Utilities.RandomInvalidHandle(), IntPtr.Zero) >= 0);
+        Assert.False(H5A.write(Utilities.RandomInvalidHandle(), H5T.NATIVE_DOUBLE, IntPtr.Zero) >= 0);
     }
 }

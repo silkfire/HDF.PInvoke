@@ -13,56 +13,40 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Acreate_by_nameTest1()
     {
-        [TestMethod]
-        public void H5Acreate_by_nameTest1()
-        {
-            hid_t att = H5A.create_by_name(m_v0_class_file, ".", "BNA",
-                H5T.IEEE_F32BE, m_space_null);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create_by_name(H5AFixture.m_v0_class_file, ".", "BNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create_by_name(m_v2_class_file, ".", "BNA",
-                H5T.IEEE_F32BE, m_space_null);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create_by_name(H5AFixture.m_v2_class_file, ".", "BNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create_by_name(m_v0_class_file, ".", "BSA",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create_by_name(H5AFixture.m_v0_class_file, ".", "BSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create_by_name(m_v2_class_file, ".", "BSA",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-        }
+        att = H5A.create_by_name(H5AFixture.m_v2_class_file, ".", "BSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Acreate_by_nameTest2()
-        {
-            Assert.IsFalse(
-                H5A.create(Utilities.RandomInvalidHandle(), "A",
-                H5T.IEEE_F32BE, m_space_null) >= 0);
-            Assert.IsFalse(
-                H5A.create(m_v0_test_file, "A",
-                Utilities.RandomInvalidHandle(), m_space_null) >= 0);
-            Assert.IsFalse(
-                H5A.create(m_v2_test_file, "A",
-                H5T.IEEE_F32BE, Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Acreate_by_nameTest2()
+    {
+        Assert.False(H5A.create(Utilities.RandomInvalidHandle(), "A", H5T.IEEE_F32BE, H5AFixture.m_space_null) >= 0);
+        Assert.False(H5A.create(m_v0_test_file, "A", Utilities.RandomInvalidHandle(), H5AFixture.m_space_null) >= 0);
+        Assert.False(H5A.create(m_v2_test_file, "A", H5T.IEEE_F32BE, Utilities.RandomInvalidHandle()) >= 0);
     }
 }

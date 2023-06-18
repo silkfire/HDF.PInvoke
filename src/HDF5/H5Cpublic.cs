@@ -13,30 +13,30 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-namespace HDF.PInvoke
+
+namespace HDF.PInvoke.HDF5;
+
+public sealed class H5C
 {
-    public unsafe sealed class H5C
+    static H5C() { H5.open(); }
+
+    public enum cache_incr_mode
     {
-        static H5C() { H5.open(); }
+        OFF,
+        THRESHOLD
+    }
 
-        public enum cache_incr_mode
-        {
-            OFF,
-            THRESHOLD
-        };
+    public enum cache_flash_incr_mode
+    {
+        OFF,
+        ADD_SPACE
+    }
 
-        public enum cache_flash_incr_mode
-        {
-            OFF,
-            ADD_SPACE
-        };
-
-        public enum cache_decr_mode
-        {
-            OFF,
-            THRESHOLD,
-            AGE_OUT,
-            AGE_OUT_WITH_THRESHOLD
-        };
+    public enum cache_decr_mode
+    {
+        OFF,
+        THRESHOLD,
+        AGE_OUT,
+        AGE_OUT_WITH_THRESHOLD
     }
 }

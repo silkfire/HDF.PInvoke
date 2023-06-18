@@ -13,34 +13,26 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5GTest
 {
-    public partial class H5GTest
+    [Fact]
+    public void H5Fclear_elink_cacheTest1()
     {
-        [TestMethod]
-        public void H5Fclear_elink_cacheTest1()
-        {
-            Assert.IsTrue(H5F.clear_elink_file_cache(m_v0_class_file) >= 0);
-            Assert.IsTrue(H5F.clear_elink_file_cache(m_v2_class_file) >= 0);
-            Assert.IsTrue(H5F.clear_elink_file_cache(m_v0_test_file) >= 0);
-            Assert.IsTrue(H5F.clear_elink_file_cache(m_v2_test_file) >= 0);
-        }
+        Assert.True(H5F.clear_elink_file_cache(H5GFixture.m_v0_class_file) >= 0);
+        Assert.True(H5F.clear_elink_file_cache(H5GFixture.m_v2_class_file) >= 0);
+        Assert.True(H5F.clear_elink_file_cache(m_v0_test_file) >= 0);
+        Assert.True(H5F.clear_elink_file_cache(m_v2_test_file) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Fclear_elink_cacheTest2()
-        {
-            Assert.IsFalse(
-                H5F.clear_elink_file_cache(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Fclear_elink_cacheTest2()
+    {
+        Assert.False(H5F.clear_elink_file_cache(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

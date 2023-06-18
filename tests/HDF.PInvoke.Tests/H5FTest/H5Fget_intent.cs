@@ -13,35 +13,26 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_intentTest1()
     {
-        [TestMethod]
-        public void H5Fget_intentTest1()
-        {
-            uint intent = 4711;
-            Assert.IsTrue(H5F.get_intent(m_v0_class_file, ref intent) >= 0);
-            Assert.IsTrue(H5F.get_intent(m_v2_class_file, ref intent) >= 0);
-        }
+        uint intent = 4711;
+        Assert.True(H5F.get_intent(H5FFixture.m_v0_class_file, ref intent) >= 0);
+        Assert.True(H5F.get_intent(H5FFixture.m_v2_class_file, ref intent) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Fget_intentTest2()
-        {
-            uint intent = 4711;
-            Assert.IsFalse(
-                H5F.get_intent(Utilities.RandomInvalidHandle(),
-                ref intent) >= 0);
-        }
+    [Fact]
+    public void H5Fget_intentTest2()
+    {
+        uint intent = 4711;
+        Assert.False(H5F.get_intent(Utilities.RandomInvalidHandle(), ref intent) >= 0);
     }
 }

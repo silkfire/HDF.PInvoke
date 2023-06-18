@@ -13,58 +13,37 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
+
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+using Xunit;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5LTest
 {
-    public partial class H5LTest
+    [Fact]
+    public void H5Ldelete_by_indexTest1()
     {
-        [TestMethod]
-        public void H5Ldelete_by_indexTest1()
-        {
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "A/B/C/D0", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "A/B/C/D1", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "A/B/C/D2", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5L.create_hard(m_v0_test_file,
-                Encoding.ASCII.GetBytes("A/B/C/D1"), m_v0_test_file,
-                Encoding.ASCII.GetBytes("shortcut")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D0", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D1", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D2", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, Encoding.ASCII.GetBytes("A/B/C/D1"), m_v0_test_file, Encoding.ASCII.GetBytes("shortcut")) >= 0);
 
-            Assert.IsTrue(H5L.delete_by_idx(m_v0_test_file, "A/B/C",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
-            
-            Assert.IsTrue(H5L.exists(m_v0_test_file, "shortcut") > 0);
-            Assert.IsTrue(H5L.exists(m_v0_test_file, "A/B/C/D1") == 0);
+        Assert.True(H5L.delete_by_idx(m_v0_test_file, "A/B/C", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
+
+        Assert.True(H5L.exists(m_v0_test_file, "shortcut") > 0);
+        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D1") == 0);
 
 
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "A/B/C/D0", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "A/B/C/D1", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "A/B/C/D2", m_lcpl)) >= 0);
-            Assert.IsTrue(
-                H5L.create_hard(m_v2_test_file,
-                Encoding.ASCII.GetBytes("A/B/C/D1"), m_v2_test_file,
-                Encoding.ASCII.GetBytes("shortcut")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D0", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D1", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D2", H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, Encoding.ASCII.GetBytes("A/B/C/D1"), m_v2_test_file, Encoding.ASCII.GetBytes("shortcut")) >= 0);
 
-            Assert.IsTrue(H5L.delete_by_idx(m_v2_test_file, "A/B/C",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
+        Assert.True(H5L.delete_by_idx(m_v2_test_file, "A/B/C", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
 
-            Assert.IsTrue(H5L.exists(m_v2_test_file, "shortcut") > 0);
-            Assert.IsTrue(H5L.exists(m_v2_test_file, "A/B/C/D1") == 0);
-        }
+        Assert.True(H5L.exists(m_v2_test_file, "shortcut") > 0);
+        Assert.True(H5L.exists(m_v2_test_file, "A/B/C/D1") == 0);
     }
 }

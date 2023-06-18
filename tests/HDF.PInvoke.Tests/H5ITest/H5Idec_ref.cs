@@ -13,55 +13,49 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ITest
 {
-    public partial class H5ITest
+    [Fact]
+    public void H5Idec_refTest1()
     {
-        [TestMethod]
-        public void H5Idec_refTest1()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A");
-            Assert.IsTrue(gid > 0);
-            Assert.IsTrue(H5I.dec_ref(gid) >= 0);
-            Assert.IsFalse(H5G.close(gid) >= 0);
+        hid_t gid = H5G.create(m_v0_test_file, "A");
+        Assert.True(gid > 0);
+        Assert.True(H5I.dec_ref(gid) >= 0);
+        Assert.False(H5G.close(gid) >= 0);
 
-            gid = H5G.create(m_v2_test_file, "A");
-            Assert.IsTrue(gid > 0);
-            Assert.IsTrue(H5I.dec_ref(gid) >= 0);
-            Assert.IsFalse(H5G.close(gid) >= 0);
-        }
+        gid = H5G.create(m_v2_test_file, "A");
+        Assert.True(gid > 0);
+        Assert.True(H5I.dec_ref(gid) >= 0);
+        Assert.False(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Idec_refTest2()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A");
-            Assert.IsTrue(gid > 0);
-            Assert.IsTrue(H5I.inc_ref(gid) >= 0);
-            Assert.IsTrue(H5I.dec_ref(gid) >= 0);
-            Assert.IsTrue(H5G.close(gid) >= 0);
+    [Fact]
+    public void H5Idec_refTest2()
+    {
+        hid_t gid = H5G.create(m_v0_test_file, "A");
+        Assert.True(gid > 0);
+        Assert.True(H5I.inc_ref(gid) >= 0);
+        Assert.True(H5I.dec_ref(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            gid = H5G.create(m_v2_test_file, "A");
-            Assert.IsTrue(gid > 0);
-            Assert.IsTrue(H5I.inc_ref(gid) >= 0);
-            Assert.IsTrue(H5I.dec_ref(gid) >= 0);
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        gid = H5G.create(m_v2_test_file, "A");
+        Assert.True(gid > 0);
+        Assert.True(H5I.inc_ref(gid) >= 0);
+        Assert.True(H5I.dec_ref(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Idec_refTest3()
-        {
-            Assert.IsFalse(H5I.dec_ref(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Idec_refTest3()
+    {
+        Assert.False(H5I.dec_ref(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

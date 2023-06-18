@@ -13,218 +13,213 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.IO;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.HDF5;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace HDF.PInvoke
+using System;
+using System.IO;
+using System.Runtime.InteropServices;
+
+/// <summary>
+/// Helper class used to fetch public variables (e.g. native type values)
+/// exported by the HDF5 DLL
+/// </summary>
+internal abstract class H5DLLImporter
 {
-    internal delegate T Converter<T>( IntPtr address );
+    public static readonly H5DLLImporter Instance;
 
-    /// <summary>
-    /// Helper class used to fetch public variables (e.g. native type values)
-    /// exported by the HDF5 DLL
-    /// </summary>
-    internal abstract class H5DLLImporter
+    static H5DLLImporter()
     {
-        public static readonly H5DLLImporter Instance;
+        H5.open();
 
-        static H5DLLImporter()
-        {
-            H5.open();
-
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                Instance = new H5LinuxDllImporter(Constants.DLLFileName);
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                Instance = new H5MacDllImporter(Constants.DLLFileName);
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                Instance = new H5WindowsDLLImporter(Constants.DLLFileName);
-            else
-                throw new PlatformNotSupportedException();
-        }
-
-        protected abstract IntPtr _GetAddress(string varName);
-
-        public IntPtr GetAddress(string varName)
-        {
-            var address = _GetAddress(varName);
-            if (address == IntPtr.Zero)
-                throw new Exception(string.Format("The export with name \"{0}\" doesn't exist.", varName));
-            return address;
-        }
-
-        public bool GetAddress(string varName, out IntPtr address)
-        {
-            address = _GetAddress(varName);
-            return (address == IntPtr.Zero);
-        }
-
-        /*public bool GetValue<T>(
-            string          varName,
-            ref T           value,
-            Func<IntPtr, T> converter
-            )
-        {
-            IntPtr address;
-            if (!this.GetAddress(varName, out address))
-                return false;
-            value = converter(address);
-            return true;
-
-            //return (T) Marshal.PtrToStructure(address,typeof(T));
-        }*/
-
-        public unsafe hid_t GetHid(string varName)
-        {
-            return *(hid_t*) this.GetAddress(varName);
-        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            Instance = new H5LinuxDllImporter(Constants.MainLibraryDllFilename);
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            Instance = new H5MacDllImporter(Constants.MainLibraryDllFilename);
+        else if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            Instance = new H5WindowsDLLImporter(Constants.MainLibraryDllFilename);
+        else
+            throw new PlatformNotSupportedException();
     }
 
-    #region Windows Importer
-    internal class H5WindowsDLLImporter : H5DLLImporter
+    protected abstract IntPtr _GetAddress(string varName);
+
+    public IntPtr GetAddress(string varName)
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetModuleHandle(string lpszLib);
+        var address = _GetAddress(varName);
+        if (address == IntPtr.Zero) throw new Exception($"The export with name \"{varName}\" doesn't exist.");
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr GetProcAddress
-            (IntPtr hModule, string procName);
+        return address;
+    }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        internal static extern IntPtr LoadLibrary(string lpszLib);
+    public bool GetAddress(string varName, out IntPtr address)
+    {
+        address = _GetAddress(varName);
+        return address == IntPtr.Zero;
+    }
 
-        private IntPtr hLib;
+    /*public bool GetValue<T>(
+        string          varName,
+        ref T           value,
+        Func<IntPtr, T> converter
+        )
+    {
+        IntPtr address;
+        if (!this.GetAddress(varName, out address))
+            return false;
+        value = converter(address);
+        return true;
 
-        public H5WindowsDLLImporter(string libName)
+        //return (T) Marshal.PtrToStructure(address,typeof(T));
+    }*/
+
+    public unsafe hid_t GetHid(string varName)
+    {
+        return *(hid_t*)GetAddress(varName);
+    }
+}
+
+#region Windows Importer
+internal class H5WindowsDLLImporter : H5DLLImporter
+{
+    [DllImport("kernel32.dll", SetLastError = true)]
+    internal static extern IntPtr GetModuleHandle(string lpszLib);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    internal static extern IntPtr GetProcAddress
+        (IntPtr hModule, string procName);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    internal static extern IntPtr LoadLibrary(string lpszLib);
+
+    private IntPtr hLib;
+
+    public H5WindowsDLLImporter(string libName)
+    {
+        hLib = GetModuleHandle(libName);
+        if (hLib == IntPtr.Zero)  // the library hasn't been loaded
         {
-            hLib = GetModuleHandle(libName);
-            if (hLib == IntPtr.Zero)  // the library hasn't been loaded
+            hLib = LoadLibrary(libName);
+            if (hLib == IntPtr.Zero)
             {
-                hLib = LoadLibrary(libName);
-                if (hLib == IntPtr.Zero)
+                try
                 {
-                    try
-                    {
-                        Marshal.ThrowExceptionForHR(Marshal.GetLastWin32Error());
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception(string.Format("Couldn't load library \"{0}\"", libName), e);
-                    }
+                    Marshal.ThrowExceptionForHR(Marshal.GetLastWin32Error());
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Couldn't load library \"{libName}\"", e);
                 }
             }
         }
+    }
 
-        protected override IntPtr _GetAddress(string varName)
+    protected override IntPtr _GetAddress(string varName)
+    {
+        return GetProcAddress(hLib, varName);
+    }
+}
+#endregion
+
+internal class H5LinuxDllImporter : H5DLLImporter
+{
+    [DllImport("libdl.so.2")]
+    protected static extern IntPtr dlopen(string filename, int flags);
+
+    [DllImport("libdl.so.2")]
+    protected static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+    [DllImport("libdl.so.2")]
+    protected static extern IntPtr dlerror();
+
+    private IntPtr hLib;
+
+    public H5LinuxDllImporter(string libName)
+    {
+        // If the library is referenced directly, i.e. for UnitTests.csproj, the native libs 
+        // are located in the same directory as the library itself.
+        // If the library is referenced via a NuGet package, the native libs are located
+        // in the runtimes/linux-x64/native subfolder of the package.
+        var filename = $"lib{libName}.so";
+        var libDir = Path.GetDirectoryName(NativeDependencies.GetAssemblyPath());
+        var inLibDir = Path.Combine(libDir, filename);
+        var inPkgDir = Path.Combine(libDir, "..", "..", "runtimes", "linux-x64", "native", filename);
+        var inPkgDir3 = Path.Combine(libDir, "runtimes", "linux-x64", "native", filename);
+        if (File.Exists(inLibDir))
+            libName = inLibDir;
+        else if (File.Exists(inPkgDir))
+            libName = inPkgDir;
+        else if (File.Exists(inPkgDir3))
+            libName = inPkgDir3;
+
+        hLib = dlopen(libName, RTLD_NOW);
+        if (hLib == IntPtr.Zero)
         {
-            return GetProcAddress(hLib, varName);
+            throw new ArgumentException(
+                                        $"Unable to load unmanaged module \"{libName}\"");
         }
     }
-    #endregion
 
-	internal class H5LinuxDllImporter : H5DLLImporter
+    const int RTLD_NOW = 2; // for dlopen's flags
+    protected override IntPtr _GetAddress(string varName)
     {
-		[DllImport("libdl.so.2")]
-		protected static extern IntPtr dlopen(string filename, int flags);
-
-		[DllImport("libdl.so.2")]
-		protected static extern IntPtr dlsym(IntPtr handle, string symbol);
-
-		[DllImport("libdl.so.2")]
-		protected static extern IntPtr dlerror();
-
-        private IntPtr hLib;
-
-        public H5LinuxDllImporter(string libName)
+        var address = dlsym(hLib, varName);
+        var errPtr = dlerror();
+        if (errPtr != IntPtr.Zero)
         {
-            // If the library is referenced directly, i.e. for UnitTests.csproj, the native libs 
-            // are located in the same directory as the library itself.
-            // If the library is referenced via a NuGet package, the native libs are located
-            // in the runtimes/linux-x64/native subfolder of the package.
-            var filename = "lib" + libName + ".so"; 
-            var libDir = Path.GetDirectoryName(NativeDependencies.GetAssemblyName());
-            var inLibDir = Path.Combine(libDir, filename);
-            var inPkgDir = Path.Combine(libDir, "..", "..", "runtimes", "linux-x64", "native", filename);
-            var inPkgDir3 = Path.Combine(libDir, "runtimes", "linux-x64", "native", filename);
-            if (File.Exists(inLibDir))
-                libName = inLibDir;
-            else if (File.Exists(inPkgDir))
-                libName = inPkgDir;
-            else if (File.Exists(inPkgDir3))
-                libName = inPkgDir3;            
-
-			hLib = dlopen(libName, RTLD_NOW);
-			if (hLib==IntPtr.Zero)
-			{
-				throw new ArgumentException(
-					String.Format("Unable to load unmanaged module \"{0}\"", libName));
-			}
+            throw new Exception($"dlsym: {Marshal.PtrToStringAnsi(errPtr)}");
         }
+        return address;
+    }
+}
 
-		const int RTLD_NOW = 2; // for dlopen's flags
-		protected override IntPtr _GetAddress(string varName)
-		{
-			var address = dlsym(hLib, varName);
-			var errPtr = dlerror();
-			if (errPtr != IntPtr.Zero){
-				throw new Exception("dlsym: " + Marshal.PtrToStringAnsi(errPtr));
-			}
-			return address;
-		}
-	}
+internal class H5MacDllImporter : H5DLLImporter
+{
+    [DllImport("libdl")]
+    protected static extern IntPtr dlopen(string filename, int flags);
 
-	internal class H5MacDllImporter : H5DLLImporter 
+    [DllImport("libdl")]
+    protected static extern IntPtr dlsym(IntPtr handle, string symbol);
+
+    [DllImport("libdl")]
+    protected static extern IntPtr dlerror();
+
+    private IntPtr hLib;
+
+    public H5MacDllImporter(string libName)
     {
-		[DllImport("libdl")]
-		protected static extern IntPtr dlopen(string filename, int flags);
+        // If the library is referenced directly, i.e. for UnitTests.csproj, the native libs 
+        // are located in the same directory as the library itself.
+        // If the library is referenced via a NuGet package, the native libs are located
+        // in the runtimes/osx-x64/native subfolder of the package.
+        var filename = $"lib{libName}.dylib";
+        var libDir = Path.GetDirectoryName(NativeDependencies.GetAssemblyPath());
+        var inLibDir = Path.Combine(libDir, filename);
+        var inPkgDir = Path.Combine(libDir, "..", "..", "runtimes", "osx-x64", "native", filename);
 
-		[DllImport("libdl")]
-		protected static extern IntPtr dlsym(IntPtr handle, string symbol);
+        if (File.Exists(inLibDir))
+            libName = inLibDir;
+        else if (File.Exists(inPkgDir))
+            libName = inPkgDir;
 
-		[DllImport("libdl")]
-		protected static extern IntPtr dlerror();
-
-        private IntPtr hLib;
-
-        public H5MacDllImporter(string libName)
+        hLib = dlopen(libName, RTLD_NOW);
+        if (hLib == IntPtr.Zero)
         {
-            // If the library is referenced directly, i.e. for UnitTests.csproj, the native libs 
-            // are located in the same directory as the library itself.
-            // If the library is referenced via a NuGet package, the native libs are located
-            // in the runtimes/osx-x64/native subfolder of the package.
-            var filename = "lib" + libName + ".dylib"; 
-            var libDir = Path.GetDirectoryName(NativeDependencies.GetAssemblyName());
-            var inLibDir = Path.Combine(libDir, filename);
-            var inPkgDir = Path.Combine(libDir, "..", "..", "runtimes", "osx-x64", "native", filename);
-            if (File.Exists(inLibDir))
-                libName = inLibDir;
-            else if (File.Exists(inPkgDir))
-                libName = inPkgDir;
-
-			hLib = dlopen(libName, RTLD_NOW);
-			if (hLib==IntPtr.Zero)
-			{
-				throw new ArgumentException(
-					String.Format("Unable to load unmanaged module \"{0}\"", libName));
-			}
+            throw new ArgumentException($"Unable to load unmanaged module \"{libName}\"");
         }
+    }
 
-		const int RTLD_NOW = 2; // for dlopen's flags
-		protected override IntPtr _GetAddress(string varName)
-		{
-			var address = dlsym(hLib, varName);
-			var errPtr = dlerror();
-			if (errPtr != IntPtr.Zero){
-				throw new Exception("dlsym: " + Marshal.PtrToStringAnsi(errPtr));
-			}
-			return address;
-		}
-	}    
+    const int RTLD_NOW = 2; // for dlopen's flags
+    protected override IntPtr _GetAddress(string varName)
+    {
+        var address = dlsym(hLib, varName);
+        var errPtr = dlerror();
+        if (errPtr != IntPtr.Zero)
+        {
+            throw new Exception($"dlsym: {Marshal.PtrToStringAnsi(errPtr)}");
+        }
+        return address;
+    }
 }

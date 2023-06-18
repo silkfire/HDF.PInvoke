@@ -13,61 +13,48 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5Oexists_by_nameTest1()
     {
-        [TestMethod]
-        public void H5Oexists_by_nameTest1()
-        {
-            Assert.IsTrue(H5L.create_soft("/oh my",
-                m_v0_test_file, "AA") >= 0);
+        Assert.True(H5L.create_soft("/oh my", m_v0_test_file, "AA") >= 0);
 
-            hid_t gid = H5G.create(m_v0_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
+        hid_t gid = H5G.create(m_v0_test_file, "A/B/C", H5OFixture.m_lcpl);
+        Assert.True(gid >= 0);
 
-            Assert.IsTrue(H5O.exists_by_name(m_v0_test_file, "A/B") > 0);
+        Assert.True(H5O.exists_by_name(m_v0_test_file, "A/B") > 0);
 
-            Assert.IsTrue(H5O.exists_by_name(m_v0_test_file, "AA") == 0);
+        Assert.True(H5O.exists_by_name(m_v0_test_file, "AA") == 0);
 
-            Assert.IsTrue(
-                H5O.exists_by_name(m_v0_test_file, "A/B/Caesar") < 0);
+        Assert.True(H5O.exists_by_name(m_v0_test_file, "A/B/Caesar") < 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            Assert.IsTrue(H5L.create_soft("/oh my",
-                m_v2_test_file, "AA") >= 0);
+        Assert.True(H5L.create_soft("/oh my", m_v2_test_file, "AA") >= 0);
 
-            gid = H5G.create(m_v2_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
+        gid = H5G.create(m_v2_test_file, "A/B/C", H5OFixture.m_lcpl);
+        Assert.True(gid >= 0);
 
-            Assert.IsTrue(H5O.exists_by_name(m_v2_test_file, "A/B") > 0);
+        Assert.True(H5O.exists_by_name(m_v2_test_file, "A/B") > 0);
 
-            Assert.IsTrue(H5O.exists_by_name(m_v2_test_file, "AA") == 0);
+        Assert.True(H5O.exists_by_name(m_v2_test_file, "AA") == 0);
 
-            Assert.IsTrue(
-                H5O.exists_by_name(m_v2_test_file, "A/B/Caesar") < 0);
+        Assert.True(H5O.exists_by_name(m_v2_test_file, "A/B/Caesar") < 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Oexists_by_nameTest2()
-        {
-            Assert.IsFalse(
-                H5O.exists_by_name(Utilities.RandomInvalidHandle(),
-                (string)null) >= 0);
-        }
+    [Fact]
+    public void H5Oexists_by_nameTest2()
+    {
+        Assert.False(H5O.exists_by_name(Utilities.RandomInvalidHandle(), (string)null) >= 0);
     }
 }

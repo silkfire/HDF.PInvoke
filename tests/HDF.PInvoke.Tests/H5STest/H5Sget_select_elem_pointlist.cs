@@ -13,53 +13,39 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-using herr_t = System.Int32;
 using hsize_t = System.UInt64;
-using hssize_t = System.Int64;
-
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+
+public partial class H5STest
 {
-    public partial class H5STest
+    [Fact]
+    public void H5Sget_select_elem_pointlistTest1()
     {
-        [TestMethod]
-        public void H5Sget_select_elem_pointlistTest1()
-        {
-            hsize_t[] dims = { 1, 2, 3 };
-            hid_t space =  H5S.create_simple(dims.Length, dims, dims);
-            Assert.IsTrue(space > 0);
-            hsize_t[] sel = { 0, 1, 2, 0, 2, 2 };
-            Assert.IsTrue(
-                H5S.select_elements(space, H5S.seloper_t.SET, new IntPtr(2),
-                sel) >= 0);
-            hsize_t[] buf = new hsize_t[sel.Length];
-            Assert.IsTrue(H5S.get_select_elem_pointlist(space, 0, 2, buf) >= 0);
+        hsize_t[] dims = { 1, 2, 3 };
+        hid_t space = H5S.create_simple(dims.Length, dims, dims);
+        Assert.True(space > 0);
+        hsize_t[] sel = { 0, 1, 2, 0, 2, 2 };
+        Assert.True(H5S.select_elements(space, H5S.seloper_t.SET, new IntPtr(2), sel) >= 0);
+        hsize_t[] buf = new hsize_t[sel.Length];
+        Assert.True(H5S.get_select_elem_pointlist(space, 0, 2, buf) >= 0);
 
-            for (int i = 0; i < buf.Length; ++i)
-            {
-                Assert.IsTrue(sel[i] == buf[i]);
-            }
-            
-            Assert.IsTrue(H5S.close(space) >= 0);
+        for (int i = 0; i < buf.Length; ++i)
+        {
+            Assert.True(sel[i] == buf[i]);
         }
 
-        [TestMethod]
-        public void H5Sget_select_elem_pointlistTest2()
-        {
-            Assert.IsFalse(
-                H5S.get_select_elem_pointlist(Utilities.RandomInvalidHandle(),
-                0, 0, null) >= 0);
-        }
+        Assert.True(H5S.close(space) >= 0);
+    }
+
+    [Fact]
+    public void H5Sget_select_elem_pointlistTest2()
+    {
+        Assert.False(H5S.get_select_elem_pointlist(Utilities.RandomInvalidHandle(), 0, 0, null) >= 0);
     }
 }

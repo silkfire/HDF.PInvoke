@@ -13,33 +13,27 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ETest
 {
-    public partial class H5ETest
+    [Fact]
+    public void H5Eclose_stackTest1()
     {
-        [TestMethod]
-        public void H5Eclose_stackTest1()
-        {
-            hid_t est = H5E.create_stack();
-            Assert.IsTrue(est >= 0);
-            Assert.IsTrue(H5E.close_stack(est) >= 0);
-        }
+        hid_t est = H5E.create_stack();
+        Assert.True(est >= 0);
+        Assert.True(H5E.close_stack(est) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Eclose_stackTest2()
-        {
-            Assert.IsFalse(
-                H5E.close_stack(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Eclose_stackTest2()
+    {
+        Assert.False(H5E.close_stack(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

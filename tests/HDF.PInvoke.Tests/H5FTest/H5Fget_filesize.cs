@@ -13,49 +13,33 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+
+namespace HDF.PInvoke.Tests;
 
 using hsize_t = System.UInt64;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_filesizeTest1()
     {
-        [TestMethod]
-        public void H5Fget_filesizeTest1()
-        {
-            hsize_t size = 0;
-            Assert.IsTrue(H5F.get_filesize(m_v0_class_file, ref size) >= 0);
-            Assert.IsTrue(H5F.get_filesize(m_v2_class_file, ref size) >= 0);
-            Assert.IsTrue(H5F.get_filesize(m_v0_test_file, ref size) >= 0);
-            // the next two are "empty" and have a predictable size
-            #if HDF5_VER1_10
-            Assert.IsTrue(size == 65536, String.Format("File size: {0}", size));
-            #else
-            Assert.IsTrue(size == 2144, String.Format("File size: {0}", size));
-            #endif
-            Assert.IsTrue(H5F.get_filesize(m_v2_test_file, ref size) >= 0);
-            #if HDF5_VER1_10
-            Assert.IsTrue(size == 65536, String.Format("File size: {0}", size));
-            #else
-            Assert.IsTrue(size == 2096, String.Format("File size: {0}", size));
-            #endif
-        }
+        hsize_t size = 0;
+        Assert.True(H5F.get_filesize(H5FFixture.m_v0_class_file, ref size) >= 0);
+        Assert.True(H5F.get_filesize(H5FFixture.m_v2_class_file, ref size) >= 0);
+        Assert.True(H5F.get_filesize(m_v0_test_file, ref size) >= 0);
+        // the next two are "empty" and have a predictable size
+        Assert.True(size == 65536, $"File size: {size}");
+        Assert.True(H5F.get_filesize(m_v2_test_file, ref size) >= 0);
+        Assert.True(size == 65536, $"File size: {size}");
+    }
 
-        [TestMethod]
-        public void H5Fget_filesizeTest2()
-        {
-            hsize_t size = 0;
-            Assert.IsFalse(H5F.get_filesize(Utilities.RandomInvalidHandle(),
-                ref size) >= 0);
-        }
+    [Fact]
+    public void H5Fget_filesizeTest2()
+    {
+        hsize_t size = 0;
+        Assert.False(H5F.get_filesize(Utilities.RandomInvalidHandle(), ref size) >= 0);
     }
 }

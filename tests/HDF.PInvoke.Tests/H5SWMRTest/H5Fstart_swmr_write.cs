@@ -13,37 +13,26 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
+using HDF5;
+using Xunit;
 
-using hid_t = System.Int64;
-
-namespace UnitTests
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5Fstart_swmr_writeTestSWMR1()
     {
-        [TestMethod]
-        public void H5Fstart_swmr_writeTestSWMR1()
-        {
-            Assert.IsFalse(H5F.start_swmr_write(m_v3_test_file_swmr) >= 0);
-        }
+        Assert.False(H5F.start_swmr_write(m_v3_test_file_swmr) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Fstart_swmr_writeTestSWMR2()
-        {
-            Assert.IsTrue(H5F.start_swmr_write(m_v3_test_file_no_swmr) >= 0);
-            uint intent = 0;
-            Assert.IsTrue(
-                H5F.get_intent(m_v3_test_file_no_swmr, ref intent) >= 0);
-            Assert.IsTrue((intent & H5F.ACC_SWMR_WRITE) > 0);
-        }
+    [Fact]
+    public void H5Fstart_swmr_writeTestSWMR2()
+    {
+        Assert.True(H5F.start_swmr_write(m_v3_test_file_no_swmr) >= 0);
+        uint intent = 0;
+        Assert.True(H5F.get_intent(m_v3_test_file_no_swmr, ref intent) >= 0);
+        Assert.True((intent & H5F.ACC_SWMR_WRITE) > 0);
     }
 }
-
-#endif

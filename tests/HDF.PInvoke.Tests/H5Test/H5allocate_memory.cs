@@ -13,57 +13,56 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+using Xunit;
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-namespace UnitTests
+public partial class H5Test
 {
-    public partial class H5Test
+    [Fact]
+    public void H5allocate_memoryTest1()
     {
-        [TestMethod]
-        public void H5allocate_memoryTest1()
-        {
-            IntPtr size = new IntPtr(1024 * 1024);
+        IntPtr size = new IntPtr(1024 * 1024);
 
-            // uninitialized allocation
-            IntPtr ptr = H5.allocate_memory(size, 0);
-            Assert.IsFalse(ptr == IntPtr.Zero);
-            Assert.IsTrue(H5.free_memory(ptr) >= 0);
+        // uninitialized allocation
+        IntPtr ptr = H5.allocate_memory(size, 0);
+        Assert.False(ptr == IntPtr.Zero);
+        Assert.True(H5.free_memory(ptr) >= 0);
 
-            // initialize with zeros
-            ptr = H5.allocate_memory(size, 1);
-            Assert.IsFalse(ptr == IntPtr.Zero);
-            Assert.IsTrue(H5.free_memory(ptr) >= 0);
+        // initialize with zeros
+        ptr = H5.allocate_memory(size, 1);
+        Assert.False(ptr == IntPtr.Zero);
+        Assert.True(H5.free_memory(ptr) >= 0);
 
-            // size = 0 -> NULL return
-            size = new IntPtr(0);
-            ptr = H5.allocate_memory(size, 0);
-            Assert.IsTrue(ptr == IntPtr.Zero);
-            Assert.IsTrue(H5.free_memory(ptr) >= 0);
-        }
+        // size = 0 -> NULL return
+        size = new IntPtr(0);
+        ptr = H5.allocate_memory(size, 0);
+        Assert.True(ptr == IntPtr.Zero);
+        Assert.True(H5.free_memory(ptr) >= 0);
+    }
 
-        [TestMethod]
-        public void H5allocate_memoryTest2()
-        {
-            IntPtr size = new IntPtr(1024 * 1024);
+    [Fact]
+    public void H5allocate_memoryTest2()
+    {
+        IntPtr size = new IntPtr(1024 * 1024);
 
-            // uninitialized allocation
-            IntPtr ptr = H5.allocate_memory(size, 0);
-            Assert.IsFalse(ptr == IntPtr.Zero);
-            Marshal.FreeHGlobal(ptr);
+        // uninitialized allocation
+        IntPtr ptr = H5.allocate_memory(size, 0);
+        Assert.False(ptr == IntPtr.Zero);
+        Marshal.FreeHGlobal(ptr);
 
-            // initialize with zeros
-            ptr = H5.allocate_memory(size, 1);
-            Assert.IsFalse(ptr == IntPtr.Zero);
-            Marshal.FreeHGlobal(ptr);
+        // initialize with zeros
+        ptr = H5.allocate_memory(size, 1);
+        Assert.False(ptr == IntPtr.Zero);
+        Marshal.FreeHGlobal(ptr);
 
-            // size = 0 -> NULL return
-            size = new IntPtr(0);
-            ptr = H5.allocate_memory(size, 0);
-            Assert.IsTrue(ptr == IntPtr.Zero);
-            Marshal.FreeHGlobal(ptr);
-        }
+        // size = 0 -> NULL return
+        size = new IntPtr(0);
+        ptr = H5.allocate_memory(size, 0);
+        Assert.True(ptr == IntPtr.Zero);
+        Marshal.FreeHGlobal(ptr);
     }
 }

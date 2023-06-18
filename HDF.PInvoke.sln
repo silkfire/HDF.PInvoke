@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDF.PInvoke", "HDF.PInvoke.csproj", "{4450F800-93E2-4D4A-B224-966E2338CDED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDF.PInvoke", "src\HDF.PInvoke.csproj", "{4450F800-93E2-4D4A-B224-966E2338CDED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{5A77D1AD-A2D6-4313-B29B-3A708281FED0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDF.PInvoke.Tests", "tests\HDF.PInvoke.Tests\HDF.PInvoke.Tests.csproj", "{5A77D1AD-A2D6-4313-B29B-3A708281FED0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -13,72 +13,61 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
+namespace HDF.PInvoke.Tests;
+
 using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
-
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5Pset_append_flushTestSWMR1()
     {
-        [TestMethod]
-        public void H5Pset_append_flushTestSWMR1()
-        {
-            hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
-            Assert.IsTrue(dapl >= 0);
+        hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
+        Assert.True(dapl >= 0);
 
-            hsize_t[] boundary = {1, 1};
+        hsize_t[] boundary = { 1, 1 };
 
-            H5D.append_cb_t cb = append_func;
+        H5D.append_cb_t cb = H5SWMRFixture.append_func;
 
-            Assert.IsTrue(
-                H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
-            
-            Assert.IsTrue(H5P.close(dapl) >= 0);
-        }
+        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
 
-        [TestMethod]
-        public void H5Pset_append_flushTestSWMR2()
-        {
-            hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
-            Assert.IsTrue(dapl >= 0);
+        Assert.True(H5P.close(dapl) >= 0);
+    }
 
-            hsize_t[] boundary = { 1, 1 };
+    [Fact]
+    public void H5Pset_append_flushTestSWMR2()
+    {
+        hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
+        Assert.True(dapl >= 0);
 
-            H5D.append_cb_t cb = append_func;
+        hsize_t[] boundary = { 1, 1 };
 
-            Assert.IsTrue(
-                H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
+        H5D.append_cb_t cb = H5SWMRFixture.append_func;
 
-            hsize_t[] check_boundary = { 0, 0, 0 };
+        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
 
-            H5D.append_cb_t check_cb = null;
+        hsize_t[] check_boundary = { 0, 0, 0 };
 
-            IntPtr check_ptr = new IntPtr(4711);
+        H5D.append_cb_t check_cb = null;
 
-            Assert.IsTrue(
-                H5P.get_append_flush(dapl, 2, check_boundary, ref check_cb,
-                ref check_ptr) >= 0);
+        IntPtr check_ptr = new IntPtr(4711);
 
-            Assert.IsTrue(check_boundary[0] == 1);
-            Assert.IsTrue(check_boundary[1] == 1);
-            Assert.IsTrue(check_boundary[2] == 0);
+        Assert.True(H5P.get_append_flush(dapl, 2, check_boundary, ref check_cb, ref check_ptr) >= 0);
 
-            Assert.IsTrue(check_cb == cb);
+        Assert.True(check_boundary[0] == 1);
+        Assert.True(check_boundary[1] == 1);
+        Assert.True(check_boundary[2] == 0);
 
-            Assert.IsTrue(check_ptr == IntPtr.Zero);
+        Assert.True(check_cb == cb);
 
-            Assert.IsTrue(H5P.close(dapl) >= 0);
-        }
+        Assert.True(check_ptr == IntPtr.Zero);
+
+        Assert.True(H5P.close(dapl) >= 0);
     }
 }
-
-#endif

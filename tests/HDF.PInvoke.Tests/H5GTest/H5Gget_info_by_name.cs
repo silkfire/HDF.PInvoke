@@ -13,51 +13,38 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5GTest
 {
-    public partial class H5GTest
+    [Fact]
+    public void H5Gget_info_by_nameTest1()
     {
-        [TestMethod]
-        public void H5Gget_info_by_nameTest1()
-        {
-            H5G.info_t info = new H5G.info_t();
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v0_class_file, ".", ref info) >= 0);
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v0_test_file, ".", ref info) >= 0);
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v2_class_file, ".", ref info) >= 0);
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v2_test_file, ".", ref info) >= 0);
-        }
+        H5G.info_t info = new H5G.info_t();
+        Assert.True(H5G.get_info_by_name(H5GFixture.m_v0_class_file, ".", ref info) >= 0);
+        Assert.True(H5G.get_info_by_name(m_v0_test_file, ".", ref info) >= 0);
+        Assert.True(H5G.get_info_by_name(H5GFixture.m_v2_class_file, ".", ref info) >= 0);
+        Assert.True(H5G.get_info_by_name(m_v2_test_file, ".", ref info) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Gget_info_by_nameTest2()
-        {
-            hid_t group = H5G.create(m_v0_test_file, "A");
-            Assert.IsTrue(group >= 0);
-            H5G.info_t info = new H5G.info_t();
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v0_test_file, "A", ref info) >= 0);
-            Assert.IsTrue(H5G.close(group) >= 0);
+    [Fact]
+    public void H5Gget_info_by_nameTest2()
+    {
+        hid_t group = H5G.create(m_v0_test_file, "A");
+        Assert.True(group >= 0);
+        H5G.info_t info = new H5G.info_t();
+        Assert.True(H5G.get_info_by_name(m_v0_test_file, "A", ref info) >= 0);
+        Assert.True(H5G.close(group) >= 0);
 
-            group = H5G.create(m_v2_test_file, "A");
-            Assert.IsTrue(group >= 0);
-            Assert.IsTrue(
-                H5G.get_info_by_name(m_v2_test_file, "A", ref info) >= 0);
-            Assert.IsTrue(H5G.close(group) >= 0);
-        }
+        group = H5G.create(m_v2_test_file, "A");
+        Assert.True(group >= 0);
+        Assert.True(H5G.get_info_by_name(m_v2_test_file, "A", ref info) >= 0);
+        Assert.True(H5G.close(group) >= 0);
     }
 }

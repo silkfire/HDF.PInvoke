@@ -13,167 +13,139 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+
+namespace HDF.PInvoke.Tests;
+
+using hsize_t = System.UInt64;
+using hid_t = System.Int64;
+
+using HDF5;
+using Xunit;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5AiterateTest1()
     {
-        [TestMethod]
-        public void H5AiterateTest1()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5ATest.cs
-            H5A.operator_t cb = DelegateMethod;
-            Assert.IsTrue(H5A.iterate(m_v2_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 3 elements in the array list
-            Assert.IsTrue(al.Count == 3);
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5ATest.cs
+        H5A.operator_t cb = H5AFixture.DelegateMethod;
+        Assert.True(H5A.iterate(m_v2_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 3 elements in the array list
+        Assert.Equal(3, al.Count);
 
-            att = H5A.create(m_v0_test_file, "IEEE_F32BE",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            al.Clear();
-            n = 0;
-            Assert.IsTrue(H5A.iterate(m_v0_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 3 elements in the array list
-            Assert.IsTrue(al.Count == 3);
+        al.Clear();
+        n = 0;
+        Assert.True(H5A.iterate(m_v0_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 3 elements in the array list
+        Assert.Equal(3, al.Count);
 
-            hnd.Free();
-        }
+        hnd.Free();
+    }
 
-        [TestMethod]
-        public void H5AiterateTest2()
-        {
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5ATest.cs
-            H5A.operator_t cb = DelegateMethod;
+    [Fact]
+    public void H5AiterateTest2()
+    {
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5ATest.cs
+        H5A.operator_t cb = H5AFixture.DelegateMethod;
 
-            Assert.IsFalse(
-                H5A.iterate(Utilities.RandomInvalidHandle(),
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n,
-                cb, op_data) >= 0);
+        Assert.False(H5A.iterate(Utilities.RandomInvalidHandle(), H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
 
-            hnd.Free();
-        }
+        hnd.Free();
+    }
 
-        [TestMethod]
-        public void H5AiterateTest3()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+    [Fact]
+    public void H5AiterateTest3()
+    {
+        hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5ATest.cs
-            H5A.operator_t cb = DelegateMethod;
-            Assert.IsTrue(H5A.iterate(m_v2_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 3 elements in the array list
-            Assert.IsTrue(al.Count == 3);
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5ATest.cs
+        H5A.operator_t cb = H5AFixture.DelegateMethod;
+        Assert.True(H5A.iterate(m_v2_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 3 elements in the array list
+        Assert.Equal(3, al.Count);
 
-            att = H5A.create(m_v0_test_file, "IEEE_F32BE",
-                H5T.IEEE_F32BE, m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8,
-               m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            al.Clear();
-            n = 0;
-            Assert.IsTrue(H5A.iterate(m_v0_test_file, H5.index_t.NAME,
-                H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
-            // we should have 3 elements in the array list
-            Assert.IsTrue(al.Count == 3);
+        al.Clear();
+        n = 0;
+        Assert.True(H5A.iterate(m_v0_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        // we should have 3 elements in the array list
+        Assert.Equal(3, al.Count);
 
-            hnd.Free();
-        }
+        hnd.Free();
+    }
 
-        [TestMethod]
-        public void H5AiterateTest4()
-        {
-            ArrayList al = new ArrayList();
-            GCHandle hnd = GCHandle.Alloc(al);
-            IntPtr op_data = (IntPtr)hnd;
-            hsize_t n = 0;
-            // the callback is defined in H5ATest.cs
-            H5A.operator_t cb = DelegateMethod;
+    [Fact]
+    public void H5AiterateTest4()
+    {
+        ArrayList al = new ArrayList();
+        GCHandle hnd = GCHandle.Alloc(al);
+        IntPtr op_data = (IntPtr)hnd;
+        hsize_t n = 0;
+        // the callback is defined in H5ATest.cs
+        H5A.operator_t cb = H5AFixture.DelegateMethod;
 
-            Assert.IsFalse(
-                H5A.iterate(Utilities.RandomInvalidHandle(),
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n,
-                cb, op_data) >= 0);
+        Assert.False(H5A.iterate(Utilities.RandomInvalidHandle(), H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
 
-            hnd.Free();
-        }
+        hnd.Free();
     }
 }

@@ -13,19 +13,17 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5Test
 {
-    public partial class H5Test
+    [Fact]
+    public void H5dont_atexitTest1()
     {
-        [TestMethod]
-        public void H5dont_atexitTest1()
-        {
-            // this is the expected behavior
-            Assert.IsTrue(H5.dont_atexit() < 0);
-        }
+        // this is the expected behavior
+        Assert.True(H5.dont_atexit() < 0);
     }
 }

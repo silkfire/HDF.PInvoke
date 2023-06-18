@@ -13,47 +13,38 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Aget_typeTest1()
     {
-        [TestMethod]
-        public void H5Aget_typeTest1()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            hid_t type = H5A.get_type(att);
-            Assert.IsTrue(type >= 0);
-            Assert.IsTrue(H5T.equal(type, H5T.IEEE_F64LE) > 0);
-            Assert.IsTrue(H5T.close(type) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        hid_t type = H5A.get_type(att);
+        Assert.True(type >= 0);
+        Assert.True(H5T.equal(type, H5T.IEEE_F64LE) > 0);
+        Assert.True(H5T.close(type) >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            type = H5A.get_type(att);
-            Assert.IsTrue(type >= 0);
-            Assert.IsTrue(H5T.equal(type, H5T.IEEE_F64LE) > 0);
-            Assert.IsTrue(H5T.close(type) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-        }
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        type = H5A.get_type(att);
+        Assert.True(type >= 0);
+        Assert.True(H5T.equal(type, H5T.IEEE_F64LE) > 0);
+        Assert.True(H5T.close(type) >= 0);
+        Assert.True(H5A.close(att) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Aget_typeTest2()
-        {
-            Assert.IsFalse(
-                H5A.get_type(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Aget_typeTest2()
+    {
+        Assert.False(H5A.get_type(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

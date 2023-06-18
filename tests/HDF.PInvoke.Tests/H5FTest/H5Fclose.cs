@@ -13,38 +13,33 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System.IO;
+
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5FcloseTest1()
     {
-        [TestMethod]
-        public void H5FcloseTest1()
-        {
-            string fname = Path.GetTempFileName();
-            hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
-            Assert.IsTrue(file >= 0);
-            Assert.IsTrue(H5F.close(file) >= 0);
-            file = H5F.open(fname, H5F.ACC_RDONLY);
-            Assert.IsTrue(file >= 0);
-            Assert.IsTrue(H5F.close(file) >= 0);
-            File.Delete(fname);
-        }
+        string fname = Path.GetTempFileName();
+        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        Assert.True(file >= 0);
+        Assert.True(H5F.close(file) >= 0);
+        file = H5F.open(fname, H5F.ACC_RDONLY);
+        Assert.True(file >= 0);
+        Assert.True(H5F.close(file) >= 0);
+        File.Delete(fname);
+    }
 
-        [TestMethod]
-        public void H5FcloseTest2()
-        {
-            Assert.IsFalse(H5F.close(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5FcloseTest2()
+    {
+        Assert.False(H5F.close(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

@@ -1,51 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <ProjectGuid>{5A77D1AD-A2D6-4313-B29B-3A708281FED0}</ProjectGuid>    
-    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
-    <IsPackable>false</IsPackable>
+    <TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DefineConstants>HDF5_VER1_10;NET_STANDARD;TRACE;DEBUG</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <DefineConstants>HDF5_VER1_10;NET_STANDARD</DefineConstants>
-    <Optimize>true</Optimize>
-  </PropertyGroup>  
-
   <ItemGroup>
-    <Compile Include="*.cs" />
-    <Compile Include="H5ATest/*.cs" />
-    <Compile Include="H5DTest/*.cs" />
-    <Compile Include="H5ETest/*.cs" />
-    <Compile Include="H5FTest/*.cs" />
-    <Compile Include="H5GTest/*.cs" />
-    <Compile Include="H5ITest/*.cs" />
-    <Compile Include="H5LTest/*.cs" />
-    <Compile Include="H5OTest/*.cs" />
-    <Compile Include="H5PLTest/*.cs" />
-    <Compile Include="H5PTest/*.cs" />
-    <Compile Include="H5RTest/*.cs" />
-    <Compile Include="H5STest/*.cs" />
-    <Compile Include="H5SWMRTest/*.cs" />
-    <Compile Include="H5Test/*.cs" />
-    <Compile Include="H5TSTest/*.cs" />
-    <Compile Include="H5TTest/*.cs" />
-    <Compile Include="H5VDSTest/*.cs" />
-    <Compile Include="H5ZTest/*.cs" />
+    <None Remove="HDF.PInvoke.Tests.csproj.DotSettings" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="1.2.1" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.2.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.2" />
+    <PackageReference Include="xunit" Version="2.4.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HDF.PInvoke.csproj" />
-  </ItemGroup> 
-  
+    <ProjectReference Include="..\..\src\HDF.PInvoke.csproj" />
+  </ItemGroup>
 </Project>

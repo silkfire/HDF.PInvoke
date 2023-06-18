@@ -13,37 +13,26 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+using Xunit;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5ETest
 {
-    public partial class H5ETest
+    [Fact]
+    public void H5EpopTest1()
     {
-        [TestMethod]
-        public void H5EpopTest1()
-        {
-            Assert.IsTrue(
-                H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS,
-                H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
-            Assert.IsTrue(
-                H5E.push(H5E.DEFAULT, "hello.c", "sqr", 78, H5E.ERR_CLS,
-                H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
-            Assert.IsTrue(H5E.pop(H5E.DEFAULT, new IntPtr(2)) >= 0);
-        }
+        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqr", 78, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        Assert.True(H5E.pop(H5E.DEFAULT, new IntPtr(2)) >= 0);
+    }
 
-        [TestMethod]
-        public void H5EpopTest2()
-        {
-            Assert.IsFalse(
-                H5E.pop(Utilities.RandomInvalidHandle(), IntPtr.Zero) >= 0);
-        }
+    [Fact]
+    public void H5EpopTest2()
+    {
+        Assert.False(H5E.pop(Utilities.RandomInvalidHandle(), IntPtr.Zero) >= 0);
     }
 }

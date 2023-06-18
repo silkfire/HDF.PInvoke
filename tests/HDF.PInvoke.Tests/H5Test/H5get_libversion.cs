@@ -13,23 +13,20 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5Test
 {
-    public partial class H5Test
+    [Fact]
+    public void H5get_libversionTest1()
     {
-        [TestMethod]
-        public void H5get_libversionTest1()
-        {
-            uint majnum = 0, minnum = 0, relnum = 0;
-            Assert.IsTrue(
-                H5.get_libversion(ref majnum, ref minnum, ref relnum) >= 0);
-            Assert.IsTrue(majnum == 1);
-            Assert.IsTrue(minnum >= 8);
-        }
+        uint majnum = 0, minnum = 0, relnum = 0;
+
+        Assert.True(H5.get_libversion(ref majnum, ref minnum, ref relnum) >= 0);
+        Assert.True(majnum == 1);
+        Assert.True(minnum >= 8);
     }
 }

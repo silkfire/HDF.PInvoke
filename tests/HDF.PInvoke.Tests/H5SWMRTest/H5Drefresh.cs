@@ -13,31 +13,22 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
-
-using herr_t = System.Int32;
-using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
 
 using hid_t = System.Int64;
 
-namespace UnitTests
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+using Xunit;
+
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5DrefreshTestSWMR1()
     {
-        [TestMethod]
-        public void H5DrefreshTestSWMR1()
-        {
-            hid_t dst = H5D.open(m_v3_class_file, "int6x6");
-            Assert.IsTrue(dst >= 0);
-            Assert.IsTrue(H5D.refresh(dst) >= 0);
-            Assert.IsTrue(H5D.close(dst) >= 0);
-        }
+        hid_t dst = H5D.open(H5SWMRFixture.m_v3_class_file, "int6x6");
+        Assert.True(dst >= 0);
+        Assert.True(H5D.refresh(dst) >= 0);
+        Assert.True(H5D.close(dst) >= 0);
     }
 }
-
-#endif

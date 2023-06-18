@@ -13,46 +13,33 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using ssize_t = System.IntPtr;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_obj_idsTest1()
     {
-        [TestMethod]
-        public void H5Fget_obj_idsTest1()
-        {
-            IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
-            
-            Assert.IsTrue(
-                H5F.get_obj_ids(m_v0_class_file, H5F.OBJ_ALL, new IntPtr(10),
-                buf).ToInt32() > 0);
-            Assert.IsTrue(
-                H5F.get_obj_ids(m_v2_class_file, H5F.OBJ_ALL, new IntPtr(10),
-                buf).ToInt32() > 0);
+        IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
 
-            Assert.IsTrue(H5.free_memory(buf) >= 0);
-           
-        }
+        Assert.True(H5F.get_obj_ids(H5FFixture.m_v0_class_file, H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
+        Assert.True(H5F.get_obj_ids(H5FFixture.m_v2_class_file, H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
 
-        [TestMethod]
-        public void H5Fget_obj_idsTest2()
-        {
-            IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
-            Assert.IsFalse(
-                H5F.get_obj_ids(Utilities.RandomInvalidHandle(),
-                H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
-            Assert.IsTrue(H5.free_memory(buf) >= 0);
-        }
+        Assert.True(H5.free_memory(buf) >= 0);
+    }
+
+    [Fact]
+    public void H5Fget_obj_idsTest2()
+    {
+        IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
+        Assert.False(H5F.get_obj_ids(Utilities.RandomInvalidHandle(), H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
+        Assert.True(H5.free_memory(buf) >= 0);
     }
 }

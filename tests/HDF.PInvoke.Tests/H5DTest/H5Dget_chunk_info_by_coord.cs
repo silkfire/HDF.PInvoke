@@ -13,106 +13,95 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using uint32_t = System.UInt32;
-using haddr_t = System.UInt64;
+namespace HDF.PInvoke.Tests;
+
 using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
+using haddr_t = System.UInt64;
+using uint32_t = System.UInt32;
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5DTest
 {
-    public partial class H5DTest
+    [Fact]
+    public void H5Dget_chunk_info_by_coordTest1()
     {
+        hsize_t[] dims = { 10, 10 };
+        hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
+        hid_t space = H5S.create_simple(2, dims, max_dims);
 
-#if HDF5_VER1_10
+        hid_t dcpl = H5P.create(H5P.DATASET_CREATE);
+        Assert.True(dcpl >= 0);
+        hsize_t[] chunk = { 4, 4 };
+        Assert.True(H5P.set_chunk(dcpl, 2, chunk) >= 0);
+        Assert.True(H5P.set_alloc_time(dcpl, H5D.alloc_time_t.EARLY) >= 0);
+        Assert.True(H5P.set_fill_time(dcpl, H5D.fill_time_t.ALLOC) >= 0);
 
-        [TestMethod]
-        public void H5Dget_chunk_info_by_coordTest1()
-        {
-            hsize_t[] dims = { 10, 10 };
-            hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
-            hid_t space = H5S.create_simple(2, dims, max_dims);
+        hid_t dset = H5D.create(m_v0_test_file, "Early Bird2", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        Assert.True(dset >= 0);
 
-            hid_t dcpl = H5P.create(H5P.DATASET_CREATE);
-            Assert.IsTrue(dcpl >= 0);
-            hsize_t[] chunk = { 4, 4 };
-            Assert.IsTrue(H5P.set_chunk(dcpl, 2, chunk) >= 0);
-            Assert.IsTrue(H5P.set_alloc_time(dcpl, H5D.alloc_time_t.EARLY) >= 0);
-            Assert.IsTrue(H5P.set_fill_time(dcpl, H5D.fill_time_t.ALLOC) >= 0);
+        hsize_t size = 0;
+        hsize_t[] offset = { 1, 2 };
+        uint32_t filter_mask = 0;
+        haddr_t addr = 0;
+        Assert.True(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
+        Assert.Equal(0U, filter_mask);
+        Assert.True(size > 0);
+        Assert.True(addr > 0);
 
-            hid_t dset = H5D.create(m_v0_test_file, "Early Bird2", H5T.IEEE_F32BE,
-                space, H5P.DEFAULT, dcpl);
-            Assert.IsTrue(dset >= 0);
+        Assert.True(H5D.close(dset) >= 0);
 
-            hsize_t size = 0;
-            hsize_t[] offset = { 1, 2 };
-            uint32_t filter_mask = 0;
-            haddr_t addr = 0;
-            Assert.IsTrue(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
-            Assert.IsTrue(filter_mask == 0 && size > 0 && addr > 0);
+        dset = H5D.create(m_v2_test_file, "Early Bird2", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        Assert.True(dset >= 0);
 
-            Assert.IsTrue(H5D.close(dset) >= 0);
+        Assert.True(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
+        Assert.Equal(0U, filter_mask);
+        Assert.True(size > 0);
+        Assert.True(addr > 0);
 
-            dset = H5D.create(m_v2_test_file, "Early Bird2", H5T.IEEE_F32BE,
-                space, H5P.DEFAULT, dcpl);
-            Assert.IsTrue(dset >= 0);
-            
-            Assert.IsTrue(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
-            Assert.IsTrue(filter_mask == 0 && size > 0 && addr > 0);
+        Assert.True(H5D.close(dset) >= 0);
+    }
 
-            Assert.IsTrue(H5D.close(dset) >= 0);
-        }
+    [Fact]
+    public void H5Dget_chunk_info_by_coordTest2()
+    {
+        hsize_t[] dims = { 10, 10 };
+        hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
+        hid_t space = H5S.create_simple(2, dims, max_dims);
 
-        [TestMethod]
-        public void H5Dget_chunk_info_by_coordTest2()
-        {
-            hsize_t[] dims = { 10, 10 };
-            hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
-            hid_t space = H5S.create_simple(2, dims, max_dims);
+        hid_t dcpl = H5P.create(H5P.DATASET_CREATE);
+        Assert.True(dcpl >= 0);
+        hsize_t[] chunk = { 4, 4 };
+        Assert.True(H5P.set_chunk(dcpl, 2, chunk) >= 0);
 
-            hid_t dcpl = H5P.create(H5P.DATASET_CREATE);
-            Assert.IsTrue(dcpl >= 0);
-            hsize_t[] chunk = { 4, 4 };
-            Assert.IsTrue(H5P.set_chunk(dcpl, 2, chunk) >= 0);
+        hid_t dset = H5D.create(m_v0_test_file, "Early Bird3", H5T.IEEE_F32BE,
+                                space, H5P.DEFAULT, dcpl);
+        Assert.True(dset >= 0);
 
-            hid_t dset = H5D.create(m_v0_test_file, "Early Bird3", H5T.IEEE_F32BE,
-                space, H5P.DEFAULT, dcpl);
-            Assert.IsTrue(dset >= 0);
+        hsize_t size = 100;
+        hsize_t[] offset = { 1, 2 };
+        uint32_t filter_mask = 0;
+        haddr_t addr = 0;
+        Assert.True(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
+        Assert.Equal(0U, filter_mask);
+        Assert.Equal(0UL, size);
+        Assert.Equal(H5.HADDR_UNDEF, addr);
 
-            hsize_t size = 100;
-            hsize_t[] offset = { 1, 2 };
-            uint32_t filter_mask = 0;
-            haddr_t addr = 0;
-            Assert.IsTrue(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
-            Assert.IsTrue(filter_mask == 0 && size == 0 && addr == H5.HADDR_UNDEF);
+        Assert.True(H5D.close(dset) >= 0);
 
-            Assert.IsTrue(H5D.close(dset) >= 0);
+        dset = H5D.create(m_v2_test_file, "Early Bird3", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        Assert.True(dset >= 0);
 
-            dset = H5D.create(m_v2_test_file, "Early Bird3", H5T.IEEE_F32BE,
-                space, H5P.DEFAULT, dcpl);
-            Assert.IsTrue(dset >= 0);
+        size = 100;
+        addr = 0;
+        Assert.True(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
+        Assert.Equal(0U, filter_mask);
+        Assert.Equal(0UL, size);
+        Assert.Equal(H5.HADDR_UNDEF, addr);
 
-            size = 100;
-            addr = 0;
-            Assert.IsTrue(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
-            Assert.IsTrue(filter_mask == 0 && size == 0 && addr == H5.HADDR_UNDEF);
-
-            Assert.IsTrue(H5D.close(dset) >= 0);
-        }
-
-#endif
+        Assert.True(H5D.close(dset) >= 0);
     }
 }

@@ -13,62 +13,50 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
 
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5Pset_object_flush_cbTestSWMR1()
     {
-        [TestMethod]
-        public void H5Pset_object_flush_cbTestSWMR1()
-        {
-            hid_t fapl = H5P.create(H5P.FILE_ACCESS);
-            Assert.IsTrue(fapl >= 0);
+        hid_t fapl = H5P.create(H5P.FILE_ACCESS);
+        Assert.True(fapl >= 0);
 
-            H5F.flush_cb_t cb = flush_func;
+        H5F.flush_cb_t cb = H5SWMRFixture.flush_func;
 
-            Assert.IsTrue(
-                H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
-            
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+        Assert.True(H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
 
-        [TestMethod]
-        public void H5Pset_object_flush_cbTestSWMR2()
-        {
-            hid_t fapl = H5P.create(H5P.FILE_ACCESS);
-            Assert.IsTrue(fapl >= 0);
+        Assert.True(H5P.close(fapl) >= 0);
+    }
 
-            H5F.flush_cb_t cb = flush_func;
+    [Fact]
+    public void H5Pset_object_flush_cbTestSWMR2()
+    {
+        hid_t fapl = H5P.create(H5P.FILE_ACCESS);
+        Assert.True(fapl >= 0);
 
-            Assert.IsTrue(
-                H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
+        H5F.flush_cb_t cb = H5SWMRFixture.flush_func;
 
-            H5F.flush_cb_t check_cb = null;
+        Assert.True(H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
 
-            IntPtr check_ptr = new IntPtr(4711);
+        H5F.flush_cb_t check_cb = null;
 
-            Assert.IsTrue(
-                H5P.get_object_flush_cb(fapl, ref check_cb,
-                ref check_ptr) >= 0);
+        IntPtr check_ptr = new IntPtr(4711);
 
-            Assert.IsTrue(check_cb == cb);
+        Assert.True(H5P.get_object_flush_cb(fapl, ref check_cb, ref check_ptr) >= 0);
 
-            Assert.IsTrue(check_ptr == IntPtr.Zero);
+        Assert.True(check_cb == cb);
 
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+        Assert.True(check_ptr == IntPtr.Zero);
+
+        Assert.True(H5P.close(fapl) >= 0);
     }
 }
-
-#endif

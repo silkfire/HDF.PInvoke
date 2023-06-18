@@ -13,46 +13,38 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5Odecr_refcountTest1()
     {
-        [TestMethod]
-        public void H5Odecr_refcountTest1()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
+        hid_t gid = H5G.create(m_v0_test_file, "A/B/C", H5OFixture.m_lcpl);
+        Assert.True(gid >= 0);
 
-            // Don't try this at home!
-            Assert.IsTrue(H5O.decr_refcount(gid) >= 0);
+        // Don't try this at home!
+        Assert.True(H5O.decr_refcount(gid) >= 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            gid = H5G.create(m_v2_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
+        gid = H5G.create(m_v2_test_file, "A/B/C", H5OFixture.m_lcpl);
+        Assert.True(gid >= 0);
 
-            // Don't try this at home!
-            Assert.IsTrue(H5O.decr_refcount(gid) >= 0);
+        // Don't try this at home!
+        Assert.True(H5O.decr_refcount(gid) >= 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Odecr_refcountTest2()
-        {
-            Assert.IsFalse(
-                H5O.decr_refcount(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Odecr_refcountTest2()
+    {
+        Assert.False(H5O.decr_refcount(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

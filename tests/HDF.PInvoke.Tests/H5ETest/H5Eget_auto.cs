@@ -13,27 +13,21 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+using Xunit;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5ETest
 {
-    public partial class H5ETest
+    [Fact]
+    public void H5Eget_autoTest1()
     {
-        [TestMethod]
-        public void H5Eget_autoTest1()
-        {
-            H5E.auto_t cb = null;
-            IntPtr client_data = IntPtr.Zero;
-            Assert.IsTrue(
-                H5E.get_auto(H5E.DEFAULT, ref cb, ref client_data) >= 0);
-        }
+        H5E.auto_t cb = null;
+        IntPtr client_data = IntPtr.Zero;
+        Assert.True(H5E.get_auto(H5E.DEFAULT, ref cb, ref client_data) >= 0);
     }
 }

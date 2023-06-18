@@ -13,47 +13,32 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using hsize_t = System.UInt64;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5DTest
 {
-    public partial class H5DTest
+    [Fact]
+    public void H5Dget_access_plistTest1()
     {
-        [TestMethod]
-        public void H5Dget_access_plistTest1()
-        {
-            hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE,
-                m_space_null);
-            Assert.IsTrue(dset >= 0);
+        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null);
+        Assert.True(dset >= 0);
 
-            hid_t dapl = H5D.get_access_plist(dset);
-            Assert.IsTrue(dapl >= 0);
+        hid_t dapl = H5D.get_access_plist(dset);
+        Assert.True(dapl >= 0);
 
-            Assert.IsTrue(H5P.close(dapl) >= 0);
-            Assert.IsTrue(H5D.close(dset) >= 0);
-            
-        }
+        Assert.True(H5P.close(dapl) >= 0);
+        Assert.True(H5D.close(dset) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Dget_access_plistTest2()
-        {
-            Assert.IsFalse(
-                H5D.get_access_plist(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Dget_access_plistTest2()
+    {
+        Assert.False(H5D.get_access_plist(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

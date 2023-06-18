@@ -13,51 +13,40 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using htri_t = System.Int32;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5AopenTest1()
     {
-        [TestMethod]
-        public void H5AopenTest1()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,  H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.open(m_v2_test_file, "A");
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.open(m_v2_test_file, "A");
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.open(m_v0_test_file, "A");
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-        }
+        att = H5A.open(m_v0_test_file, "A");
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
+    }
 
-        [TestMethod]
-        public void H5AopenTest2()
-        {
-            Assert.IsFalse(
-                H5A.open(Utilities.RandomInvalidHandle(), ".") >= 0);
-            Assert.IsFalse(
-                H5A.open(m_v2_class_file, "") >= 0);
-        }
+    [Fact]
+    public void H5AopenTest2()
+    {
+        Assert.False(H5A.open(Utilities.RandomInvalidHandle(), ".") >= 0);
+        Assert.False(H5A.open(H5AFixture.m_v2_class_file, "") >= 0);
     }
 }

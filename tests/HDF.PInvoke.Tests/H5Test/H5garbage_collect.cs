@@ -13,19 +13,16 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5Test
 {
-    public partial class H5Test
+    [Fact]
+    public void H5garbage_collectTest1()
     {
-        [TestMethod]
-        public void H5garbage_collectTest1()
-        {
-            Assert.IsTrue(H5.garbage_collect() >= 0);
-        }
+        Assert.True(H5.garbage_collect() >= 0);
     }
 }

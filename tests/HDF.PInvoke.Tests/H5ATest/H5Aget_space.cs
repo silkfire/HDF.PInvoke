@@ -13,45 +13,37 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Aget_spaceTest1()
     {
-        [TestMethod]
-        public void H5Aget_spaceTest1()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            hid_t space = H5A.get_space(att);
-            Assert.IsTrue(space >= 0);
-            Assert.IsTrue(H5S.close(space) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        hid_t space = H5A.get_space(att);
+        Assert.True(space >= 0);
+        Assert.True(H5S.close(space) >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            space = H5A.get_space(att);
-            Assert.IsTrue(space >= 0);
-            Assert.IsTrue(H5S.close(space) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-        }
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        space = H5A.get_space(att);
+        Assert.True(space >= 0);
+        Assert.True(H5S.close(space) >= 0);
+        Assert.True(H5A.close(att) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Aget_spaceTest2()
-        {
-            Assert.IsFalse(
-                H5A.get_space(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Aget_spaceTest2()
+    {
+        Assert.False(H5A.get_space(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

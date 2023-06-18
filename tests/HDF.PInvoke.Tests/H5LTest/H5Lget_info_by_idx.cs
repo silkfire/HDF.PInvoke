@@ -13,59 +13,36 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using size_t = System.IntPtr;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5LTest
 {
-    public partial class H5LTest
+    [Fact]
+    public void H5Lget_info_by_idxTest1()
     {
-        [TestMethod]
-        public void H5Lget_info_by_idxTest1()
-        {
-            Assert.IsTrue(
-                H5L.create_external(m_v0_class_file_name, "/", m_v0_test_file,
-                "A", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_external(m_v0_class_file_name, "/", m_v0_test_file,
-                "AB", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_external(m_v0_class_file_name, "/", m_v0_test_file,
-                "ABC", m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "A", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "AB", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "ABC", H5LFixture.m_lcpl) >= 0);
 
-            H5L.info_t info = new H5L.info_t();
-            Assert.IsTrue(H5L.get_info_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
-            Assert.IsTrue(info.type == H5L.type_t.EXTERNAL);
-            Assert.IsTrue(info.corder_valid == 0);
-            Assert.IsTrue(info.cset == H5T.cset_t.ASCII);
-            Assert.IsTrue(info.u.val_size.ToInt64() > 0);
+        H5L.info_t info = new H5L.info_t();
+        Assert.True(H5L.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+        Assert.True(info.type == H5L.type_t.EXTERNAL);
+        Assert.True(info.corder_valid == 0);
+        Assert.True(info.cset == H5T.cset_t.ASCII);
+        Assert.True(info.u.val_size.ToInt64() > 0);
 
-            Assert.IsTrue(
-                H5L.create_external(m_v2_class_file_name, "/", m_v2_test_file,
-                "A", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_external(m_v2_class_file_name, "/", m_v2_test_file,
-                "AB", m_lcpl) >= 0);
-            Assert.IsTrue(
-                H5L.create_external(m_v2_class_file_name, "/", m_v2_test_file,
-                "ABC", m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "A", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "AB", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "ABC", H5LFixture.m_lcpl) >= 0);
 
-            Assert.IsTrue(H5L.get_info_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
-            Assert.IsTrue(info.type == H5L.type_t.EXTERNAL);
-            Assert.IsTrue(info.corder_valid == 0);
-            Assert.IsTrue(info.cset == H5T.cset_t.ASCII);
-            Assert.IsTrue(info.u.val_size.ToInt64() > 0);
-        }
+        Assert.True(H5L.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+        Assert.True(info.type == H5L.type_t.EXTERNAL);
+        Assert.True(info.corder_valid == 0);
+        Assert.True(info.cset == H5T.cset_t.ASCII);
+        Assert.True(info.u.val_size.ToInt64() > 0);
     }
 }

@@ -13,37 +13,30 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using ssize_t = System.IntPtr;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
+using ssize_t = nint;
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ETest
 {
-    public partial class H5ETest
+    [Fact]
+    public void H5Eget_numTest1()
     {
-        [TestMethod]
-        public void H5Eget_numTest1()
-        {
-            hid_t est = H5E.get_current_stack();
-            Assert.IsTrue(est >= 0);
-            ssize_t size = H5E.get_num(est);
-            Assert.IsTrue(size.ToInt32() >= 0);
-            Assert.IsTrue(H5E.close_stack(est) >= 0);
-        }
+        hid_t est = H5E.get_current_stack();
+        Assert.True(est >= 0);
+        ssize_t size = H5E.get_num(est);
+        Assert.True(size.ToInt32() >= 0);
+        Assert.True(H5E.close_stack(est) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Eget_numTest2()
-        {
-            Assert.IsFalse(
-                H5E.get_num(Utilities.RandomInvalidHandle()).ToInt32() >= 0);
-        }
+    [Fact]
+    public void H5Eget_numTest2()
+    {
+        Assert.False(H5E.get_num(Utilities.RandomInvalidHandle()).ToInt32() >= 0);
     }
 }

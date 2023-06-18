@@ -13,89 +13,74 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System.Text;
+
+public partial class H5LTest
 {
-    public partial class H5LTest
+    [Fact]
+    public void H5LcopyTest1()
     {
-        [TestMethod]
-        public void H5LcopyTest1()
+        hid_t gid = H5G.create(m_v0_test_file, "A/B/C", H5LFixture.m_lcpl);
+        Assert.True(gid >= 0);
+
+        Assert.True(H5L.copy(m_v0_test_file, "A", gid, "A_copy") >= 0);
+        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/A_copy/B") > 0);
+
+        Assert.True(H5G.close(gid) >= 0);
+
+        gid = H5G.create(m_v2_test_file, "A/B/C", H5LFixture.m_lcpl);
+        Assert.True(gid >= 0);
+
+        Assert.True(H5L.copy(m_v2_test_file, "A", gid, "A_copy") >= 0);
+        Assert.True(H5L.exists(m_v2_test_file, "A/B/C/A_copy/B") > 0);
+
+        Assert.True(H5G.close(gid) >= 0);
+    }
+
+    [Fact]
+    public void H5LcopyTest2()
+    {
+        Assert.True(H5L.create_soft("/my/fantastic/path", m_v0_test_file, "A") >= 0);
+
+        // copy symlink to the other test file
+
+        Assert.True(H5L.copy(m_v0_test_file, "A", m_v2_test_file, "C/B/A_copy", H5LFixture.m_lcpl) >= 0);
+    }
+
+    [Fact]
+    public void H5LcopyTest3()
+    {
+        hid_t gid = H5G.create(m_v0_test_file, "A/B/C", H5LFixture.m_lcpl);
+        Assert.True(gid >= 0);
+
+        for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            hid_t gid = H5G.create(m_v0_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
+            Assert.True(H5L.copy(m_v0_test_file, Encoding.ASCII.GetBytes("A"), gid, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]), H5LFixture.m_lcpl_utf8) >= 0);
 
-            Assert.IsTrue(H5L.copy(m_v0_test_file, "A", gid, "A_copy") >= 0);
-            Assert.IsTrue(H5L.exists(m_v0_test_file, "A/B/C/A_copy/B") > 0);
-
-            Assert.IsTrue(H5G.close(gid) >= 0);
-
-            gid = H5G.create(m_v2_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
-
-            Assert.IsTrue(H5L.copy(m_v2_test_file, "A", gid, "A_copy") >= 0);
-            Assert.IsTrue(H5L.exists(m_v2_test_file, "A/B/C/A_copy/B") > 0);
-
-            Assert.IsTrue(H5G.close(gid) >= 0);
+            string path = $"A/B/C/{H5LFixture.m_utf8strings[i]}/B";
+            Assert.True(H5L.exists(m_v0_test_file, Encoding.UTF8.GetBytes(path)) > 0);
         }
 
-        [TestMethod]
-        public void H5LcopyTest2()
+        Assert.True(H5G.close(gid) >= 0);
+
+        gid = H5G.create(m_v2_test_file, "A/B/C", H5LFixture.m_lcpl);
+        Assert.True(gid >= 0);
+
+        for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.IsTrue(H5L.create_soft("/my/fantastic/path",
-                m_v0_test_file, "A") >= 0);
+            Assert.True(H5L.copy(m_v2_test_file, Encoding.ASCII.GetBytes("A"), gid, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]), H5LFixture.m_lcpl_utf8) >= 0);
 
-            // copy symlink to the other test file
-
-            Assert.IsTrue(H5L.copy(m_v0_test_file, "A", m_v2_test_file,
-                "C/B/A_copy", m_lcpl) >= 0);
+            string path = $"A/B/C/{H5LFixture.m_utf8strings[i]}/B";
+            Assert.True(H5L.exists(m_v2_test_file, Encoding.UTF8.GetBytes(path)) > 0);
         }
 
-        [TestMethod]
-        public void H5LcopyTest3()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
-
-            for (int i = 0; i < m_utf8strings.Length; ++i)
-            {
-                Assert.IsTrue(
-                    H5L.copy(m_v0_test_file, Encoding.ASCII.GetBytes("A"), gid,
-                    Encoding.UTF8.GetBytes(m_utf8strings[i]),
-                    m_lcpl_utf8) >= 0);
-
-                string path = "A/B/C/" + m_utf8strings[i] + "/B";
-                Assert.IsTrue(
-                    H5L.exists(m_v0_test_file, Encoding.UTF8.GetBytes(path)) > 0);
-            }
-
-            Assert.IsTrue(H5G.close(gid) >= 0);
-
-            gid = H5G.create(m_v2_test_file, "A/B/C", m_lcpl);
-            Assert.IsTrue(gid >= 0);
-
-            for (int i = 0; i < m_utf8strings.Length; ++i)
-            {
-                Assert.IsTrue(
-                    H5L.copy(m_v2_test_file, Encoding.ASCII.GetBytes("A"), gid,
-                    Encoding.UTF8.GetBytes(m_utf8strings[i]),
-                    m_lcpl_utf8) >= 0);
-
-                string path = "A/B/C/" + m_utf8strings[i] + "/B";
-                Assert.IsTrue(
-                    H5L.exists(m_v2_test_file, Encoding.UTF8.GetBytes(path)) > 0);
-            }
-
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid) >= 0);
     }
 }

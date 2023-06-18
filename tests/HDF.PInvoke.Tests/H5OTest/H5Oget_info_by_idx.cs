@@ -13,59 +13,39 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5Oget_info_by_idxTest1()
     {
-        [TestMethod]
-        public void H5Oget_info_by_idxTest1()
-        {
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "A")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "AA")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "AAA")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v0_test_file, "AAAA")) >= 0);            
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AAA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AAAA")) >= 0);
 
-            H5O.info_t info = new H5O.info_t();
-            Assert.IsTrue(H5O.get_info_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
-            Assert.IsTrue(info.type == H5O.type_t.GROUP);
+        H5O.info_t info = new H5O.info_t();
+        Assert.True(H5O.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
+        Assert.True(info.type == H5O.type_t.GROUP);
 
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "A")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "AA")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "AAA")) >= 0);
-            Assert.IsTrue(
-                H5G.close(H5G.create(m_v2_test_file, "AAAA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AAA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AAAA")) >= 0);
 
-            info = new H5O.info_t();
-            Assert.IsTrue(H5O.get_info_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
-            Assert.IsTrue(info.type == H5O.type_t.GROUP);
-        }
+        info = new H5O.info_t();
+        Assert.True(H5O.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
+        Assert.True(info.type == H5O.type_t.GROUP);
+    }
 
-        [TestMethod]
-        public void H5Oget_info_by_idxTest2()
-        {
-            H5O.info_t info = new H5O.info_t();
-            Assert.IsFalse(
-                H5O.get_info_by_idx(Utilities.RandomInvalidHandle(), "A",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 44, ref info) >= 0);
-        }
+    [Fact]
+    public void H5Oget_info_by_idxTest2()
+    {
+        H5O.info_t info = new H5O.info_t();
+        Assert.False(H5O.get_info_by_idx(Utilities.RandomInvalidHandle(), "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, 44, ref info) >= 0);
     }
 }

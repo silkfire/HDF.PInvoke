@@ -13,49 +13,43 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5GTest
 {
-    public partial class H5GTest
+    [Fact]
+    public void H5Gcreate_anonTest1()
     {
-        [TestMethod]
-        public void H5Gcreate_anonTest1()
-        {
-            hid_t gid = H5G.create_anon(m_v0_test_file);
-            Assert.IsTrue(gid > 0);
+        hid_t gid = H5G.create_anon(m_v0_test_file);
+        Assert.True(gid > 0);
 
-            hid_t gid1 = H5G.create_anon(gid);
-            Assert.IsTrue(gid1 > 0);
+        hid_t gid1 = H5G.create_anon(gid);
+        Assert.True(gid1 > 0);
 
-            Assert.IsTrue(H5G.close(gid1) >= 0);
-            Assert.IsTrue(H5G.close(gid) >= 0);
+        Assert.True(H5G.close(gid1) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            gid = H5G.create_anon(m_v2_test_file);
-            Assert.IsTrue(gid > 0);
+        gid = H5G.create_anon(m_v2_test_file);
+        Assert.True(gid > 0);
 
-            gid1 = H5G.create_anon(gid);
-            Assert.IsTrue(gid1 > 0);
+        gid1 = H5G.create_anon(gid);
+        Assert.True(gid1 > 0);
 
-            Assert.IsTrue(H5G.close(gid1) >= 0);
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid1) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Gcreate_anonTest2()
-        {
-            hid_t file = Utilities.RandomInvalidHandle();
-            hid_t gid = H5G.create_anon(file);
-            Assert.IsTrue(gid < 0);
-        }
+    [Fact]
+    public void H5Gcreate_anonTest2()
+    {
+        hid_t file = Utilities.RandomInvalidHandle();
+        hid_t gid = H5G.create_anon(file);
+        Assert.True(gid < 0);
     }
 }

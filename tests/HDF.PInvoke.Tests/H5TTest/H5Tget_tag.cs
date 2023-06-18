@@ -13,48 +13,40 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+
+namespace HDF.PInvoke.Tests;
+
+using hid_t = System.Int64;
+
+using HDF5;
+using Xunit;
 using System;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5TTest
 {
-    public partial class H5TTest
+    [Fact]
+    public void H5Tget_tagTest1()
     {
-        [TestMethod]
-        public void H5Tget_tagTest1()
-        {
-            hid_t dtype = H5T.create(H5T.class_t.OPAQUE, new IntPtr(1024));
-            Assert.IsTrue(dtype >= 0);
+        hid_t dtype = H5T.create(H5T.class_t.OPAQUE, new IntPtr(1024));
+        Assert.True(dtype >= 0);
 
-            Assert.IsTrue(
-                H5T.set_tag(dtype, "Mary had a little lamb...") >= 0);
+        Assert.True(H5T.set_tag(dtype, "Mary had a little lamb...") >= 0);
 
-            IntPtr tag = H5T.get_tag(dtype);
-            Assert.IsTrue(tag.ToInt64() >= 0);
+        IntPtr tag = H5T.get_tag(dtype);
+        Assert.True(tag.ToInt64() >= 0);
 
-            Assert.IsTrue(Marshal.PtrToStringAnsi(tag)
-                == "Mary had a little lamb...");
+        Assert.True(Marshal.PtrToStringAnsi(tag) == "Mary had a little lamb...");
 
-            Assert.IsTrue(H5.free_memory(tag) >= 0);
+        Assert.True(H5.free_memory(tag) >= 0);
 
-            Assert.IsTrue(H5T.close(dtype) >= 0);
-        }
+        Assert.True(H5T.close(dtype) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Tget_tagTest2()
-        {
-            IntPtr tag = H5T.get_tag(Utilities.RandomInvalidHandle());
-            Assert.IsTrue(tag == IntPtr.Zero);
-        }
+    [Fact]
+    public void H5Tget_tagTest2()
+    {
+        IntPtr tag = H5T.get_tag(Utilities.RandomInvalidHandle());
+        Assert.Equal(IntPtr.Zero, tag);
     }
 }

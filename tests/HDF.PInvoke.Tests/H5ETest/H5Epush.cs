@@ -13,37 +13,24 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ETest
 {
-    public partial class H5ETest
+    [Fact]
+    public void H5EpushTest1()
     {
-        [TestMethod]
-        public void H5EpushTest1()
-        {
-            Assert.IsTrue(
-                H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS,
-                H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
-            Assert.IsTrue(
-                H5E.get_num(H5E.DEFAULT).ToInt32() > 0);
-        }
+        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        Assert.True(H5E.get_num(H5E.DEFAULT).ToInt32() > 0);
+    }
 
-        [TestMethod]
-        public void H5EpushTest2()
-        {
-            Assert.IsFalse(
-                H5E.push(Utilities.RandomInvalidHandle(), "hello.c", "sqrt",
-                77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR,
-                "Hello, World!") >= 0);
-        }
+    [Fact]
+    public void H5EpushTest2()
+    {
+        Assert.False(H5E.push(Utilities.RandomInvalidHandle(), "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
     }
 }

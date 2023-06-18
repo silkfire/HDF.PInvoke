@@ -13,49 +13,39 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
 
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5SWMRTest
 {
-    public partial class H5SWMRTest
+    [Fact]
+    public void H5Fget_metadata_read_attemptsTestSWMR1()
     {
-        [TestMethod]
-        public void H5Fget_metadata_read_attemptsTestSWMR1()
-        {
-            hid_t fapl = H5F.get_access_plist(m_v3_test_file_swmr);
-            Assert.IsTrue(fapl >= 0);
+        hid_t fapl = H5F.get_access_plist(m_v3_test_file_swmr);
+        Assert.True(fapl >= 0);
 
-            uint attempts = 0;
-            Assert.IsTrue(
-                H5P.get_metadata_read_attempts(fapl, ref attempts) >= 0);
-            Assert.IsTrue(attempts > 0);
+        uint attempts = 0;
+        Assert.True(H5P.get_metadata_read_attempts(fapl, ref attempts) >= 0);
+        Assert.True(attempts > 0);
 
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+        Assert.True(H5P.close(fapl) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Fget_metadata_read_attemptsTestSWMR2()
-        {
-            hid_t fapl = H5F.get_access_plist(m_v3_test_file_no_swmr);
-            Assert.IsTrue(fapl >= 0);
+    [Fact]
+    public void H5Fget_metadata_read_attemptsTestSWMR2()
+    {
+        hid_t fapl = H5F.get_access_plist(m_v3_test_file_no_swmr);
+        Assert.True(fapl >= 0);
 
-            uint attempts = 0;
-            Assert.IsTrue(
-                H5P.get_metadata_read_attempts(fapl, ref attempts) >= 0);
-            Assert.IsTrue(attempts > 0);
+        uint attempts = 0;
+        Assert.True(H5P.get_metadata_read_attempts(fapl, ref attempts) >= 0);
+        Assert.True(attempts > 0);
 
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+        Assert.True(H5P.close(fapl) >= 0);
     }
 }
-
-#endif

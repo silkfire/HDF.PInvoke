@@ -13,45 +13,36 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5OlinkTest1()
     {
-        [TestMethod]
-        public void H5OlinkTest1()
-        {
-            hid_t gid = H5G.create_anon(m_v0_test_file);
-            Assert.IsTrue(gid >= 0);
+        hid_t gid = H5G.create_anon(m_v0_test_file);
+        Assert.True(gid >= 0);
 
-            Assert.IsTrue(H5O.link(gid, m_v0_test_file, "A/B/C", m_lcpl) >= 0);
+        Assert.True(H5O.link(gid, m_v0_test_file, "A/B/C", H5OFixture.m_lcpl) >= 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
+        Assert.True(H5G.close(gid) >= 0);
 
-            gid = H5G.create_anon(m_v2_test_file);
-            Assert.IsTrue(gid >= 0);
+        gid = H5G.create_anon(m_v2_test_file);
+        Assert.True(gid >= 0);
 
-            Assert.IsTrue(H5O.link(gid, m_v2_test_file, "A/B/C", m_lcpl) >= 0);
+        Assert.True(H5O.link(gid, m_v2_test_file, "A/B/C", H5OFixture.m_lcpl) >= 0);
 
-            Assert.IsTrue(H5G.close(gid) >= 0);
-        }
+        Assert.True(H5G.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5OlinkTest2()
-        {
-            Assert.IsFalse(
-                H5O.link(Utilities.RandomInvalidHandle(), m_v0_test_file,
-                "A/B/C", m_lcpl) >= 0);
-        }
+    [Fact]
+    public void H5OlinkTest2()
+    {
+        Assert.False(H5O.link(Utilities.RandomInvalidHandle(), m_v0_test_file, "A/B/C", H5OFixture.m_lcpl) >= 0);
     }
 }

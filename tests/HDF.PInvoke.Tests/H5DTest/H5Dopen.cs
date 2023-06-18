@@ -13,50 +13,33 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using haddr_t = System.UInt64;
-using herr_t = System.Int32;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5DTest
 {
-    public partial class H5DTest
+    [Fact]
+    public void H5DopenTest1()
     {
-        [TestMethod]
-        public void H5DopenTest1()
-        {
-            Assert.IsTrue(
-                H5D.close(H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE,
-                m_space_null)) >= 0);
-            hid_t dset = H5D.open(m_v0_test_file, "dset");
-            Assert.IsTrue(dset >= 0);
-            Assert.IsTrue(H5D.close(dset) >= 0);
+        Assert.True(H5D.close(H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
+        hid_t dset = H5D.open(m_v0_test_file, "dset");
+        Assert.True(dset >= 0);
+        Assert.True(H5D.close(dset) >= 0);
 
-            Assert.IsTrue(
-                H5D.close(H5D.create(m_v2_test_file, "dset", H5T.IEEE_F64BE,
-                m_space_null)) >= 0);
-            dset = H5D.open(m_v0_test_file, "dset");
-            Assert.IsTrue(dset >= 0);
-            Assert.IsTrue(H5D.close(dset) >= 0);
-        }
+        Assert.True(H5D.close(H5D.create(m_v2_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
+        dset = H5D.open(m_v0_test_file, "dset");
+        Assert.True(dset >= 0);
+        Assert.True(H5D.close(dset) >= 0);
+    }
 
-        [TestMethod]
-        public void H5DopenTest2()
-        {
-            Assert.IsFalse(
-                H5D.open(Utilities.RandomInvalidHandle(), "dset") >=  0);
-        }
+    [Fact]
+    public void H5DopenTest2()
+    {
+        Assert.False(H5D.open(Utilities.RandomInvalidHandle(), "dset") >= 0);
     }
 }

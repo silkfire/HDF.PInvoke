@@ -13,27 +13,27 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using HDF.PInvoke;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace HDF.PInvoke.Tests;
+
+using HDF5;
+using Xunit;
 using System;
 
-namespace UnitTests
+public class GlobalFixture : IDisposable
 {
-    [TestClass]
-    public class _AssemblySpecific
-    {
-        //[AssemblyInitialize()]
-        //public static void AssemblyInit(TestContext context)
-        //{
-        //    // open the HDF5 library
-        //    Assert.IsTrue(H5.open() >= 0);
-        //}
+    //public GlobalFixture()
+    //{
+    //    // open the HDF5 library
+    //    Assert.True(H5.open() >= 0);
+    //}
 
-        [AssemblyCleanup()]
-        public static void AssemblyCleanup()
-        {
-            // close the HDF5 library
-            Assert.IsTrue(H5.close() >= 0);
-        }
+    public void Dispose()
+    {
+        // close the HDF5 library
+        Assert.True(H5.close() >= 0);
     }
 }
+
+[CollectionDefinition("Global collection")]
+public class GlobalCollection : ICollectionFixture<GlobalFixture> { }

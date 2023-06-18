@@ -13,70 +13,60 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
+
+namespace HDF.PInvoke.Tests;
+
+using ssize_t = nint;
+using hid_t = System.Int64;
+
+using HDF5;
+using Xunit;
 using System.IO;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using hsize_t = System.UInt64;
-using ssize_t = System.IntPtr;
-
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
-
-namespace UnitTests
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_files_imageTest1()
     {
-        [TestMethod]
-        public void H5Fget_files_imageTest1()
-        {
-            string fname = Path.GetTempFileName();
-            hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
-            Assert.IsTrue(file >= 0);
+        string fname = Path.GetTempFileName();
+        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        Assert.True(file >= 0);
 
-            IntPtr buf_len = new IntPtr();
-            ssize_t size = H5F.get_file_image(file, IntPtr.Zero, buf_len);
-            Assert.IsTrue(size.ToInt32() > 0);
+        ssize_t buf_len = new ssize_t();
+        ssize_t size = H5F.get_file_image(file, ssize_t.Zero, buf_len);
+        Assert.True(size.ToInt32() > 0);
 
-            IntPtr buf = H5.allocate_memory(new IntPtr(size.ToInt32()), 1);
-            Assert.IsTrue(buf != IntPtr.Zero);
+        ssize_t buf = H5.allocate_memory(new ssize_t(size.ToInt32()), 1);
+        Assert.True(buf != ssize_t.Zero);
 
-            Assert.IsTrue(H5F.get_file_image(file, IntPtr.Zero,
-                buf_len).ToInt32() > 0);
+        Assert.True(H5F.get_file_image(file, ssize_t.Zero, buf_len).ToInt32() > 0);
 
-            Assert.IsTrue(H5.free_memory(buf) >= 0);
-            
-            Assert.IsTrue(H5F.close(file) >= 0);
-            File.Delete(fname);
-        }
+        Assert.True(H5.free_memory(buf) >= 0);
 
-        [TestMethod]
-        public void H5Fget_files_imageTest2()
-        {
-            string fname = Path.GetTempFileName();
-            hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
-            Assert.IsTrue(file >= 0);
+        Assert.True(H5F.close(file) >= 0);
+        File.Delete(fname);
+    }
 
-            IntPtr buf_len = new IntPtr();
-            ssize_t size = H5F.get_file_image(file, IntPtr.Zero, buf_len);
-            Assert.IsTrue(size.ToInt32() > 0);
+    [Fact]
+    public void H5Fget_files_imageTest2()
+    {
+        string fname = Path.GetTempFileName();
+        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        Assert.True(file >= 0);
 
-            IntPtr buf = Marshal.AllocHGlobal((int) size);
-            Assert.IsTrue(buf != IntPtr.Zero);
+        ssize_t buf_len = new ssize_t();
+        ssize_t size = H5F.get_file_image(file, ssize_t.Zero, buf_len);
+        Assert.True(size.ToInt32() > 0);
 
-            Assert.IsTrue(H5F.get_file_image(file, IntPtr.Zero,
-                buf_len).ToInt32() > 0);
+        ssize_t buf = Marshal.AllocHGlobal((int)size);
+        Assert.True(buf != ssize_t.Zero);
 
-            Marshal.FreeHGlobal(buf);
+        Assert.True(H5F.get_file_image(file, ssize_t.Zero, buf_len).ToInt32() > 0);
 
-            Assert.IsTrue(H5F.close(file) >= 0);
-            File.Delete(fname);
-        }
+        Marshal.FreeHGlobal(buf);
+
+        Assert.True(H5F.close(file) >= 0);
+        File.Delete(fname);
     }
 }

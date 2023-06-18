@@ -13,37 +13,30 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Text;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using hsize_t = System.UInt64;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
 
-namespace UnitTests
-{
-    public partial class H5PTest
-    {
-        [TestMethod]
-        public void H5Pset_virtual_prefixTest1()
-        {
-            hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
-            Assert.IsTrue(dapl >= 0);
-            string prefix = "foo";
-            Assert.IsTrue(H5P.set_virtual_prefix(dapl, prefix) >= 0);
-            
-            StringBuilder sb = new StringBuilder(4);
-            IntPtr size = new IntPtr(4);
-            Assert.IsTrue(H5P.get_virtual_prefix(dapl, sb, size).ToInt32() == 3);
+using HDF5;
+using Xunit;
+using System;
+using System.Text;
 
-            Assert.IsTrue(H5P.close(dapl) >= 0);
-        }
+public partial class H5PTest
+{
+    [Fact]
+    public void H5Pset_virtual_prefixTest1()
+    {
+        hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
+        Assert.True(dapl >= 0);
+        string prefix = "foo";
+        Assert.True(H5P.set_virtual_prefix(dapl, prefix) >= 0);
+
+        StringBuilder sb = new StringBuilder(4);
+        IntPtr size = new IntPtr(4);
+        Assert.True(H5P.get_virtual_prefix(dapl, sb, size).ToInt32() == 3);
+
+        Assert.True(H5P.close(dapl) >= 0);
     }
 }
-
-#endif

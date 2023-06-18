@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows10.0.22621.0</TargetFramework>
+    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <RootNamespace>HDF.PInvoke</RootNamespace>
+    <AssemblyName>HDF.PInvoke</AssemblyName>
+    <AssemblyOriginatorKeyFile>HDF.PInvoke.snk</AssemblyOriginatorKeyFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591;CA1401</NoWarn>
+
+    <PackageId>HDF.PInvoke.win-x64</PackageId>
+    <Title>HDF.PInvoke for .NET (win-x64)</Title>
+    <Summary>.NET interop with native HDF5 libraries</Summary>
+    <Product>HDF.PInvoke.NETStandard</Product>    
+    <Company>The HDF Group</Company>
+    <Authors>The HDF Group, Sebastian Urban (.NET port), Gabriel Bider</Authors>
+    <Copyright>Copyright © 2016-2023</Copyright>
+    <Description>
+  This package contains PInvoke declarations for the (unmanaged) HDF5 1.10.x API and
+  the native HDF5 libraries for 64-bit Microsoft Windows built with thread-safety enabled.
+
+  Full API reference documentation is provided at
+  https://surban.github.io/HDF.PInvoke/api/HDF.PInvoke.html
+
+  For information on how to use the HDF5 libraries please refer to
+  https://portal.hdfgroup.org/display/HDF5/HDF5
+
+  This is an inofficial port of HDF.PInvoke to .NET, based on 
+  the code published by the HDF Group at https://github.com/HDFGroup/HDF.PInvoke.
+    </Description>
+    <PackageLicenseUrl>http://www.hdfgroup.org/ftp/HDF5/current/src/unpacked/COPYING</PackageLicenseUrl>
+    <RequireLicenseAcceptance>false</RequireLicenseAcceptance>
+    <PackageTags>HDF5 HDF Hierarchical Data Format</PackageTags>
+    <PackageProjectUrl>https://github.com/silkfire/HDF.PInvoke</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/HDFGroup/HDF.PInvoke/master/images/hdf.png</PackageIconUrl>
+    <Version>1.10.10</Version>
+    <AssemblyVersion>1.10.10.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ContentWithTargetPath Include="native\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <TargetPath>%(Filename)%(Extension)</TargetPath>
+    </ContentWithTargetPath>
+    <None Remove="native\**" />
+  </ItemGroup>
+  
+</Project>
+

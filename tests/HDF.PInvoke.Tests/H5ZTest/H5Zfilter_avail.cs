@@ -13,25 +13,17 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5ZTest
 {
-    public partial class H5ZTest
+    [Fact]
+    public void H5Zfilter_availTest1()
     {
-        [TestMethod]
-        public void H5Zfilter_availTest1()
-        {
-            Assert.IsTrue(H5Z.filter_avail(H5Z.filter_t.DEFLATE) >= 0);
-            Assert.IsFalse(H5Z.filter_avail(H5Z.filter_t.ERROR) >= 0);
-        }
+        Assert.True(H5Z.filter_avail(H5Z.filter_t.DEFLATE) >= 0);
+        Assert.False(H5Z.filter_avail(H5Z.filter_t.ERROR) >= 0);
     }
 }

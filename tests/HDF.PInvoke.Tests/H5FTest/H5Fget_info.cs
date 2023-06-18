@@ -13,34 +13,26 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+namespace HDF.PInvoke.Tests;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_infoTest1()
     {
-        [TestMethod]
-        public void H5Fget_infoTest1()
-        {
-            H5F.info_t info = new H5F.info_t();
-            Assert.IsTrue(H5F.get_info(m_v0_class_file, ref info) >= 0);
-            Assert.IsTrue(H5F.get_info(m_v2_class_file, ref info) >= 0);
-        }
+        H5F.info_t info = new H5F.info_t();
+        Assert.True(H5F.get_info(H5FFixture.m_v0_class_file, ref info) >= 0);
+        Assert.True(H5F.get_info(H5FFixture.m_v2_class_file, ref info) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Fget_infoTest2()
-        {
-            H5F.info_t info = new H5F.info_t();
-            Assert.IsFalse(
-                H5F.get_info(Utilities.RandomInvalidHandle(), ref info) >= 0);
-        }
+    [Fact]
+    public void H5Fget_infoTest2()
+    {
+        H5F.info_t info = new H5F.info_t();
+        Assert.False(H5F.get_info(Utilities.RandomInvalidHandle(), ref info) >= 0);
     }
 }

@@ -13,37 +13,29 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
 
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5VDSTest
 {
-    public partial class H5VDSTest
+    [Fact]
+    public void H5Pget_layoutTestVDS1()
     {
-        [TestMethod]
-        public void H5Pget_layoutTestVDS1()
-        {
-            hid_t vds = H5D.open(m_vds_class_file, "VDS");
-            Assert.IsTrue(vds >= 0);
+        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, "VDS");
+        Assert.True(vds >= 0);
 
-            hid_t dcpl = H5D.get_create_plist(vds);
-            Assert.IsTrue(dcpl >= 0);
+        hid_t dcpl = H5D.get_create_plist(vds);
+        Assert.True(dcpl >= 0);
 
-            H5D.layout_t layout = H5P.get_layout(dcpl);
-            Assert.IsTrue(layout == H5D.layout_t.VIRTUAL);
+        H5D.layout_t layout = H5P.get_layout(dcpl);
+        Assert.True(layout == H5D.layout_t.VIRTUAL);
 
-            Assert.IsTrue(H5P.close(dcpl) >= 0);
-            Assert.IsTrue(H5D.close(vds) >= 0);
-        }
+        Assert.True(H5P.close(dcpl) >= 0);
+        Assert.True(H5D.close(vds) >= 0);
     }
 }
-
-#endif

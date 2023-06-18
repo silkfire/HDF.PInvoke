@@ -13,48 +13,33 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-using herr_t = System.Int32;
 using hsize_t = System.UInt64;
-using hssize_t = System.Int64;
-
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5STest
 {
-    public partial class H5STest
+    [Fact]
+    public void H5Sget_select_hyper_nblocksTest1()
     {
-        [TestMethod]
-        public void H5Sget_select_hyper_nblocksTest1()
-        {
-            hsize_t[] dims = { 1, 2, 3 };
-            hid_t space =  H5S.create_simple(dims.Length, dims, dims);
-            Assert.IsTrue(space > 0);
-            hsize_t[] start = { 0, 0, 0 };
-            hsize_t[] count = { 1, 1, 1 };
-            hsize_t[] block = { 1, 2, 3 };
-            Assert.IsTrue(
-                H5S.select_hyperslab(space, H5S.seloper_t.SET, start, null,
-                count, block) >= 0);
-            Assert.IsTrue(H5S.get_select_hyper_nblocks(space) == 1);
-            Assert.IsTrue(H5S.close(space) >= 0);
-        }
+        hsize_t[] dims = { 1, 2, 3 };
+        hid_t space = H5S.create_simple(dims.Length, dims, dims);
+        Assert.True(space > 0);
+        hsize_t[] start = { 0, 0, 0 };
+        hsize_t[] count = { 1, 1, 1 };
+        hsize_t[] block = { 1, 2, 3 };
+        Assert.True(H5S.select_hyperslab(space, H5S.seloper_t.SET, start, null, count, block) >= 0);
+        Assert.True(H5S.get_select_hyper_nblocks(space) == 1);
+        Assert.True(H5S.close(space) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Sget_select_hyper_nblocksTest2()
-        {
-            Assert.IsFalse(
-                H5S.get_select_hyper_nblocks(Utilities.RandomInvalidHandle())
-                >= 0);
-        }
+    [Fact]
+    public void H5Sget_select_hyper_nblocksTest2()
+    {
+        Assert.False(H5S.get_select_hyper_nblocks(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

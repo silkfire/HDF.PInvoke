@@ -13,28 +13,20 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
 using uint32_t = System.UInt32;
 
-#if HDF5_VER1_10
-using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5PLTest
 {
-    public partial class H5PLTest
+    [Fact]
+    public void H5PLsizeTest1()
     {
-        [TestMethod]
-        public void H5PLsizeTest1()
-        {
-            uint32_t listsize = 0;
-            Assert.IsTrue(H5PL.size(ref listsize) >= 0);
-            Assert.IsTrue(listsize >= 0);
-        }
+        uint32_t listsize = 0;
+        Assert.True(H5PL.size(ref listsize) >= 0);
+        Assert.True(listsize >= 0);
     }
 }

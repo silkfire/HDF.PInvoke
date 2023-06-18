@@ -13,60 +13,55 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-#if HDF5_VER1_10
+namespace HDF.PInvoke.Tests;
+
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5OTest
 {
-    public partial class H5OTest
+    [Fact]
+    public void H5OcloseTest1()
     {
-        [TestMethod]
-        public void H5OcloseTest1()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A");
-            Assert.IsTrue(gid >= 0);
-            Assert.IsTrue(H5O.close(gid) >= 0);
+        hid_t gid = H5G.create(m_v0_test_file, "A");
+        Assert.True(gid >= 0);
+        Assert.True(H5O.close(gid) >= 0);
 
-            gid = H5G.create(m_v2_test_file, "A");
-            Assert.IsTrue(gid >= 0);
-            Assert.IsTrue(H5O.close(gid) >= 0);
-        }
+        gid = H5G.create(m_v2_test_file, "A");
+        Assert.True(gid >= 0);
+        Assert.True(H5O.close(gid) >= 0);
+    }
 
-        [TestMethod]
-        public void H5OcloseTest2()
-        {
-            hid_t gid = H5G.create(m_v0_test_file, "A");
-            Assert.IsTrue(gid >= 0);
-            Assert.IsTrue(H5O.close(gid) >= 0);
-            Assert.IsTrue(H5O.close(gid) < 0);
+    [Fact]
+    public void H5OcloseTest2()
+    {
+        hid_t gid = H5G.create(m_v0_test_file, "A");
+        Assert.True(gid >= 0);
+        Assert.True(H5O.close(gid) >= 0);
+        Assert.True(H5O.close(gid) < 0);
 
-            gid = H5G.create(m_v2_test_file, "A");
-            Assert.IsTrue(gid >= 0);
-            Assert.IsTrue(H5O.close(gid) >= 0);
-            Assert.IsTrue(H5O.close(gid) < 0);
-        }
+        gid = H5G.create(m_v2_test_file, "A");
+        Assert.True(gid >= 0);
+        Assert.True(H5O.close(gid) >= 0);
+        Assert.True(H5O.close(gid) < 0);
+    }
 
-        [TestMethod]
-        public void H5OcloseTest3()
-        {
-            hid_t gid = Utilities.RandomInvalidHandle();
-            Assert.IsTrue(H5O.close(gid) < 0);
-        }
+    [Fact]
+    public void H5OcloseTest3()
+    {
+        hid_t gid = Utilities.RandomInvalidHandle();
+        Assert.True(H5O.close(gid) < 0);
+    }
 
-        [TestMethod]
-        public void H5OcloseTest4()
-        {
-            hid_t space = H5S.create(H5S.class_t.SCALAR);
-            Assert.IsTrue(space >= 0);
-            Assert.IsTrue(H5O.close(space) < 0);
-            Assert.IsTrue(H5S.close(space) >= 0);
-        }
+    [Fact]
+    public void H5OcloseTest4()
+    {
+        hid_t space = H5S.create(H5S.class_t.SCALAR);
+        Assert.True(space >= 0);
+        Assert.True(H5O.close(space) < 0);
+        Assert.True(H5S.close(space) >= 0);
     }
 }

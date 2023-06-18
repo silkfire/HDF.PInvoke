@@ -13,45 +13,36 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Aget_create_plistTest1()
     {
-        [TestMethod]
-        public void H5Aget_create_plistTest1()
-        {
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            hid_t acpl = H5A.get_create_plist(att);
-            Assert.IsTrue(acpl >= 0);
-            Assert.IsTrue(H5P.close(acpl) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        hid_t acpl = H5A.get_create_plist(att);
+        Assert.True(acpl >= 0);
+        Assert.True(H5P.close(acpl) >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            acpl = H5A.get_create_plist(att);
-            Assert.IsTrue(acpl >= 0);
-            Assert.IsTrue(H5P.close(acpl) >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-        }
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        acpl = H5A.get_create_plist(att);
+        Assert.True(acpl >= 0);
+        Assert.True(H5P.close(acpl) >= 0);
+        Assert.True(H5A.close(att) >= 0);
+    }
 
-        [TestMethod]
-        public void H5Aget_create_plistTest2()
-        {
-            Assert.IsFalse(
-                H5A.get_create_plist(Utilities.RandomInvalidHandle()) >= 0);
-        }
+    [Fact]
+    public void H5Aget_create_plistTest2()
+    {
+        Assert.False(H5A.get_create_plist(Utilities.RandomInvalidHandle()) >= 0);
     }
 }

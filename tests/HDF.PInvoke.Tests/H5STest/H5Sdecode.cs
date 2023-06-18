@@ -13,60 +13,51 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
 using hsize_t = System.UInt64;
-using size_t = System.IntPtr;
-
-#if HDF5_VER1_10
+using size_t = nint;
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5STest
 {
-    public partial class H5STest
+    [Fact]
+    public void H5SdecodeTest1()
     {
-        [TestMethod]
-        public void H5SdecodeTest1()
+        hsize_t[] dims = { 1, 2, 3 };
+        hid_t space = H5S.create_simple(dims.Length, dims, dims);
+        Assert.True(space > 0);
+
+        size_t nalloc = new size_t();
+        Assert.True(H5S.encode(space, null, ref nalloc) >= 0);
+
+        byte[] buf = new byte[nalloc.ToInt32()];
+        Assert.True(H5S.encode(space, buf, ref nalloc) >= 0);
+
+        Assert.True(H5S.close(space) >= 0);
+
+        space = H5S.decode(buf);
+        Assert.True(space >= 0);
+
+        Assert.True(H5S.get_simple_extent_ndims(space) == dims.Length);
+        hsize_t[] tdims = new hsize_t[dims.Length];
+        Assert.True(
+                      H5S.get_simple_extent_dims(space, tdims, null) == dims.Length);
+
+        for (int i = 0; i < dims.Length; ++i)
         {
-            hsize_t[] dims = { 1, 2, 3 };
-            hid_t space =  H5S.create_simple(dims.Length, dims, dims);
-            Assert.IsTrue(space > 0);
-
-            size_t nalloc = new IntPtr();
-            Assert.IsTrue(H5S.encode(space, null, ref nalloc) >= 0);
-
-            byte[] buf = new byte [nalloc.ToInt32()];
-            Assert.IsTrue(H5S.encode(space, buf, ref nalloc) >= 0);
-
-            Assert.IsTrue(H5S.close(space) >= 0);
-
-            space = H5S.decode(buf);
-            Assert.IsTrue(space >= 0);
-
-            Assert.IsTrue(H5S.get_simple_extent_ndims(space) == dims.Length);
-            hsize_t[] tdims = new hsize_t[dims.Length];
-            Assert.IsTrue(
-                H5S.get_simple_extent_dims(space, tdims, null) == dims.Length);
-
-            for (int i = 0; i < dims.Length; ++i)
-            {
-                Assert.IsTrue(tdims[i] == dims[i]);
-            }
-            
-            Assert.IsTrue(H5S.close(space) >= 0);
+            Assert.True(tdims[i] == dims[i]);
         }
 
-        [TestMethod]
-        public void H5SdecodeTest2()
-        {
-            Assert.IsFalse(H5S.decode(null) >= 0);
-        }
+        Assert.True(H5S.close(space) >= 0);
+    }
+
+    [Fact]
+    public void H5SdecodeTest2()
+    {
+        Assert.False(H5S.decode(null) >= 0);
     }
 }

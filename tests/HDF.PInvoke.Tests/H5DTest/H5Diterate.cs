@@ -13,55 +13,44 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Collections;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
+namespace HDF.PInvoke.Tests;
+
 using hsize_t = System.UInt64;
-
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+using System.Runtime.InteropServices;
+
+public partial class H5DTest
 {
-    public partial class H5DTest
+    [Fact]
+    public void H5DiterateTest1()
     {
-        [TestMethod]
-        public void H5DiterateTest1()
-        {
-            int[] buf = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+        int[] buf = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            IntPtr count_ptr = Marshal.AllocHGlobal(sizeof(int));
-            Marshal.WriteInt32(count_ptr, 0);
-            
-            hsize_t[] dims = { 10 };
-            hid_t space = H5S.create_simple(1, dims, null);
-            Assert.IsTrue(space >= 0);
-            Assert.IsTrue(H5S.select_all(space) >= 0);
+        IntPtr count_ptr = Marshal.AllocHGlobal(sizeof(int));
+        Marshal.WriteInt32(count_ptr, 0);
 
-            GCHandle buf_hnd = GCHandle.Alloc(buf, GCHandleType.Pinned);
-            
-            H5D.operator_t cb = DelegateMethod;
-            Assert.IsTrue(
-                H5D.iterate(buf_hnd.AddrOfPinnedObject(), H5T.NATIVE_INT,
-                space, cb, count_ptr) >= 0);
+        hsize_t[] dims = { 10 };
+        hid_t space = H5S.create_simple(1, dims, null);
+        Assert.True(space >= 0);
+        Assert.True(H5S.select_all(space) >= 0);
 
-            buf_hnd.Free();
+        GCHandle buf_hnd = GCHandle.Alloc(buf, GCHandleType.Pinned);
 
-            int count = Marshal.ReadInt32(count_ptr);
-            // expect the sum of the buffer elements
-            Assert.IsTrue(count == 45);
+        H5D.operator_t cb = H5DFixture.DelegateMethod;
+        Assert.True(H5D.iterate(buf_hnd.AddrOfPinnedObject(), H5T.NATIVE_INT, space, cb, count_ptr) >= 0);
 
-            Assert.IsTrue(H5S.close(space) >= 0);
-            Marshal.FreeHGlobal(count_ptr);
-        }
+        buf_hnd.Free();
+
+        int count = Marshal.ReadInt32(count_ptr);
+        // expect the sum of the buffer elements
+        Assert.True(count == 45);
+
+        Assert.True(H5S.close(space) >= 0);
+        Marshal.FreeHGlobal(count_ptr);
     }
 }

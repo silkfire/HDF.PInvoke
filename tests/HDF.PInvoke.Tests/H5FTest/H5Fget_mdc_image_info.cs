@@ -13,32 +13,25 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using haddr_t = System.UInt64;
+namespace HDF.PInvoke.Tests;
+
 using hsize_t = System.UInt64;
+using haddr_t = System.UInt64;
 
-#if HDF5_VER1_10
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5FTest
 {
-    public partial class H5FTest
+    [Fact]
+    public void H5Fget_mdc_image_infoTest1()
     {
-        [TestMethod]
-        public void H5Fget_mdc_image_infoTest1()
-        {
-            haddr_t image_addr = 111;
-            hsize_t image_size = 222;
+        haddr_t image_addr = 111;
+        hsize_t image_size = 222;
 
-            Assert.IsTrue(H5F.get_mdc_image_info(m_v2_class_file,
-                ref image_addr,
-                ref image_size) >= 0);
-            Assert.IsTrue(image_addr == H5.HADDR_UNDEF);
-            Assert.IsTrue(image_size == 0);
-        }
+        Assert.True(H5F.get_mdc_image_info(H5FFixture.m_v2_class_file, ref image_addr, ref image_size) >= 0);
+        Assert.True(image_addr == H5.HADDR_UNDEF);
+        Assert.True(image_size == 0);
     }
 }
-
-#endif

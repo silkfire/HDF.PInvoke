@@ -13,40 +13,31 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using hsize_t = System.UInt64;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
 
-namespace UnitTests
-{
-    public partial class H5PTest
-    {
-        [TestMethod]
-        public void H5Pset_evict_on_closeTest1()
-        {
-            hid_t fapl = H5P.create(H5P.FILE_ACCESS);
-            Assert.IsTrue(fapl >= 0);
-            Assert.IsTrue(H5P.set_evict_on_close(fapl, 1) >= 0);
-            Assert.IsTrue(H5P.close(fapl) >= 0);
-        }
+using HDF5;
+using Xunit;
 
-        [TestMethod]
-        public void H5Pset_evict_on_closeTest2()
-        {
-            hid_t fcpl = H5P.create(H5P.FILE_CREATE);
-            Assert.IsTrue(fcpl >= 0);
-            Assert.IsFalse(H5P.set_evict_on_close(fcpl, 1) >= 0);
-            Assert.IsTrue(H5P.close(fcpl) >= 0);
-        }
+public partial class H5PTest
+{
+    [Fact]
+    public void H5Pset_evict_on_closeTest1()
+    {
+        hid_t fapl = H5P.create(H5P.FILE_ACCESS);
+        Assert.True(fapl >= 0);
+        Assert.True(H5P.set_evict_on_close(fapl, 1) >= 0);
+        Assert.True(H5P.close(fapl) >= 0);
+    }
+
+    [Fact]
+    public void H5Pset_evict_on_closeTest2()
+    {
+        hid_t fcpl = H5P.create(H5P.FILE_CREATE);
+        Assert.True(fcpl >= 0);
+        Assert.False(H5P.set_evict_on_close(fcpl, 1) >= 0);
+        Assert.True(H5P.close(fcpl) >= 0);
     }
 }
-
-#else
-using hid_t = System.Int32;
-#endif

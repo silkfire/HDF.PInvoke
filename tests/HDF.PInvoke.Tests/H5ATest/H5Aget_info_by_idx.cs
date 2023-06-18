@@ -13,61 +13,41 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
 using hid_t = System.Int64;
-#else
-using hid_t = System.Int32;
-#endif
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+
+public partial class H5ATest
 {
-    public partial class H5ATest
+    [Fact]
+    public void H5Aget_info_by_idxTest1()
     {
-        [TestMethod]
-        public void H5Aget_info_by_idxTest1()
-        {
-            H5A.info_t info = new H5A.info_t();
-            hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-            att = H5A.create(m_v2_test_file, "B", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
+        H5A.info_t info = new H5A.info_t();
+        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
+        att = H5A.create(m_v2_test_file, "B", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
 
-            Assert.IsTrue(H5A.get_info_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 0,
-                ref info) >= 0);
-            Assert.IsTrue(H5A.get_info_by_idx(m_v2_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1,
-                ref info) >= 0);
-            
-            att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE,
-                m_space_scalar);
-            Assert.IsTrue(att >= 0);
-            Assert.IsTrue(H5A.close(att) >= 0);
-            Assert.IsTrue(H5A.get_info_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 0,
-                ref info) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
 
-            Assert.IsFalse(H5A.get_info_by_idx(m_v0_test_file, ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1,
-                ref info) >= 0);
-        }
+        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
 
-        [TestMethod]
-        public void H5Aget_info_by_idxTest2()
-        {
-            H5A.info_t info = new H5A.info_t();
-            Assert.IsFalse(
-                H5A.get_info_by_idx(Utilities.RandomInvalidHandle(), ".",
-                H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024,
-                ref info) >= 0);
-        }
+        Assert.False(H5A.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+    }
+
+    [Fact]
+    public void H5Aget_info_by_idxTest2()
+    {
+        H5A.info_t info = new H5A.info_t();
+        Assert.False(H5A.get_info_by_idx(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024, ref info) >= 0);
     }
 }

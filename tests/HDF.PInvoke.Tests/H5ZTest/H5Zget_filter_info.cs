@@ -13,24 +13,19 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
+namespace HDF.PInvoke.Tests;
 
-using herr_t = System.Int32;
+using HDF5;
+using Xunit;
 
-namespace UnitTests
+public partial class H5ZTest
 {
-    public partial class H5ZTest
+    [Fact]
+    public void H5Zget_filter_infoTest1()
     {
-        [TestMethod]
-        public void H5Zget_filter_infoTest1()
-        {
-            uint filter_config = 0;
-            Assert.IsTrue(H5Z.get_filter_info(H5Z.filter_t.DEFLATE,
-                ref filter_config) >= 0);
-            Assert.IsTrue((filter_config & H5Z.CONFIG_ENCODE_ENABLED) == 1);
-            Assert.IsTrue((filter_config & H5Z.CONFIG_DECODE_ENABLED) == 2);
-        }
+        uint filter_config = 0;
+        Assert.True(H5Z.get_filter_info(H5Z.filter_t.DEFLATE, ref filter_config) >= 0);
+        Assert.True((filter_config & H5Z.CONFIG_ENCODE_ENABLED) == 1);
+        Assert.True((filter_config & H5Z.CONFIG_DECODE_ENABLED) == 2);
     }
 }

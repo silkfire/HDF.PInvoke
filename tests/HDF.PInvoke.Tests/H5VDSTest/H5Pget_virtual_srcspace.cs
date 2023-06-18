@@ -13,51 +13,43 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using HDF.PInvoke;
 
-using herr_t = System.Int32;
-using size_t = System.IntPtr;
+namespace HDF.PInvoke.Tests;
 
-#if HDF5_VER1_10
-
+using size_t = nint;
 using hid_t = System.Int64;
 
-namespace UnitTests
+using HDF5;
+using Xunit;
+using System;
+
+public partial class H5VDSTest
 {
-    public partial class H5VDSTest
+    [Fact]
+    public void H5Pget_virtual_srcspaceTestVDS1()
     {
-        [TestMethod]
-        public void H5Pget_virtual_srcspaceTestVDS1()
+        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, "VDS");
+        Assert.True(vds >= 0);
+
+        hid_t dcpl = H5D.get_create_plist(vds);
+        Assert.True(dcpl >= 0);
+
+        IntPtr count = IntPtr.Zero;
+        Assert.True(H5P.get_virtual_count(dcpl, ref count) >= 0);
+        Assert.True(3 == count.ToInt32());
+
+        for (int i = 0; i < count.ToInt32(); ++i)
         {
-            hid_t vds = H5D.open(m_vds_class_file, "VDS");
-            Assert.IsTrue(vds >= 0);
+            size_t index = new size_t(i);
+            hid_t srcspace = H5P.get_virtual_srcspace(dcpl, index);
+            Assert.True(srcspace >= 0);
 
-            hid_t dcpl = H5D.get_create_plist(vds);
-            Assert.IsTrue(dcpl >= 0);
+            Assert.True(H5S.get_select_type(srcspace) == H5S.sel_type.ALL);
 
-            IntPtr count = IntPtr.Zero;
-            Assert.IsTrue(H5P.get_virtual_count(dcpl, ref count) >= 0);
-            Assert.IsTrue(3 == count.ToInt32());
-
-            for (int i = 0; i < count.ToInt32(); ++i)
-            {
-                size_t index = new size_t(i);
-                hid_t srcspace = H5P.get_virtual_srcspace(dcpl, index);
-                Assert.IsTrue(srcspace >= 0);
-
-                Assert.IsTrue(H5S.get_select_type(srcspace) ==
-                    H5S.sel_type.ALL);
-
-                Assert.IsTrue(H5S.close(srcspace) >= 0);
-            }
-
-            Assert.IsTrue(H5P.close(dcpl) >= 0);
-            Assert.IsTrue(H5D.close(vds) >= 0);
+            Assert.True(H5S.close(srcspace) >= 0);
         }
+
+        Assert.True(H5P.close(dcpl) >= 0);
+        Assert.True(H5D.close(vds) >= 0);
     }
 }
-
-#endif

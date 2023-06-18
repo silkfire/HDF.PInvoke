@@ -13,33 +13,16 @@
  * access to either file, you may request a copy from help@hdfgroup.org.     *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTests
+namespace HDF.PInvoke.Tests;
+
+using Xunit;
+
+[Collection("Global collection")]
+public sealed partial class H5ZTest : IClassFixture<H5AFixture>
 {
-    [TestClass]
-    public partial class H5ZTest
+    public H5ZTest()
     {
-        [ClassInitialize()]
-        public static void ClassInit(TestContext testContext)
-        {
-        }
-
-        [TestInitialize()]
-        public void Init()
-        {
-            Utilities.DisableErrorPrinting();
-        }
-
-        [TestCleanup()]
-        public void Cleanup()
-        {
-        }
-
-        [ClassCleanup()]
-        public static void ClassCleanup()
-        {
-        }
+        Utilities.DisableErrorPrinting();
     }
 }
