@@ -31,8 +31,9 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
+using static System.Net.WebRequestMethods;
 
-public sealed class H5O
+public sealed partial class H5O
 {
     static H5O()
     {
@@ -67,7 +68,7 @@ public sealed class H5O
     public const uint COPY_WITHOUT_ATTR_FLAG = 0x0010u;
 
     /// <summary>
-    /// Copy <code>NULL</code> messages (empty space)
+    /// Copy <c>NULL</c> messages (empty space)
     /// </summary>
     public const uint COPY_PRESERVE_NULL_FLAG = 0x0020u;
 
@@ -350,10 +351,8 @@ public sealed class H5O
     /// <param name="name"></param>
     /// <param name="info"></param>
     /// <param name="op_data"></param>
-    /// <returns></returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate herr_t iterate_t
-        (hid_t obj, ssize_t name, ref info_t info, ssize_t op_data);
+    public delegate herr_t iterate_t(hid_t obj, ssize_t name, ref info_t info, ssize_t op_data);
 
     public enum mcdt_search_ret_t
     {
@@ -380,43 +379,42 @@ public sealed class H5O
     /// committed datatype from the committed dtype list
     /// </summary>
     /// <param name="op_data">Pointer to user-defined input data.</param>
-    /// <returns>Returns one of the <code>MCDT_SEARCH_*</code> values.</returns>
+    /// <returns>Returns one of the <c>MCDT_SEARCH_*</c> values.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate mcdt_search_ret_t mcdt_search_cb_t(ssize_t op_data);
 
     /// <summary>
     /// Determines if an HDF5 object (dataset, group, committed datatype)
     /// has had flushes of metadata entries disabled.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Oare_mdc_flushes_disabled.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-AreMdcFlushesDisabled" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Identifier of an object in the cache.</param>
     /// <param name="are_disabled">Flushes enabled/disabled.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Oare_mdc_flushes_disabled",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oare_mdc_flushes_disabled"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t are_mdc_flushes_disabled
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t are_mdc_flushes_disabled
         (hid_t object_id, ref hbool_t are_disabled);
 
     /// <summary>
     /// Closes an object in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Close
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Close" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Object identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oclose",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oclose"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t
         close
         (hid_t object_id);
 
     /// <summary>
     /// Copies an object in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Copy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Copy" /> for further reference.</para>
     /// </summary>
     /// <param name="src_loc_id">Object identifier indicating the location
     /// of the source object to be copied</param>
@@ -429,17 +427,17 @@ public sealed class H5O
     /// link</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ocopy",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ocopy"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t copy
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t copy
     (hid_t src_loc_id, byte[] src_name, hid_t dst_loc_id,
      byte[] dst_name, hid_t ocpypl_id = H5P.DEFAULT,
      hid_t lcpl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Copies an object in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Copy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Copy" /> for further reference.</para>
     /// </summary>
     /// <param name="src_loc_id">Object identifier indicating the location
     /// of the source object to be copied</param>
@@ -453,18 +451,17 @@ public sealed class H5O
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ocopy",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ocopy", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t copy
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t copy
     (hid_t src_loc_id, string src_name, hid_t dst_loc_id,
      string dst_name, hid_t ocpypl_id = H5P.DEFAULT,
      hid_t lcpl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Decrements an object's reference count.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-DecrRefCount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-DecrRefCount" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Object identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -473,70 +470,70 @@ public sealed class H5O
     /// This function must be used with care! Improper use can lead to
     /// inaccessible data, wasted space in the file, or file corruption.
     /// </remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Odecr_refcount",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Odecr_refcount"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t decr_refcount(hid_t object_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t decr_refcount(hid_t object_id);
 
     /// <summary>
     /// Prevents metadata entries for an HDF5 object from being flushed
     /// from the metadata cache to storage.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Odisable_mdc_flushes.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-DisableMdcFlushes" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Identifier of the object that will have
     /// flushes disabled.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Odisable_mdc_flushes",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Odisable_mdc_flushes"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t disable_mdc_flushes(hid_t object_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t disable_mdc_flushes(hid_t object_id);
 
     /// <summary>
     /// Allow metadata entries for an HDF5 object to be flushed
     /// from the metadata cache to storage.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Oenable_mdc_flushes.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-EnableMdcFlushes" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Identifier of the object that will have
     /// flushes (re-)enabled.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oenable_mdc_flushes",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oenable_mdc_flushes"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t enable_mdc_flushes(hid_t object_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t enable_mdc_flushes(hid_t object_id);
 
 
     /// <summary>
     /// Determines whether a link resolves to an actual object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-ExistsByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-ExistsByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of the file or group to query.</param>
     /// <param name="name">The name of the link to check.</param>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <returns>Returns 1 or 0 if successful; otherwise returns a negative
     /// value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oexists_by_name",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oexists_by_name"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern htri_t exists_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial htri_t exists_by_name
         (hid_t loc_id, byte[] name, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Flushes all buffers associated with an HDF5 object to disk.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Oflush.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Flush" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Identifier of the object to be flushed.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oflush",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oflush"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t flush(hid_t obj_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t flush(hid_t obj_id);
 
     /// <summary>
     /// Determines whether a link resolves to an actual object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-ExistsByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-ExistsByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of the file or group to query.</param>
     /// <param name="name">The name of the link to check.</param>
@@ -544,24 +541,23 @@ public sealed class H5O
     /// <returns>Returns 1 or 0 if successful; otherwise returns a negative
     /// value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oexists_by_name",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oexists_by_name", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern htri_t exists_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial htri_t exists_by_name
         (hid_t loc_id, string name, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Retrieves comment for specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetComment
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetComment" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Identifier for the target object.</param>
     /// <param name="comment">The comment.</param>
     /// <param name="size">Size of the <paramref name="comment"/> buffer.</param>
     /// <returns>Upon success, returns the number of characters in the
-    /// comment, not including the <code>NULL</code> terminator, or zero
+    /// comment, not including the <c>NULL</c> terminator, or zero
     /// (0) if the object has no comment. The value returned may be larger
-    /// than <code>size</code>. Otherwise returns a negative value.</returns>
+    /// than <c>size</c>. Otherwise returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_comment",
                CallingConvention = CallingConvention.Cdecl,
                CharSet = CharSet.Ansi),
@@ -571,7 +567,7 @@ public sealed class H5O
 
     /// <summary>
     /// Retrieves comment for specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetCommentByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetCommentByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of a file, group, dataset, or named
     /// datatype.</param>
@@ -582,7 +578,7 @@ public sealed class H5O
     /// <param name="size">Size of the <paramref name="comment"/> buffer.</param>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <returns>Upon success, returns the number of characters in the
-    /// comment, not including the <code>NULL</code> terminator, or zero
+    /// comment, not including the <c>NULL</c> terminator, or zero
     /// (0) if the object has no comment. The value returned may be larger
     /// than <paramref name="size"/>. Otherwise returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_comment_by_name",
@@ -595,7 +591,7 @@ public sealed class H5O
 
     /// <summary>
     /// Retrieves comment for specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetCommentByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetCommentByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of a file, group, dataset, or named
     /// datatype.</param>
@@ -606,7 +602,7 @@ public sealed class H5O
     /// <param name="size">Size of the <paramref name="comment"/> buffer.</param>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <returns>Upon success, returns the number of characters in the
-    /// comment, not including the <code>NULL</code> terminator, or zero
+    /// comment, not including the <c>NULL</c> terminator, or zero
     /// (0) if the object has no comment. The value returned may be larger
     /// than <paramref name="size"/>. Otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
@@ -620,22 +616,22 @@ public sealed class H5O
 
     /// <summary>
     /// Retrieves the metadata for an object specified by an identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier for object of type specified by
-    /// <code>H5O.type_t</code></param>
+    /// <c>H5O.type_t</c></param>
     /// <param name="oinfo">Buffer in which to return object information</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info1",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info1"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info(hid_t loc_id, ref info_t oinfo);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info(hid_t loc_id, ref info_t oinfo);
 
     /// <summary>
     /// Retrieves the metadata for an object, identifying the object by an
     /// index position.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByIdx
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByIdx" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier specifying location
     /// of group in which object is located</param>
@@ -647,10 +643,10 @@ public sealed class H5O
     /// <param name="lapl_id">Link access property list</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_idx1",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_idx1"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info_by_idx
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info_by_idx
     (hid_t loc_id, byte[] group_name, H5.index_t idx_type,
      H5.iter_order_t order, hsize_t n, ref info_t oinfo,
      hid_t lapl_id = H5P.DEFAULT);
@@ -658,7 +654,7 @@ public sealed class H5O
     /// <summary>
     /// Retrieves the metadata for an object, identifying the object by an
     /// index position.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByIdx
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByIdx" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier specifying location
     /// of group in which object is located</param>
@@ -671,11 +667,10 @@ public sealed class H5O
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_idx1",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_idx1", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info_by_idx
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info_by_idx
     (hid_t loc_id, string group_name, H5.index_t idx_type,
      H5.iter_order_t order, hsize_t n, ref info_t oinfo,
      hid_t lapl_id = H5P.DEFAULT);
@@ -683,7 +678,7 @@ public sealed class H5O
     /// <summary>
     /// Retrieves the metadata for an object, identifying the object by
     /// location and relative name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier specifying location
     /// of group in which object is located</param>
@@ -693,17 +688,17 @@ public sealed class H5O
     /// <param name="lapl_id">Link access property list</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_name1",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_name1"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info_by_name
     (hid_t loc_id, byte[] name, ref info_t oinfo,
      hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Retrieves the metadata for an object, identifying the object by
     /// location and relative name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-GetInfoByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier specifying location
     /// of group in which object is located</param>
@@ -714,17 +709,16 @@ public sealed class H5O
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_name1",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oget_info_by_name1", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info_by_name
     (hid_t loc_id, string name, ref info_t oinfo,
      hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Increments an object's reference count.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-IncrRefCount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-IncrRefCount" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Object identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -732,14 +726,14 @@ public sealed class H5O
     /// <remarks>This function must be used with care! Improper use can
     /// lead to inaccessible data, wasted space in the file, or file
     /// corruption.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oincr_refcount",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oincr_refcount"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t incr_refcount(hid_t object_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t incr_refcount(hid_t object_id);
 
     /// <summary>
     /// Creates a hard link to an object in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Link
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Link" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Object to be linked.</param>
     /// <param name="new_loc_id">File or group identifier specifying
@@ -750,16 +744,16 @@ public sealed class H5O
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Olink",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Olink"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t link
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t link
     (hid_t obj_id, hid_t new_loc_id, byte[] new_name,
      hid_t lcpl_id = H5P.DEFAULT, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Creates a hard link to an object in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Link
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Link" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Object to be linked.</param>
     /// <param name="new_loc_id">File or group identifier specifying
@@ -771,17 +765,16 @@ public sealed class H5O
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Olink",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Olink", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t link
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t link
     (hid_t obj_id, hid_t new_loc_id, string new_name,
      hid_t lcpl_id = H5P.DEFAULT, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Opens an object in an HDF5 file by location identifier and path name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Open
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Open" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier</param>
     /// <param name="name">Path to the object, relative to
@@ -790,15 +783,15 @@ public sealed class H5O
     /// pointing to the object</param>
     /// <returns>Returns an object identifier for the opened object if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open
         (hid_t loc_id, byte[] name, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Opens an object in an HDF5 file by location identifier and path name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Open
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Open" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier</param>
     /// <param name="name">Path to the object, relative to
@@ -808,32 +801,31 @@ public sealed class H5O
     /// <returns>Returns an object identifier for the opened object if
     /// successful; otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open
         (hid_t loc_id, string name, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Opens an object using its address within an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-OpenByAddr
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-OpenByAddr" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">File or group identifier</param>
-    /// <param name="addr">Object’s address in the file</param>
+    /// <param name="addr">Object's address in the file</param>
     /// <returns>Returns an object identifier for the opened object if
     /// successful; otherwise returns a negative value.</returns>
     /// <remarks>This function must be used with care! Improper use can
     /// lead to inaccessible data, wasted space in the file, or file
     /// corruption.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_addr",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_addr"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open_by_addr(hid_t loc_id, haddr_t addr);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open_by_addr(hid_t loc_id, haddr_t addr);
 
     /// <summary>
     /// Open the n-th object in a group.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-OpenByIdx
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-OpenByIdx" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">A file or group identifier.</param>
     /// <param name="group_name">Name of group, relative to
@@ -844,28 +836,28 @@ public sealed class H5O
     /// <param name="lapl_id">Link access property list</param>
     /// <returns>Returns an object identifier for the opened object if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_idx",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_idx"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open_by_idx
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open_by_idx
     (hid_t loc_id, byte[] group_name, H5.index_t idx_type,
      H5.iter_order_t order, hsize_t n, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Refreshes all buffers associated with an HDF5 object.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Orefresh.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Refresh" /> for further reference.</para>
     /// </summary>
     /// <param name="oid">Identifier of the object to be refreshed.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Orefresh",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Orefresh"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t refresh(hid_t oid);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t refresh(hid_t oid);
 
     /// <summary>
     /// Open the n-th object in a group.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-OpenByIdx
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-OpenByIdx" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">A file or group identifier.</param>
     /// <param name="group_name">Name of group, relative to
@@ -877,17 +869,16 @@ public sealed class H5O
     /// <returns>Returns an object identifier for the opened object if
     /// successful; otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_idx",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Oopen_by_idx", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open_by_idx
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open_by_idx
     (hid_t loc_id, string group_name, H5.index_t idx_type,
      H5.iter_order_t order, hsize_t n, hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Recursively visits all objects accessible from a specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-Visit
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-Visit" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Identifier of the object at which the
     /// recursive iteration begins.</param>
@@ -902,16 +893,16 @@ public sealed class H5O
     /// processed with no operator returning non-zero. On failure, returns
     /// a negative value if something goes wrong within the library, or the
     /// first negative value returned by an operator.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit1",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit1"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t visit
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t visit
     (hid_t obj_id, H5.index_t idx_type, H5.iter_order_t order,
      iterate_t op, size_t op_data);
 
     /// <summary>
     /// Recursively visits all objects starting from a specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-VisitByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-VisitByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of a file or group</param>
     /// <param name="obj_name">Name of the object, generally relative to
@@ -928,17 +919,17 @@ public sealed class H5O
     /// processed with no operator returning non-zero. On failure, returns
     /// a negative value if something goes wrong within the library, or the
     /// first negative value returned by an operator.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit_by_name1",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit_by_name1"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t visit_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t visit_by_name
     (hid_t loc_id, byte[] obj_name, H5.index_t idx_type,
      H5.iter_order_t order, iterate_t op, IntPtr op_data,
      hid_t lapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Recursively visits all objects starting from a specified object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5O.html#Object-VisitByName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5O.html#Object-VisitByName" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Identifier of a file or group</param>
     /// <param name="obj_name">Name of the object, generally relative to
@@ -955,11 +946,10 @@ public sealed class H5O
     /// processed with no operator returning non-zero. On failure, returns
     /// a negative value if something goes wrong within the library, or the
     /// first negative value returned by an operator.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit_by_name1",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ovisit_by_name1", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t visit_by_name
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t visit_by_name
     (hid_t loc_id, string obj_name, H5.index_t idx_type,
      H5.iter_order_t order, iterate_t op, IntPtr op_data,
      hid_t lapl_id = H5P.DEFAULT);

@@ -4,6 +4,8 @@ This is an unofficial port of [HDF.PInvoke](https://github.com/HDFGroup/HDF.PInv
 
 This library **only** works with 64-bit Windows.
 
+Currently embedded HD5 version: **1.10.10** <font size="2">(April 7, 2023)</font>.
+
 ## License
 
 HDF.PInvoke is part of [HDF5](https://www.hdfgroup.org/HDF5/).

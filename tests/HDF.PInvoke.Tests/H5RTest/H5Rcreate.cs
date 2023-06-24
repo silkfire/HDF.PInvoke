@@ -30,12 +30,9 @@ public partial class H5RTest
     [Fact]
     public void H5RcreateTest1()
     {
-        byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
-        byte[] name = new byte[path.Length + 1];
-        Array.Copy(path, name, path.Length);
+        var path = string.Join("/", H5RFixture.m_utf8strings);
 
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, path, H5RFixture.m_lcpl_utf8)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, path, H5.Encoding.Utf8, H5RFixture.m_lcpl_utf8)) >= 0);
 
         byte[] refer = new byte[H5R.OBJ_REF_BUF_SIZE];
         GCHandle hnd = GCHandle.Alloc(refer, GCHandleType.Pinned);
@@ -63,7 +60,7 @@ public partial class H5RTest
     public void H5RcreateTest2()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -95,7 +92,7 @@ public partial class H5RTest
     public void H5RcreateTest3()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -145,7 +142,7 @@ public partial class H5RTest
     public void H5RcreateTest4()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 

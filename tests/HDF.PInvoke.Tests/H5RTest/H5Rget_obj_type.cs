@@ -31,7 +31,7 @@ public partial class H5RTest
     {
         byte[] path =
             Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -54,7 +54,7 @@ public partial class H5RTest
     public void H5Rget_obj_typeTest2()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -77,7 +77,7 @@ public partial class H5RTest
     public void H5Rget_obj_typeTest3()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -111,7 +111,7 @@ public partial class H5RTest
     public void H5Rget_obj_typeTest4()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 

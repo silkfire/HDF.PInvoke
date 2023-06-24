@@ -21,20 +21,25 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5Aget_storage_sizeTest1()
     {
-        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+
+        hid_t att = H5A.create(m_v2_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         hsize_t size = H5A.get_storage_size(att);
         Assert.Equal(8UL, size);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
+        Marshal.FreeHGlobal(aNamePtr);
+
         size = H5A.get_storage_size(att);
         Assert.Equal(8UL, size);
         Assert.True(H5A.close(att) >= 0);

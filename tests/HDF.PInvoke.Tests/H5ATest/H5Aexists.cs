@@ -20,30 +20,45 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5AexistsTest1()
     {
-        htri_t check = H5A.exists(H5AFixture.m_v0_class_file, ".");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+        var nacNamePtr = Marshal.StringToHGlobalAnsi("NAC");
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+
+        htri_t check = H5A.exists(H5AFixture.m_v0_class_file, dotNamePtr);
         Assert.True(check >= 0);
-        check = H5A.exists(H5AFixture.m_v0_class_file, "NAC");
+        check = H5A.exists(H5AFixture.m_v0_class_file, nacNamePtr);
         Assert.True(check >= 0);
-        check = H5A.exists(H5AFixture.m_v2_class_file, "A");
+        check = H5A.exists(H5AFixture.m_v2_class_file, aNamePtr);
         Assert.True(check >= 0);
 
-        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        hid_t att = H5A.create(m_v2_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
-        check = H5A.exists(m_v2_test_file, "A");
+        check = H5A.exists(m_v2_test_file, aNamePtr);
         Assert.True(check > 0);
         Assert.True(H5A.close(att) >= 0);
+
+        Marshal.FreeHGlobal(dotNamePtr);
+        Marshal.FreeHGlobal(nacNamePtr);
+        Marshal.FreeHGlobal(aNamePtr);
     }
 
     [Fact]
     public void H5AexistsTest2()
     {
-        Assert.False(H5A.exists(Utilities.RandomInvalidHandle(), ".") >= 0);
-        Assert.False(H5A.exists(H5AFixture.m_v2_class_file, "") >= 0);
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+        var emptyNamePtr = Marshal.StringToHGlobalAnsi("");
+
+        Assert.False(H5A.exists(Utilities.RandomInvalidHandle(), dotNamePtr) >= 0);
+        Assert.False(H5A.exists(H5AFixture.m_v2_class_file, emptyNamePtr) >= 0);
+
+        Marshal.FreeHGlobal(dotNamePtr);
+        Marshal.FreeHGlobal(emptyNamePtr);
     }
 }

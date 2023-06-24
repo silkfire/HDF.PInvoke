@@ -21,16 +21,19 @@ using hid_t = System.Int64;
 using HDF5;
 using Xunit;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 public partial class H5TSTest
 {
     private void AttributeCreateProcedure()
     {
-        string name = Thread.CurrentThread.Name;
+        var threadNamePtr = Marshal.StringToHGlobalAnsi(Thread.CurrentThread.Name);
+
         hid_t space = H5S.create(H5S.class_t.NULL);
         Assert.True(space >= 0);
 
-        Assert.True(H5A.close(H5A.create(H5TSFixture.m_shared_file_id, name, H5T.STD_I32BE, space)) >= 0);
+        Assert.True(H5A.close(H5A.create(H5TSFixture.m_shared_file_id, threadNamePtr, H5T.STD_I32BE, space)) >= 0);
+        Marshal.FreeHGlobal(threadNamePtr);
 
         Assert.True(H5S.close(space) >= 0);
     }

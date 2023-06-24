@@ -149,8 +149,7 @@ public sealed partial class H5T
         UTF8 = 1,
         // reserved for later use [values = 2-15]
         [System.ComponentModel.Browsable(false)]
-        [System.ComponentModel.EditorBrowsable(
-                                                  System.ComponentModel.EditorBrowsableState.Never)]
+        [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
         RESERVED_2 = 2,
         RESERVED_3 = 3,
         RESERVED_4 = 4,
@@ -411,8 +410,7 @@ public sealed partial class H5T
 
 
     /// <summary>
-    /// The return value from conversion callback function
-    /// conv_except_func_t
+    /// The return value from conversion callback function <see cref="conv_except_func_t"/>.
     /// </summary>
     public enum conv_ret_t
     {
@@ -432,8 +430,7 @@ public sealed partial class H5T
 
     /// <summary>
     /// Variable Length Datatype struct in memory
-    /// (This is only used for VL sequences, not VL strings, which are
-    /// stored in byte[]'s)
+    /// (This is only used for VL sequences, not VL strings, which are stored in byte[]'s)
     /// </summary>
     public struct hvl_t
     {
@@ -448,8 +445,7 @@ public sealed partial class H5T
     }
 
     /// <summary>
-    /// Indicate that a string is variable length (null-terminated in C,
-    /// instead of fixed length)
+    /// Indicate that a string is variable length (null-terminated in C, instead of fixed length)
     /// </summary>
     public static readonly size_t VARIABLE = new size_t(-1);
 
@@ -459,9 +455,7 @@ public sealed partial class H5T
     public const int OPAQUE_TAG_MAX = 256;
 
     /// <summary>
-    /// Exception handler.  If an exception like overflow happenes during
-    /// conversion, this function is called if it's registered through
-    /// H5P.set_type_conv_cb.
+    /// Exception handler. If an exception like overflow happenes during conversion, this function is called if it's registered through <see cref="H5P.set_type_conv_cb"/>.
     /// </summary>
     /// <param name="except_type"></param>
     /// <param name="src_id"></param>
@@ -469,143 +463,96 @@ public sealed partial class H5T
     /// <param name="src_buf"></param>
     /// <param name="dst_buf"></param>
     /// <param name="user_data"></param>
-    /// <returns></returns>
+    /// <returns>Valid callback function return values are <see cref="conv_ret_t.ABORT"/>, <see cref="conv_ret_t.UNHANDLED"/> and <see cref="conv_ret_t.HANDLED"/>.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate conv_ret_t conv_except_func_t
-    (conv_except_t except_type, hid_t src_id, hid_t dst_id,
-     size_t src_buf, size_t dst_buf, size_t user_data);
+    public delegate conv_ret_t conv_except_func_t(conv_except_t except_type, hid_t src_id, hid_t dst_id, size_t src_buf, size_t dst_buf, size_t user_data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate herr_t conv_t
-    (hid_t src_id, hid_t dst_id, ref cdata_t cdata,
-     size_t nelmts, size_t buf_stride, size_t bkg_stride, size_t buf,
-     size_t bkg, hid_t dset_xfer_plist = H5P.DEFAULT);
+    public delegate herr_t conv_t(hid_t src_id, hid_t dst_id, ref cdata_t cdata, size_t nelmts, size_t buf_stride, size_t bkg_stride, size_t buf, size_t bkg, hid_t dset_xfer_plist = H5P.DEFAULT);
 
     /// <summary>
     /// Creates an array datatype object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-ArrayCreate2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-ArrayCreate2" /> for further reference.</para>
     /// </summary>
-    /// <param name="base_type_id">Datatype identifier for the array base
-    /// datatype.</param>
+    /// <param name="base_type_id">Datatype identifier for the array base datatype.</param>
     /// <param name="rank">Rank of the array.</param>
     /// <param name="dims">Size of each array dimension.</param>
-    /// <returns>Returns a valid datatype identifier if successful;
-    /// otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tarray_create2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t array_create
-    (hid_t base_type_id, uint rank,
-     [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] hsize_t[] dims);
+    /// <returns>Returns a valid datatype identifier if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tarray_create2", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern hid_t array_create(hid_t base_type_id, uint rank, [MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 1)] hsize_t[] dims);
 
     /// <summary>
     /// Releases a datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Close
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Close" /> for further reference.</para>
     /// </summary>
     /// <param name="type_id">Identifier of datatype to release.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tclose",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tclose", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t close(hid_t type_id);
 
     /// <summary>
-    /// Commits a transient datatype, linking it into the file and creating
-    /// a new named datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Commit2
+    /// Commits a transient datatype, linking it into the file and creating a new named datatype.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Commit2" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Location identifier</param>
     /// <param name="name">Name given to committed datatype</param>
-    /// <param name="dtype_id">Identifier of datatype to be committed and,
-    /// upon function’s return, identifier for the committed datatype</param>
+    /// <param name="dtype_id">Identifier of datatype to be committed and, upon function's return, identifier for the committed datatype</param>
     /// <param name="lcpl_id">Link creation property list</param>
     /// <param name="tcpl_id">Datatype creation property list</param>
     /// <param name="tapl_id">Datatype access property list</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t commit
-    (hid_t loc_id, byte[] name, hid_t dtype_id,
-     hid_t lcpl_id = H5P.DEFAULT, hid_t tcpl_id = H5P.DEFAULT,
-     hid_t tapl_id = H5P.DEFAULT);
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit2", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t commit(hid_t loc_id, byte[] name, hid_t dtype_id, hid_t lcpl_id = H5P.DEFAULT, hid_t tcpl_id = H5P.DEFAULT, hid_t tapl_id = H5P.DEFAULT);
 
     /// <summary>
-    /// Commits a transient datatype, linking it into the file and creating
-    /// a new named datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Commit2
+    /// Commits a transient datatype, linking it into the file and creating a new named datatype.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Commit2" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">Location identifier</param>
     /// <param name="name">Name given to committed datatype</param>
-    /// <param name="dtype_id">Identifier of datatype to be committed and,
-    /// upon function’s return, identifier for the committed datatype</param>
+    /// <param name="dtype_id">Identifier of datatype to be committed and, upon function's return, identifier for the committed datatype</param>
     /// <param name="lcpl_id">Link creation property list</param>
     /// <param name="tcpl_id">Datatype creation property list</param>
     /// <param name="tapl_id">Datatype access property list</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit2",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t commit
-    (hid_t loc_id, string name, hid_t dtype_id,
-     hid_t lcpl_id = H5P.DEFAULT, hid_t tcpl_id = H5P.DEFAULT,
-     hid_t tapl_id = H5P.DEFAULT);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t commit(hid_t loc_id, string name, hid_t dtype_id, hid_t lcpl_id = H5P.DEFAULT, hid_t tcpl_id = H5P.DEFAULT, hid_t tapl_id = H5P.DEFAULT);
 
     /// <summary>
-    /// Commits a transient datatype to a file, creating a new named
-    /// datatype, but does not link it into the file structure.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-CommitAnon
+    /// Commits a transient datatype to a file, creating a new named datatype, but does not link it into the file structure.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-CommitAnon" /> for further reference.</para>
     /// </summary>
-    /// <param name="loc_id">A file or group identifier specifying the file
-    /// in which the new named datatype is to be created.</param>
+    /// <param name="loc_id">A file or group identifier specifying the file in which the new named datatype is to be created.</param>
     /// <param name="dtype_id">A datatype identifier.</param>
     /// <param name="tcpl_id">A datatype creation property list identifier.</param>
     /// <param name="tapl_id">A datatype access property list identifier.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit_anon",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t commit_anon
-    (hid_t loc_id, hid_t dtype_id, hid_t tcpl_id = H5P.DEFAULT,
-     hid_t tapl_id = H5P.DEFAULT);
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommit_anon", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t commit_anon(hid_t loc_id, hid_t dtype_id, hid_t tcpl_id = H5P.DEFAULT, hid_t tapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Determines whether a datatype is a named type or a transient type.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Committed
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Committed" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier.</param>
-    /// <returns>When successful, returns a positive value, for
-    /// <code>TRUE</code>, if the datatype has been committed, or 0 (zero),
-    /// for <code>FALSE</code>, if the datatype has not been committed.
-    /// Otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommitted",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>When successful, returns a positive value, for <c>TRUE</c>, if the datatype has been committed, or 0 (zero), for <c>FALSE</c>, if the datatype has not been committed. Otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcommitted", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern htri_t committed(hid_t dtype_id);
 
     /// <summary>
-    /// Check whether the library’s default conversion is hard conversion.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-CompilerConv
+    /// Check whether the library's default conversion is hard conversion.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-CompilerConv" /> for further reference.</para>
     /// </summary>
     /// <param name="src_id">Identifier for the source datatype.</param>
     /// <param name="dst_id">Identifier for the destination datatype.</param>
-    /// <returns>When successful, returns a positive value, for
-    /// <code>TRUE</code>, if the datatype has been committed, or 0 (zero),
-    /// for <code>FALSE</code>, if the datatype has not been committed.
-    /// Otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcompiler_conv",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>When successful, returns a positive value, for <c>TRUE</c>, if the datatype has been committed, or 0 (zero), for <c>FALSE</c>, if the datatype has not been committed. Otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcompiler_conv", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern htri_t compiler_conv(hid_t src_id, hid_t dst_id);
 
     /// <summary>
     /// Converts data from one specified datatype to another.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Convert
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Convert" /> for further reference.</para>
     /// </summary>
     /// <param name="src_type_id">Identifier for the source datatype.</param>
     /// <param name="dest_type_id">Identifier for the destination datatype.</param>
@@ -613,100 +560,73 @@ public sealed partial class H5T
     /// <param name="buf">Array containing pre- and post-conversion values.</param>
     /// <param name="background">Optional background buffer.</param>
     /// <param name="plist_id">Dataset transfer property list identifier.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tconvert",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t convert
-    (hid_t src_type_id, hid_t dest_type_id, size_t nelmts,
-     size_t buf, size_t background, hid_t plist_id = H5P.DEFAULT);
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tconvert", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t convert(hid_t src_type_id, hid_t dest_type_id, size_t nelmts, size_t buf, size_t background, hid_t plist_id = H5P.DEFAULT);
 
     /// <summary>
     /// Copies an existing datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Copy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Copy" /> for further reference.</para>
     /// </summary>
     /// <param name="type_id">Identifier of datatype to copy.</param>
-    /// <returns>Returns a datatype identifier if successful; otherwise
-    /// returns a negative value</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcopy",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>Returns a datatype identifier if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcopy", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t copy(hid_t type_id);
 
     /// <summary>
     /// Creates a new datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Create
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Create" /> for further reference.</para>
     /// </summary>
     /// <param name="cls">Class of datatype to create.</param>
     /// <param name="size">Size, in bytes, of the datatype being created</param>
-    /// <returns>Returns datatype identifier if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcreate",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>Returns datatype identifier if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tcreate", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t create(class_t cls, size_t size);
 
     /// <summary>
-    /// Decode a binary object description of datatype and return a new
-    /// object handle.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Decode
+    /// Decode a binary object description of datatype and return a new object handle.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Decode" /> for further reference.</para>
     /// </summary>
     /// <param name="buf">Buffer for the datatype object to be decoded.</param>
-    /// <returns>Returns an object identifier (non-negative) if successful;
-    /// otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tdecode",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <returns>Returns an object identifier (non-negative) if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tdecode", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t decode(byte[] buf);
 
     /// <summary>
     /// Determines whether a datatype contains any datatypes of the given
     /// datatype class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-DetectClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-DetectClass" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier.</param>
     /// <param name="dtype_class">Datatype class.</param>
-    /// <returns>Returns <code>TRUE</code> or <code>FALSE</code> if
+    /// <returns>Returns <c>TRUE</c> or <c>FALSE</c> if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tdetect_class",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern htri_t detect_class
-        (hid_t dtype_id, class_t dtype_class);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tdetect_class", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern htri_t detect_class(hid_t dtype_id, class_t dtype_class);
 
     /// <summary>
     /// Encode a datatype object description into a binary buffer.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Encode
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Encode" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Identifier of the object to be encoded.</param>
-    /// <param name="buf">Buffer for the object to be encoded into. If the
-    /// provided buffer is <code>NULL</code>, only the size of buffer
-    /// needed is returned through <paramref name="nalloc"/>.</param>
+    /// <param name="buf">Buffer for the object to be encoded into. If the provided buffer is <c>NULL</c>, only the size of buffer needed is returned through <paramref name="nalloc"/>.</param>
     /// <param name="nalloc">The size of the buffer allocated or needed.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tencode",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t encode
-        (hid_t obj_id, byte[] buf, ref size_t nalloc);
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tencode", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t encode(hid_t obj_id, byte[] buf, ref size_t nalloc);
 
     /// <summary>
     /// Creates a new enumeration datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-EnumCreate
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-EnumCreate" /> for further reference.</para>
     /// </summary>
-    /// <param name="dtype_id">Datatype identifier for the base datatype. 
-    /// Must be an integer datatype.</param>
-    /// <returns>Returns the datatype identifier for the new enumeration
-    /// datatype if successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_create",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <param name="dtype_id">Datatype identifier for the base datatype. Must be an integer datatype.</param>
+    /// <returns>Returns the datatype identifier for the new enumeration datatype if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_create", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t enum_create(hid_t dtype_id);
 
     /// <summary>
     /// Inserts a new enumeration datatype member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-EnumInsert
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-EnumInsert" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the enumeration
     /// datatype.</param>
@@ -715,37 +635,26 @@ public sealed partial class H5T
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_insert",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t enum_insert
-        (hid_t dtype_id, string name, size_t value);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_insert", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t enum_insert(hid_t dtype_id, string name, size_t value);
 
     /// <summary>
-    /// Returns the symbol name corresponding to a specified member of an
-    /// enumeration datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-EnumNameOf
+    /// Returns the symbol name corresponding to a specified member of an enumeration datatype.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-EnumNameOf" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Enumeration datatype identifier.</param>
     /// <param name="value">Value of the enumeration datatype.</param>
     /// <param name="name">Buffer for output of the symbol name.</param>
-    /// <param name="size">The capacity of the buffer, in bytes
-    /// (characters).</param>
-    /// <returns>Returns a non-negative value if successful. Otherwise
-    /// returns a negative value.</returns>
+    /// <param name="size">The capacity of the buffer, in bytes (characters).</param>
+    /// <returns>Returns a non-negative value if successful. Otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_nameof",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t enum_nameof
-        (hid_t dtype_id, size_t value, [In][Out] StringBuilder name, size_t size);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_nameof", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t enum_nameof(hid_t dtype_id, size_t value, [In][Out] StringBuilder name, size_t size);
 
     /// <summary>
     /// Returns the value corresponding to a specified member of an
     /// enumeration datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-EnumValueOf
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-EnumValueOf" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Enumeration datatype identifier.</param>
     /// <param name="name">Symbol name of the enumeration datatype.</param>
@@ -754,133 +663,109 @@ public sealed partial class H5T
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_valueof",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t enum_valueof
-        (hid_t dtype_id, string name, size_t value);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tenum_valueof", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t enum_valueof(hid_t dtype_id, string name, size_t value);
 
     /// <summary>
     /// Determines whether two datatype identifiers refer to the same
     /// datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Equal
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Equal" /> for further reference.</para>
     /// </summary>
     /// <param name="type_id1">Identifier of datatype to compare.</param>
     /// <param name="type_id2">Identifier of datatype to compare.</param>
     /// <returns>When successful, returns a positive value, for
-    /// <code>TRUE</code>, if the datatype has been committed, or 0 (zero),
-    /// for <code>FALSE</code>, if the datatype has not been committed.
+    /// <c>TRUE</c>, if the datatype has been committed, or 0 (zero),
+    /// for <c>FALSE</c>, if the datatype has not been committed.
     /// Otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tequal",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tequal", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern htri_t equal(hid_t type_id1, hid_t type_id2);
 
     /// <summary>
     /// Finds a conversion function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Find
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Find" /> for further reference.</para>
     /// </summary>
     /// <param name="src_id">Identifier for the source datatype.</param>
     /// <param name="dst_id">Identifier for the destination datatype.</param>
     /// <param name="pcdata">Pointer to type conversion data.</param>
     /// <returns>Returns a pointer to a suitable conversion function if
-    /// successful. Otherwise returns <code>NULL</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tfind",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern conv_t find
-        (hid_t src_id, hid_t dst_id, ref cdata_t pcdata);
+    /// successful. Otherwise returns <c>NULL</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tfind", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern conv_t find(hid_t src_id, hid_t dst_id, ref cdata_t pcdata);
 
     /// <summary>
     /// Flushes all buffers associated with a committed datatype to disk.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Tflush.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Flush" /> for further reference.</para>
     /// </summary>
-    /// <param name="type_id">Identifier of the committed datatype to be
+    /// <param name="dtype_id">Identifier of the committed datatype to be
     /// flushed.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tflush",
-        CallingConvention = CallingConvention.Cdecl),
-    SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t flush(hid_t type_id);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tflush", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t flush(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves sizes of array dimensions.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetArrayDims2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetArrayDims2" /> for further reference.</para>
     /// </summary>
     /// <param name="adtype_id">Array datatype identifier.</param>
     /// <param name="dims">Sizes of array dimensions.</param>
     /// <returns>Returns the non-negative number of dimensions of the array
     /// type if successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_array_dims2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern int get_array_dims
-        (hid_t adtype_id, hsize_t[] dims);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_array_dims2", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern int get_array_dims(hid_t adtype_id, hsize_t[] dims);
 
     /// <summary>
     /// Returns the rank of an array datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetArrayNdims
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetArrayNdims" /> for further reference.</para>
     /// </summary>
     /// <param name="adtype_id">Array datatype identifier.</param>
     /// <returns>Returns the rank of the array if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_array_ndims",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_array_ndims", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern int get_array_ndims(hid_t adtype_id);
 
     /// <summary>
     /// Returns the datatype class identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetClass" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns datatype class identifier if successful; otherwise
-    /// <code>H5T_NO_CLASS</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_class",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <c>H5T_NO_CLASS</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_class", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern class_t get_class(hid_t dtype_id);
 
     /// <summary>
     /// Returns a copy of a datatype creation property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetCreatePlist
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetCreatePlist" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier.</param>
     /// <returns>Returns a datatype property list identifier if successful;
     /// otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_create_plist",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_create_plist", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t get_create_plist(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the character set type of a string datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetCset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetCset" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a valid character set type if successful;
-    /// otherwise <code>H5T.cset_t.CSET_ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_cset",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// otherwise <c>H5T.cset_t.CSET_ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_cset", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern cset_t get_cset(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the exponent bias of a floating-point type.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetEbias
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetEbias" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns the bias if successful; otherwise 0.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_ebias",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_ebias", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern size_t get_ebias(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves floating point datatype bit field information.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetFields
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetFields" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <param name="spos">Pointer to location to return floating-point
@@ -895,43 +780,34 @@ public sealed partial class H5T
     /// in bits.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_fields",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_fields
-    (hid_t dtype_id, ref size_t spos, ref size_t epos,
-     ref size_t esize, ref size_t mpos, ref size_t msize);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_fields", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_fields(hid_t dtype_id, ref size_t spos, ref size_t epos, ref size_t esize, ref size_t mpos, ref size_t msize);
 
     /// <summary>
     /// Retrieves the internal padding type for unused bits in
     /// floating-point datatypes.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetInpad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetInpad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a valid padding type if successful; otherwise
-    /// <code>H5T.pad_t.ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_inpad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <c>H5T.pad_t.ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_inpad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern pad_t get_inpad(hid_t dtype_id);
 
     /// <summary>
     /// Returns datatype class of compound datatype member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberClass" /> for further reference.</para>
     /// </summary>
     /// <param name="cdtype_id">Datatype identifier of compound object.</param>
     /// <param name="member_no">Compound type member number.</param>
     /// <returns>Returns the datatype class, a non-negative value, if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_class",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern class_t get_member_class
-        (hid_t cdtype_id, uint member_no);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_class", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern class_t get_member_class(hid_t cdtype_id, uint member_no);
 
     /// <summary>
     /// Retrieves the index of a compound or enumeration datatype member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberIndex
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberIndex" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <param name="field_name">Name of the field or member whose index is
@@ -939,62 +815,48 @@ public sealed partial class H5T
     /// <returns>Returns a valid field or member index if successful;
     /// otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_index",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern int get_member_index
-        (hid_t dtype_id, string field_name);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_index", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern int get_member_index(hid_t dtype_id, string field_name);
 
     /// <summary>
     /// Retrieves the name of a compound or enumeration datatype member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberName" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <param name="field_idx">Zero-based index of the field or element
     /// whose name is to be retrieved.</param>
     /// <returns>Returns a pointer to a string allocated in unmanaged
-    /// memory if successful; otherwise returns <code>NULL</code>.</returns>
+    /// memory if successful; otherwise returns <c>NULL</c>.</returns>
     /// <remarks>The caller is responsible for freeing the allocated
     /// memory.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_name",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern size_t get_member_name
-        (hid_t dtype_id, uint field_idx);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_name", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern size_t get_member_name(hid_t dtype_id, uint field_idx);
 
     /// <summary>
     /// Retrieves the offset of a field of a compound datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberOffset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberOffset" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
-    /// <param name="memb_no">Number of the field whose offset is
-    /// requested.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_offset",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern size_t get_member_offset
-        (hid_t dtype_id, uint memb_no);
+    /// <param name="memb_no">Number of the field whose offset is requested.</param>
+    /// <returns>Returns the byte offset of the field if successful; otherwise returns 0 (zero). Note that zero is a valid offset and that this function will fail only if a call to <see cref="get_member_class"/> fails with the same arguments.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_offset", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern size_t get_member_offset(hid_t dtype_id, uint memb_no);
 
     /// <summary>
     /// Returns the datatype of the specified member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberType
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberType" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <param name="field_idx">Field index (0-based) of the field type to
     /// retrieve.</param>
     /// <returns>Returns the identifier of a copy of the datatype of the
     /// field if successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_type",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t get_member_type
-        (hid_t dtype_id, uint field_idx);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_type", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern hid_t get_member_type(hid_t dtype_id, uint field_idx);
 
     /// <summary>
     /// Returns the value of an enumeration datatype member.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberValue
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetMemberValue" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the enumeration
     /// datatype.</param>
@@ -1003,80 +865,66 @@ public sealed partial class H5T
     /// the enumeration datatype member.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_value",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_member_value
-        (hid_t dtype_id, uint memb_no, size_t value);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_member_value", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_member_value(hid_t dtype_id, uint memb_no, size_t value);
 
     /// <summary>
     /// Returns the native datatype of a specified datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetNativeType
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetNativeType" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the dataset
     /// datatype.</param>
     /// <param name="direction">Direction of search.</param>
     /// <returns>Returns the native datatype identifier for the specified
     /// dataset datatype if successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_native_type",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t get_native_type
-        (hid_t dtype_id, direction_t direction);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_native_type", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern hid_t get_native_type(hid_t dtype_id, direction_t direction);
 
     /// <summary>
     /// Retrieves the number of elements in a compound or enumeration
     /// datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetNmembers
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetNmembers" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns the number of elements if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_nmembers",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_nmembers", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern int get_nmembers(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves mantissa normalization of a floating-point datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetNorm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetNorm" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a valid normalization type if successful;
-    /// otherwise <code>H5T.norm_t.ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_norm",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// otherwise <c>H5T.norm_t.ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_norm", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern norm_t get_norm(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the bit offset of the first significant bit.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetOffset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetOffset" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns an offset value if successful; otherwise returns a
     /// negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_offset",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_offset", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern int get_offset(hid_t dtype_id);
 
     /// <summary>
     /// Returns the byte order of an atomic datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a byte order constant if successful; otherwise
-    /// <code>H5T.order_t.ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_order",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <c>H5T.order_t.ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_order", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern order_t get_order(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the padding type of the least and most-significant bit
     /// padding.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetPad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetPad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <param name="lsb">Pointer to location to return least-significant
@@ -1085,90 +933,75 @@ public sealed partial class H5T
     /// bit padding type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_pad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_pad
-        (hid_t dtype_id, ref pad_t lsb, ref pad_t msb);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_pad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_pad(hid_t dtype_id, ref pad_t lsb, ref pad_t msb);
 
     /// <summary>
     /// Returns the precision of an atomic datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetPrecision
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetPrecision" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns the number of significant bits if successful;
     /// otherwise 0.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_precision",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_precision", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern size_t get_precision(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the sign type for an integer type.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetSign
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetSign" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a valid sign type if successful; otherwise
-    /// <code>H5T.sign_t.ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_sign",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// <c>H5T.sign_t.ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_sign", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern sign_t get_sign(hid_t dtype_id);
 
     /// <summary>
     /// Returns the size of a datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetSize" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns the size of the datatype in bytes if successful;
     /// otherwise 0.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_size",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_size", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern size_t get_size(hid_t dtype_id);
 
     /// <summary>
     /// Retrieves the type of padding used for a string datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetStrpad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetStrpad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to query.</param>
     /// <returns>Returns a valid string storage mechanism if successful;
-    /// otherwise <code>H5T.str_t.ERROR</code>.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_strpad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    /// otherwise <c>H5T.str_t.ERROR</c>.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_strpad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern str_t get_strpad(hid_t dtype_id);
 
     /// <summary>
     /// Returns the base datatype from which a datatype is derived.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetSuper
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetSuper" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the derived
     /// datatype.</param>
     /// <returns>Returns the datatype identifier for the base datatype if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_super",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_super", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t get_super(hid_t dtype_id);
 
     /// <summary>
     /// Gets the tag associated with an opaque datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-GetTag
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-GetTag" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the opaque datatype.</param>
     /// <returns>Returns a pointer to a string allocated in unmanaged
-    /// memory if successful; otherwise returns <code>NULL</code>.</returns>
+    /// memory if successful; otherwise returns <c>NULL</c>.</returns>
     /// <remarks>The caller is responsible for freeing the allocated
     /// memory.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_tag",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tget_tag", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern size_t get_tag(hid_t dtype_id);
 
     /// <summary>
     /// Adds a new member to a compound datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Insert
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Insert" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of compound datatype to modify.</param>
     /// <param name="name">Name of the field to insert.</param>
@@ -1178,40 +1011,32 @@ public sealed partial class H5T
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tinsert",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t insert
-        (hid_t dtype_id, string name, size_t offset, hid_t field_id);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tinsert", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t insert(hid_t dtype_id, string name, size_t offset, hid_t field_id);
 
     /// <summary>
     /// Determines whether datatype is a variable-length string.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-IsVariableString
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-IsVariableString" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier.</param>
-    /// <returns>Returns <code>TRUE</code> or <code>FALSE</code> if
+    /// <returns>Returns <c>TRUE</c> or <c>FALSE</c> if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tis_variable_str",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tis_variable_str", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern htri_t is_variable_str(hid_t dtype_id);
 
     /// <summary>
     /// Locks a datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Lock
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Lock" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to lock.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tlock",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tlock", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t lock_datatype(hid_t dtype_id);
 
     /// <summary>
     /// Opens a committed (named) datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Open2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Open2" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">A file or group identifier.</param>
     /// <param name="name">A datatype name, defined within the file or
@@ -1219,15 +1044,12 @@ public sealed partial class H5T
     /// <param name="tapl_id">Datatype access property list identifier.</param>
     /// <returns>Returns a committed datatype identifier if successful;
     /// otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Topen2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open
-        (hid_t loc_id, byte[] name, hid_t tapl_id = H5P.DEFAULT);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Topen2", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern hid_t open(hid_t loc_id, byte[] name, hid_t tapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Opens a committed (named) datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Open2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Open2" /> for further reference.</para>
     /// </summary>
     /// <param name="loc_id">A file or group identifier.</param>
     /// <param name="name">A datatype name, defined within the file or
@@ -1236,41 +1058,33 @@ public sealed partial class H5T
     /// <returns>Returns a committed datatype identifier if successful;
     /// otherwise returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Topen2",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open
-        (hid_t loc_id, string name, hid_t tapl_id = H5P.DEFAULT);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Topen2", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern hid_t open(hid_t loc_id, string name, hid_t tapl_id = H5P.DEFAULT);
 
     /// <summary>
     /// Recursively removes padding from within a compound datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Pack
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Pack" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to modify.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tpack",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tpack", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t pack(hid_t dtype_id);
 
     /// <summary>
     /// Refreshes all buffers associated with a committed datatype.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Trefresh.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Refresh" /> for further reference.</para>
     /// </summary>
     /// <param name="type_id">Identifier of the committed datatype to be
     /// refreshed.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Trefresh",
-        CallingConvention = CallingConvention.Cdecl),
-    SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Trefresh", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t H5Trefresh(hid_t type_id);
 
     /// <summary>
     /// Registers a conversion function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Register
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Register" /> for further reference.</para>
     /// </summary>
     /// <param name="type">Conversion function type</param>
     /// <param name="name">Name displayed in diagnostic output</param>
@@ -1281,42 +1095,34 @@ public sealed partial class H5T
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tregister",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t register(pers_t type, string name,
-                                         hid_t src_id, hid_t dst_id, conv_t func);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tregister", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t register(pers_t type, string name, hid_t src_id, hid_t dst_id, conv_t func);
 
     /// <summary>
     /// Sets character set to be used in a string or character datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetCset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetCset" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to modify.</param>
     /// <param name="cset">Character set type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_cset",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_cset", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_cset(hid_t dtype_id, cset_t cset);
 
     /// <summary>
     /// Sets the exponent bias of a floating-point type.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetEbias
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetEbias" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="ebias">Exponent bias value.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_ebias",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_ebias", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_ebias(hid_t dtype_id, size_t ebias);
 
     /// <summary>
     /// Sets locations and sizes of floating point bit fields.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetFields
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetFields" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="spos">Sign position, i.e., the bit offset of the
@@ -1327,137 +1133,113 @@ public sealed partial class H5T
     /// <param name="msize">Size of mantissa in bits.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_fields",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_fields
-    (hid_t dtype_id, size_t spos, size_t epos, size_t esize,
-     size_t mpos, size_t msize);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_fields", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t set_fields(hid_t dtype_id, size_t spos, size_t epos, size_t esize, size_t mpos, size_t msize);
 
     /// <summary>
     /// Sets interal bit padding of floating point numbers.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetInpad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetInpad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to modify.</param>
     /// <param name="inpad">Padding type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_inpad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_inpad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_inpad(hid_t dtype_id, pad_t inpad);
 
     /// <summary>
     /// Sets the mantissa normalization of a floating-point datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetNorm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetNorm" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="norm">Mantissa normalization type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_norm",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_norm", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_norm(hid_t dtype_id, norm_t norm);
 
     /// <summary>
     /// Sets the bit offset of the first significant bit.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetOffset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetOffset" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="offset">Offset of first significant bit.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_offset",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_offset", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_offset(hid_t dtype_id, size_t offset);
 
     /// <summary>
     /// Sets the byte order of a datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="order">Byte order.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_order",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_order", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_order(hid_t dtype_id, order_t order);
 
     /// <summary>
     /// Sets the least and most-significant bits padding types.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetPad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetPad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="lsb">Padding type for least-significant bits.</param>
     /// <param name="msb">Padding type for most-significant bits.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_pad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_pad
-        (hid_t dtype_id, pad_t lsb, pad_t msb);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_pad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t set_pad(hid_t dtype_id, pad_t lsb, pad_t msb);
 
     /// <summary>
     /// Sets the precision of an atomic datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetPrecision
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetPrecision" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="precision">Number of bits of precision for datatype.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_precision",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_precision
-        (hid_t dtype_id, size_t precision);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_precision", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t set_precision(hid_t dtype_id, size_t precision);
 
     /// <summary>
     /// Sets the sign property for an integer type.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetSign
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetSign" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to set.</param>
     /// <param name="sign">Sign type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_sign",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_sign", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_sign(hid_t dtype_id, sign_t sign);
 
     /// <summary>
     /// Sets the total size for a datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetSize" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype for which the size is
     /// being changed</param>
-    /// <param name="size">New datatype size in bytes or <code>VARIABLE</code></param>
+    /// <param name="size">New datatype size in bytes or <c>VARIABLE</c></param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_size",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_size", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_size(hid_t dtype_id, size_t size);
 
     /// <summary>
     /// Defines the type of padding used for character strings.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetStrpad
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetStrpad" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Identifier of datatype to modify.</param>
     /// <param name="strpad">String padding type.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_strpad",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_strpad", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_strpad(hid_t dtype_id, str_t strpad);
 
     /// <summary>
     /// Tags an opaque datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-SetTag
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-SetTag" /> for further reference.</para>
     /// </summary>
     /// <param name="dtype_id">Datatype identifier for the opaque datatype
     /// to be tagged.</param>
@@ -1468,15 +1250,12 @@ public sealed partial class H5T
     /// <remarks><paramref name="tag"/> is intended to provide a concise
     /// description; the maximum size is hard-coded in the HDF5 Library as
     /// 256 bytes </remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_tag",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tset_tag", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern herr_t set_tag(hid_t dtype_id, string tag);
 
     /// <summary>
     /// Removes a conversion function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-Unregister
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-Unregister" /> for further reference.</para>
     /// </summary>
     /// <param name="type">Conversion function type</param>
     /// <param name="name">Name displayed in diagnostic output.</param>
@@ -1487,22 +1266,16 @@ public sealed partial class H5T
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tunregister",
-               CallingConvention = CallingConvention.Cdecl,
-               CharSet = CharSet.Ansi),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t unregister
-        (pers_t type, string name, hid_t src_id, hid_t dst_id, conv_t func);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tunregister", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t unregister(pers_t type, string name, hid_t src_id, hid_t dst_id, conv_t func);
 
     /// <summary>
     /// Creates a new variable-length array datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5T.html#Datatype-VLCreate
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5T.html#Datatype-VLCreate" /> for further reference.</para>
     /// </summary>
     /// <param name="base_type_id">Base type of datatype to create.</param>
     /// <returns>Returns datatype identifier if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tvlen_create",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Tvlen_create", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
     public static extern hid_t vlen_create(hid_t base_type_id);
 }

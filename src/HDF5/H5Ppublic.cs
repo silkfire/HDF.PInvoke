@@ -91,7 +91,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Adds a path to the list of paths that will be searched in the
     /// destination file for a matching committed datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-AddMergeCommittedDtypePath
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-AddMergeCommittedDtypePath" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier.</param>
     /// <param name="path">The path to be added.</param>
@@ -107,7 +107,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Adds a path to the list of paths that will be searched in the
     /// destination file for a matching committed datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-AddMergeCommittedDtypePath
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-AddMergeCommittedDtypePath" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier.</param>
     /// <param name="path">The path to be added.</param>
@@ -124,7 +124,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Verifies that all required filters are available.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-AllFiltersAvail
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-AllFiltersAvail" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier.</param>
@@ -138,7 +138,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Terminates access to a property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Close
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Close" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of the property list to which
     /// access is terminated.</param>
@@ -151,7 +151,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Closes an existing property list class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-CloseClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-CloseClass" /> for further reference.</para>
     /// </summary>
     /// <param name="cls">Property list class to close</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -163,7 +163,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Copies an existing property list to create a new property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Copy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Copy" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to duplicate.</param>
     /// <returns>Returns a property list identifier if successful;
@@ -175,7 +175,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Copies a property from one list or class to another.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-CopyProp
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-CopyProp" /> for further reference.</para>
     /// </summary>
     /// <param name="dst_id">Identifier of the destination property list or
     /// class</param>
@@ -194,10 +194,10 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Creates a new property list as an instance of a property list class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Create
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Create" /> for further reference.</para>
     /// </summary>
     /// <param name="cls_id">The class of the property list to create.</param>
-    /// <returns>Returns a property list identifier (<code>plist</code>)
+    /// <returns>Returns a property list identifier (<c>plist</c>)
     /// if successful; otherwise Fail (-1).</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pcreate",
                CallingConvention = CallingConvention.Cdecl),
@@ -206,10 +206,10 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Creates a new property list class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-CreateClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-CreateClass" /> for further reference.</para>
     /// </summary>
     /// <param name="parent_class">Property list class to inherit from or
-    /// <code>NULL</code></param>
+    /// <c>NULL</c></param>
     /// <param name="name">Name of property list class to register</param>
     /// <param name="create">Callback routine called when a property list
     /// is created</param>
@@ -237,7 +237,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Compares two property lists or classes for equality.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Equal
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Equal" /> for further reference.</para>
     /// </summary>
     /// <param name="id1">First property object to be compared</param>
     /// <param name="id2">Second property object to be compared</param>
@@ -250,7 +250,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries whether a property name exists in a property list or class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Exist
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Exist" /> for further reference.</para>
     /// </summary>
     /// <param name="id">Identifier for the property to query</param>
     /// <param name="name">Name of property to check for</param>
@@ -266,7 +266,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Determines whether fill value is defined.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-FillValueDefined
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-FillValueDefined" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="status">Status of fill value in property list.</param>
@@ -281,7 +281,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Clears the list of paths stored in the object copy property list
     /// <paramref name="ocpypl_id"/>.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-FreeMergeCommittedDtypePaths
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-FreeMergeCommittedDtypePaths" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -295,7 +295,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries the value of a property.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Get
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Get" /> for further reference.</para>
     /// </summary>
     /// <param name="plid">Identifier of the property list to query</param>
     /// <param name="name">Name of property to query</param>
@@ -312,25 +312,18 @@ public sealed unsafe partial class H5P
         (hid_t plid, string name, IntPtr value);
 
     /// <summary>
-    /// Retrieves the current settings for alignment properties from a file
-    /// access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetAlignment
+    /// Retrieves the current settings for alignment properties from a file access property list.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetAlignment" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of a file access property list.</param>
-    /// <param name="threshold">Pointer to location of return threshold
-    /// value.</param>
-    /// <param name="alignment">Pointer to location of return alignment
-    /// value.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_alignment",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_alignment
-        (hid_t plist, ref hsize_t threshold, ref hsize_t alignment);
+    /// <param name="threshold">Pointer to location of return threshold value.</param>
+    /// <param name="alignment">Pointer to location of return alignment value.</param>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_alignment", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_alignment(hid_t plist, ref hsize_t threshold, ref hsize_t alignment);
 
     /// <summary>
     /// Retrieves the timing for storage space allocation.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetAllocTime
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetAllocTime" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="alloc_time">When to allocate dataset storage space.</param>
@@ -345,7 +338,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the values of the append property that is set up in the
     /// dataset access property list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Pget_append_flush.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetAppendFlush" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier.</param>
     /// <param name="ndims">The number of elements for
@@ -366,7 +359,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves tracking and indexing settings for attribute creation order.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetAttrCreationOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetAttrCreationOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object (group or dataset) creation property
     /// list identifier</param>
@@ -383,7 +376,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves attribute storage phase change thresholds.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetAttrPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetAttrPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object creation property list identifier</param>
     /// <param name="max_compact">Maximum number of attributes to be stored
@@ -401,7 +394,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets B-tree split ratios for a dataset transfer property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetBTreeRatios
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetBTreeRatios" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">The dataset transfer property list identifier.</param>
     /// <param name="left">The B-tree split ratio for left-most nodes.</param>
@@ -418,7 +411,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Reads buffer settings.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetBuffer
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetBuffer" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for the dataset transfer property
     /// list.</param>
@@ -436,7 +429,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries the raw data chunk cache parameters.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetCache
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetCache" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of the file access property list.</param>
     /// <param name="mdc_nelmts">UNUSED.</param>
@@ -457,7 +450,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the character encoding used to create a link or attribute
     /// name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetCharEncoding
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetCharEncoding" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Link creation or attribute creation property
     /// list identifier</param>
@@ -473,7 +466,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the size of chunks for the raw data of a chunked layout
     /// dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetChunk
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetChunk" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of property list to query.</param>
     /// <param name="max_ndims">Length of the <paramref name="dims"/>
@@ -489,7 +482,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the raw data chunk cache parameters.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetChunkCache
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetChunkCache" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier.</param>
     /// <param name="rdcc_nslots">Number of chunk slots in the raw data 
@@ -509,7 +502,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the edge chunk option setting from a dataset creation
     /// property list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/PartialEdgeChunks/H5Pget_chunk_opts.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetChunkOpts" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">Dataset creation property list identifier.</param>
     /// <param name="opts">Edge chunk option flag.</param>
@@ -523,7 +516,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the property list class identifier for a property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetClass" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to query.</param>
     /// <returns>Returns a property list class identifier if successful.
@@ -535,11 +528,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the name of a class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetClassName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetClassName" /> for further reference.</para>
     /// </summary>
     /// <param name="pcid">Identifier of the property class to query</param>
     /// <returns>If successful returns a pointer to an allocated string
-    /// containing the class name; <code>NULL</code> if unsuccessful.</returns>
+    /// containing the class name; <c>NULL</c> if unsuccessful.</returns>
     /// <remarks>The pointer to the name must be freed by the user after
     /// each successful call.</remarks>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_class_name",
@@ -549,7 +542,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the parent class of a property class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetClassParent
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetClassParent" /> for further reference.</para>
     /// </summary>
     /// <param name="pcid">Identifier of the property class to query</param>
     /// <returns>If successful, returns a valid parent class object
@@ -561,7 +554,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the properties to be used when an object is copied.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetCopyObject
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetCopyObject" /> for further reference.</para>
     /// </summary>
     /// <param name="ocp_plist_id">Object copy property list identifier</param>
     /// <param name="copy_options">Copy option(s) set in the object copy
@@ -576,7 +569,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets information about the write tracking feature used by the core VFD.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetCoreWriteTracking
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetCoreWriteTracking" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="is_enabled">Whether the feature is enabled.</param>
@@ -593,7 +586,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Determines whether property is set to enable creating missing
     /// intermediate groups.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetCreateIntermediateGroup
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetCreateIntermediateGroup" /> for further reference.</para>
     /// </summary>
     /// <param name="lcpl_id">Link creation property list identifier</param>
     /// <param name="crt_intermed_group">Flag specifying whether to create
@@ -609,7 +602,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves a data transform expression.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetDataTransform
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetDataTransform" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of the property list or class</param>
     /// <param name="expression">Pointer to memory where the transform
@@ -626,7 +619,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the setting for whether or not a file will create minimized dataset object headers.
-    /// See https://portal.hdfgroup.org/display/HDF5/H5P_GET_DSET_NO_ATTRS_HINT
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5P_GET_DSET_NO_ATTRS_HINT" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier</param>
     /// <param name="minimize">Flag indicating whether the library will or will not
@@ -641,7 +634,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns low-lever driver identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetDriver
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetDriver" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">File access or data transfer property list
     /// identifier.</param>
@@ -654,13 +647,13 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns a pointer to file driver information.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetDriverInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetDriverInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">File access or data transfer property list
     /// identifier.</param>
     /// <returns>Returns a pointer to a struct containing low-level driver
-    /// information. Otherwise returns <code>NULL</code>.</returns>
-    /// <remarks><code>NULL</code> is also returned if no driver-specific
+    /// information. Otherwise returns <c>NULL</c>.</returns>
+    /// <remarks><c>NULL</c> is also returned if no driver-specific
     /// properties have been registered. No error is pushed on the stack
     /// in this case.</remarks>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_driver_info",
@@ -670,11 +663,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Determines whether error-detection is enabled for dataset reads.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetEdcCheck
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetEdcCheck" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset transfer property list identifier.</param>
-    /// <returns>Returns <code>H5Z_ENABLE_EDC</code> or
-    /// <code>H5Z_DISABLE_EDC</code>  if successful; otherwise returns a
+    /// <returns>Returns <c>H5Z_ENABLE_EDC</c> or
+    /// <c>H5Z_DISABLE_EDC</c>  if successful; otherwise returns a
     /// negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_driver_info",
                CallingConvention = CallingConvention.Cdecl),
@@ -684,7 +677,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the prefix for external raw data storage files as set in
     /// the dataset access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetEfilePrefix
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetEfilePrefix" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl">Dataset access property list identifier.</param>
     /// <param name="prefix">Dataset external storage prefix.</param>
@@ -702,22 +695,18 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the external link traversal file access flag from the
     /// specified link access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetELinkAccFlags
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetELinkAccFlags" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier</param>
     /// <param name="flags">File access flag for link traversal.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_elink_acc_flags",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_elink_acc_flags
-        (hid_t lapl_id, ref uint flags);
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_elink_acc_flags", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_elink_acc_flags(hid_t lapl_id, ref uint flags);
 
     /// <summary>
     /// Retrieves the external link traversal callback function from the
     /// specified link access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetELinkCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetELinkCb" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <param name="func">User-defined external link traversal callback
@@ -735,7 +724,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the file access property list identifier associated with
     /// the link access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetELinkFapl
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetELinkFapl" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -747,7 +736,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the size of the external link open file cache.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetELinkFileCacheSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetELinkFileCacheSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="efc_size">External link open file cache size in number
@@ -763,13 +752,13 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves prefix applied to external link paths.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetELinkPrefix
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetELinkPrefix" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier</param>
     /// <param name="prefix">Prefix applied to external link paths</param>
     /// <param name="size">Size of prefix, including null terminator</param>
     /// <returns>If successful, returns a non-negative value specifying the
-    /// size in bytes of the prefix without the <code>NULL</code>
+    /// size in bytes of the prefix without the <c>NULL</c>
     /// terminator; otherwise returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename,
                EntryPoint = "H5Pget_elink_prefix",
@@ -781,7 +770,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Queries data required to estimate required local heap or object
     /// header size.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetEstLinkInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetEstLinkInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="est_num_entries">Estimated number of links to be
@@ -798,7 +787,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns information about an external file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetExternal
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetExternal" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of a dataset creation property list.</param>
     /// <param name="idx">External file index.</param>
@@ -820,7 +809,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the number of external files for a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetExternalCount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetExternalCount" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of a dataset creation property list.</param>
     /// <returns>Returns the number of external files if successful;
@@ -832,7 +821,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves a data offset from the file access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFamilyOffset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFamilyOffset" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="offset">Offset in bytes within the HDF5 file.</param>
@@ -846,7 +835,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries core file driver properties.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFaplCore
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFaplCore" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="increment">Size, in bytes, of memory increments.</param>
@@ -862,7 +851,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves direct I/O driver settings.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFaplDirect
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFaplDirect" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="alignment">Required memory alignment boundary</param>
@@ -879,7 +868,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns file access property list information.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFaplFamily
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFaplFamily" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="memb_size">Size in bytes of each file member.</param>
@@ -895,12 +884,12 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the file close degree.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFcloseDegree
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFcloseDegree" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="fc_degree"> Pointer to a location to which to return
     /// the file close degree property, the value of
-    /// <code>fc_degree</code>.</param>
+    /// <c>fc_degree</c>.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
     /// returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_fclose_degree",
@@ -912,12 +901,12 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves a copy of the file image designated as the initial
     /// content and structure of a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFileImage
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileImage" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
-    /// <param name="buf_ptr_ptr">On input, <code>NULL</code> or a pointer
+    /// <param name="buf_ptr_ptr">On input, <c>NULL</c> or a pointer
     /// to a pointer to a buffer that contains the file image.</param>
-    /// <param name="buf_len_ptr">On input, <code>NULL</code> or a pointer
+    /// <param name="buf_len_ptr">On input, <c>NULL</c> or a pointer
     /// to a buffer specifying the required size of the buffer to hold the
     /// file image.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -930,15 +919,15 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves callback routines for working with file images.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFileImageCallbacks
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileImageCallbacks" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="callbacks_ptr">Pointer to the instance of the
-    /// <code>H5FD.file_image_callbacks_t</code> struct in which the
+    /// <c>H5FD.file_image_callbacks_t</c> struct in which the
     /// callback routines are to be returned.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    /// <remarks>Struct fields must be initialized to <code>NULL</code>
+    /// <remarks>Struct fields must be initialized to <c>NULL</c>
     /// before the call is made.</remarks>
     [DllImport(Constants.MainLibraryDllFilename,
                EntryPoint = "H5Pget_file_image_callbacks",
@@ -948,27 +937,9 @@ public sealed unsafe partial class H5P
         (hid_t fapl_id, ref H5FD.file_image_callbacks_t callbacks_ptr);
 
     /// <summary>
-    /// Retrieves the file space management strategy and/or free-space
-    /// section threshold for an HDF5 file.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FileSpace/H5Pget_file_space.htm
-    /// </summary>
-    /// <param name="fcpl">The file creation property list identifier.</param>
-    /// <param name="strategy">The current file space management strategy
-    /// in use for the file.</param>
-    /// <param name="threshold">The current free-space section threshold.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_file_space",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_file_space
-    (hid_t fcpl, ref H5F.file_space_type_t strategy,
-     ref hsize_t threshold);
-
-    /// <summary>
     /// Retrieves the file space page size for a file creation property
     /// list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileSpacePageSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileSpacePageSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl">The file creation property list identifier.</param>
     /// <param name="fsp_size">File space page size</param>
@@ -984,7 +955,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the file space handling strategy, persisting free-space
     /// condition and threshold value for a file creation property list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileSpaceStrategy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFileSpaceStrategy" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl">The file creation property list identifier.</param>
     /// <param name="strategy">The current file space management strategy
@@ -1004,7 +975,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the time when fill value are written to a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFillTime
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFillTime" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="fill_time">Setting for the timing of writing fill
@@ -1019,11 +990,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves a dataset fill value.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFillValue
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFillValue" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="type_id">Datatype identifier for the value passed via
-    /// <code>value</code>.</param>
+    /// <c>value</c>.</param>
     /// <param name="value">Pointer to buffer to contain the returned fill
     /// value.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -1036,7 +1007,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns information about a filter in a pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFilter2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFilter2" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list 
     /// identifier.</param>
@@ -1064,7 +1035,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns information about a filter in a pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFilter2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFilter2" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list 
     /// identifier.</param>
@@ -1090,7 +1061,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns information about the specified filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetFilterById2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetFilterById2" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list 
     /// identifier.</param>
@@ -1116,7 +1087,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns garbage collecting references setting.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetGCReferences
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetGCReferences" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">File access property list identifier.</param>
     /// <param name="gc_ref">Flag returning the state of reference garbage
@@ -1132,7 +1103,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves number of I/O vectors to be read/written in hyperslab I/O.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetHyperVectorSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetHyperVectorSize" /> for further reference.</para>
     /// </summary>
     /// <param name="dxpl_id">Dataset transfer property list identifier.</param>
     /// <param name="vector_size">Number of I/O vectors to accumulate in
@@ -1148,7 +1119,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries the 1/2 rank of an indexed storage B-tree.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetIstoreK
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetIstoreK" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="ik">Pointer to location to return the chunked storage
@@ -1163,7 +1134,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the layout of the raw data for a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetLayout
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetLayout" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for property list to query.</param>
     /// <returns>Returns the layout type (a non-negative value) of a
@@ -1177,7 +1148,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves library version bounds settings that indirectly control
     /// the format versions used when creating objects.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetLibverBounds
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetLibverBounds" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="libver_low">The earliest version of the library that
@@ -1196,7 +1167,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Queries whether link creation order is tracked and/or indexed in a
     /// group.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetLinkCreationOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetLinkCreationOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="crt_order_flags">Creation order flag(s)</param>
@@ -1212,7 +1183,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Queries the settings for conversion between compact and dense
     /// groups.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetLinkPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetLinkPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="max_compact">Maximum number of links for compact
@@ -1230,7 +1201,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the anticipated size of the local heap for original-style
     /// groups.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetLocalHeapSizeHint
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetLocalHeapSizeHint" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="size_hint">Anticipated size of local heap</param>
@@ -1246,7 +1217,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the callback function from the specified object copy
     /// property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetMcdtSearchCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMcdtSearchCb" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier</param>
     /// <param name="func">User-defined callback function</param>
@@ -1264,11 +1235,11 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Get the current initial metadata cache configuration from the
     /// indicated File Access Property List.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetMdcConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMdcConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of the file access property list.</param>
     /// <param name="config_ptr">Pointer to the instance of
-    /// <code>H5AC.cache_config_t</code> in which the current metadata
+    /// <c>H5AC.cache_config_t</c> in which the current metadata
     /// cache configuration is to be reported.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -1281,11 +1252,11 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the metadata cache image configuration values for a file
     /// access property list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMDCImageConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMDCImageConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">Identifier of the file access property list.</param>
     /// <param name="config_ptr">Reference to the instance of
-    /// <code>H5AC.cache_image_config_t</code> in which the current metadata
+    /// <c>H5AC.cache_image_config_t</c> in which the current metadata
     /// cache image configuration is to be reported.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -1297,7 +1268,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets metadata cache logging options.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Pget_mdc_log_options.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMdcLogOptions" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="is_enabled">Whether logging is enabled.</param>
@@ -1318,7 +1289,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the current metadata block size setting.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetMetaBlockSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMetaBlockSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Minimum size, in bytes, of metadata block
@@ -1334,7 +1305,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the number of read attempts from a file access property
     /// list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Pget_metadata_read_attempts.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetMetadataReadAttempts" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl">Identifier for a file access property list.</param>
     /// <param name="attempts"> The number of read attempts.</param>
@@ -1349,7 +1320,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns the number of filters in the pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetNFilters
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetNFilters" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Property list identifier.</param>
     /// <returns>Returns the number of filters in the pipeline if
@@ -1361,7 +1332,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the maximum number of link traversals.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetNLinks
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetNLinks" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">File access property list identifier</param>
     /// <param name="nlinks">Maximum number of links to traverse</param>
@@ -1375,7 +1346,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries the number of properties in a property list or class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetNProps
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetNProps" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier for property object to query</param>
     /// <param name="nprops">Number of properties in object</param>
@@ -1389,7 +1360,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Determines whether times associated with an object are being recorded.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetObjTrackTimes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetObjTrackTimes" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object creation property list identifier</param>
     /// <param name="track_times">Boolean value, 1 or 0, specifying whether
@@ -1405,7 +1376,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the object flush property values from the file access
     /// property list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Pget_object_flush_cb.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetObjectFlushCb" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">Identifier for a file access property list.</param>
     /// <param name="func">The user-defined callback function.</param>
@@ -1422,7 +1393,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the maximum size for the page buffer and the minimum
     /// percentage for metadata and raw data pages.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetPageBufferSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetPageBufferSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="buf_size">Maximum size, in bytes, of the page buffer</param>
@@ -1443,7 +1414,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the configuration settings for a shared message index.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgIndex
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgIndex" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier.</param>
     /// <param name="index_num">Index being configured.</param>
@@ -1463,7 +1434,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves number of shared object header message indexes in file
     /// creation property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgNIndexes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgNIndexes" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list</param>
     /// <param name="nindexes">Number of shared object header message
@@ -1479,7 +1450,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves shared object header message phase change information.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSharedMesgPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="max_list">Threshold above which storage of a shared
@@ -1497,7 +1468,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Returns maximum data sieve buffer size.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSieveBufSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSieveBufSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Maximum size, in bytes, of data sieve buffer.</param>
@@ -1511,7 +1482,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Queries the size of a property value in bytes.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSize" /> for further reference.</para>
     /// </summary>
     /// <param name="id">Identifier of property object to query</param>
     /// <param name="name">Name of property to query</param>
@@ -1528,7 +1499,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the size of the offsets and lengths used in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSizes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSizes" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to query.</param>
     /// <param name="sizeof_addr">Pointer to location to return offset size
@@ -1545,7 +1516,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the current small data block size setting.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSmallData
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSmallData" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Maximum size, in bytes, of the small data block.</param>
@@ -1561,7 +1532,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the size of the symbol table B-tree 1/2 rank and the
     /// symbol table leaf node 1/2 size.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetSymK
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetSymK" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="ik">Pointer to location to return the symbol table's
@@ -1578,7 +1549,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets user-defined datatype conversion callback function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetTypeConvCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetTypeConvCb" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset transfer property list identifier.</param>
     /// <param name="func">User-defined type conversion callback function.</param>
@@ -1594,7 +1565,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves the size of a user block.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetUserblock
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetUserblock" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for property list to query.</param>
     /// <param name="size">Pointer to location to return user-block size.</param>
@@ -1609,7 +1580,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the version information of various objects for a file
     /// creation property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-GetVersion
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVersion" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of the file creation property list.</param>
     /// <param name="super">Pointer to location to return super block
@@ -1631,7 +1602,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets the number of mappings for the virtual dataset.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_count.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualCount" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the virtual dataset
     /// creation property list.</param>
@@ -1646,7 +1617,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Gets the name of a source dataset used in the mapping.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_dsetname.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualDsetname" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the virtual dataset
     /// creation property list.</param>
@@ -1665,30 +1636,8 @@ public sealed unsafe partial class H5P
         (hid_t dcpl_id, size_t index, byte[] name, size_t size);
 
     /// <summary>
-    /// Gets the name of a source dataset used in the mapping.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_dsetname.htm
-    /// </summary>
-    /// <param name="dcpl_id">The identifier of the virtual dataset
-    /// creation property list.</param>
-    /// <param name="index">Mapping index.</param>
-    /// <param name="name">A buffer containing the name of the source
-    /// dataset.</param>
-    /// <param name="size">The size, in bytes, of the <paramref name="name"/>
-    /// buffer.</param>
-    /// <returns>Returns the length of the dataset name if successful;
-    /// otherwise returns a negative value.</returns>
-    /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Pget_virtual_dsetname",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_virtual_dsetname
-        (hid_t dcpl_id, size_t index, [In] [Out] StringBuilder name, size_t size);
-
-    /// <summary>
     /// Gets the filename of a source dataset used in the mapping.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_filename.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualFilename" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the virtual dataset
     /// creation property list.</param>
@@ -1709,7 +1658,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Retrieves prefix applied to VDS source file paths
-    /// See https://portal.hdfgroup.org/display/HDF5/H5P_GET_VIRTUAL_PREFIX
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5P_GET_VIRTUAL_PREFIX" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl">Dataset access property list identifier.</param>
     /// <param name="prefix">Prefix applied to VDS source file paths.</param>
@@ -1728,7 +1677,7 @@ public sealed unsafe partial class H5P
     /// Returns the maximum number of missing source files and/or datasets
     /// with the printf-style names when getting the extent for an
     /// unlimited virtual dataset.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_printf_gap.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualPrintfGap" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset access property list identifier for
     /// the virtual dataset</param>
@@ -1747,7 +1696,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Gets a dataspace identifier for the selection within the source
     /// dataset used in the mapping.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_srcspace.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualSrcspace" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the virtual dataset
     /// creation property list.</param>
@@ -1764,7 +1713,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the view of a virtual dataset accessed with
     /// <paramref name="dapl_id"/>.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_view.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualView" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier for
     /// the virtual dataset</param>
@@ -1781,7 +1730,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Gets a dataspace identifier for the selection within the virtual
     /// dataset used in the mapping.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pget_virtual_vspace.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVirtualVspace" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the virtual dataset
     /// creation property list.</param>
@@ -1795,33 +1744,22 @@ public sealed unsafe partial class H5P
         (hid_t dcpl_id, size_t index);
 
     /// <summary>
-    /// Gets the memory manager for variable-length datatype allocation in
-    /// <code>H5D.read</code> and <code>H5D.vlen_reclaim</code>.
+    /// Gets the memory manager for variable-length datatype allocation in <see cref="H5D.read"/> and <see cref="H5D.vlen_reclaim"/>.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-GetVLMemManager" /> for further reference.</para>
     /// </summary>
-    /// <param name="plist">Identifier for the dataset transfer property
-    /// list.</param>
-    /// <param name="alloc">User’s allocate routine, or <code>NULL</code>
-    /// for system <code>malloc</code>.</param>
-    /// <param name="alloc_info">Extra parameter for user’s allocation
-    /// routine. Contents are ignored if preceding parameter is
-    /// <code>NULL</code>.</param>
-    /// <param name="free">User’s free routine, or <code>NULL</code>
-    /// for system <code>free</code>.</param>
-    /// <param name="free_info">Extra parameter for user’s free
-    /// routine. Contents are ignored if preceding parameter is
-    /// <code>NULL</code>.</param>
+    /// <param name="plist">Identifier for the dataset transfer property list.</param>
+    /// <param name="alloc">User's allocate routine, or <c>NULL</c> for system <c>malloc</c>.</param>
+    /// <param name="alloc_info">Extra parameter for user's allocation routine. Contents are ignored if preceding parameter is <c>NULL</c>.</param>
+    /// <param name="free">User's free routine, or <c>NULL</c> for system <c>free</c>.</param>
+    /// <param name="free_info">Extra parameter for user's free routine. Contents are ignored if preceding parameter is <c>NULL</c>.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_vlen_mem_manager",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_vlen_mem_manager
-    (hid_t plist, ref H5MM.allocate_t alloc, ref IntPtr alloc_info,
-     ref H5MM.free_t free, ref IntPtr free_info);
+    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pget_vlen_mem_manager", CallingConvention = CallingConvention.Cdecl), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    public static extern herr_t get_vlen_mem_manager(hid_t plist, ref H5MM.allocate_t alloc, ref IntPtr alloc_info, ref H5MM.free_t free, ref IntPtr free_info);
 
     /// <summary>
     /// Registers a temporary property with a property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Insert2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Insert2" /> for further reference.</para>
     /// </summary>
     /// <param name="plid">Property list identifier to create temporary
     /// property within</param>
@@ -1855,7 +1793,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Determines whether a property list is a member of a class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-IsAClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-IsAClass" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Property list identifier</param>
     /// <param name="pclass">Property list class identifier</param>
@@ -1868,7 +1806,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Iterates over properties in a property class or list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Iterate
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Iterate" /> for further reference.</para>
     /// </summary>
     /// <param name="id">Identifier of property object to iterate over</param>
     /// <param name="idx">Index of the property to begin with</param>
@@ -1876,7 +1814,7 @@ public sealed unsafe partial class H5P
     /// with each property iterated over</param>
     /// <param name="iter_data">Pointer to iteration data from user</param>
     /// <returns>Returns the value of the last call to
-    /// <code>iter_func</code> if it was non-zero; zero if all properties
+    /// <c>iter_func</c> if it was non-zero; zero if all properties
     /// have been processed. Returns a negative value on failure.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Piterate",
                CallingConvention = CallingConvention.Cdecl),
@@ -1886,14 +1824,14 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Modifies a filter in the filter pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-ModifyFilter
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-ModifyFilter" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier</param>
     /// <param name="filter_id">Filter to be modified.</param>
     /// <param name="flags">Bit vector specifying certain general
     /// properties of the filter.</param>
-    /// <param name="cd_nelmts">Number of elements in <code>cd_values</code>.</param>
+    /// <param name="cd_nelmts">Number of elements in <c>cd_values</c>.</param>
     /// <param name="cd_values">Auxiliary data for the filter.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -1906,7 +1844,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Registers a permanent property with a property list class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Register2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Register2" /> for further reference.</para>
     /// </summary>
     /// <param name="cls">Property list class to register permanent property within</param>
     /// <param name="name">Name of property to register</param>
@@ -1942,7 +1880,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Removes a property from a property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Remove
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Remove" /> for further reference.</para>
     /// </summary>
     /// <param name="plid">Identifier of the property list to modify</param>
     /// <param name="name">Name of property to remove</param>
@@ -1957,7 +1895,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Delete one or more filters in the filter pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-RemoveFilter
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-RemoveFilter" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier.</param>
@@ -1972,7 +1910,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets a property list value.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Set
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Set" /> for further reference.</para>
     /// </summary>
     /// <param name="plid">Property list identifier to modify</param>
     /// <param name="name">Name of property to modify</param>
@@ -1989,7 +1927,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets alignment properties of a file access property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetAlignment
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetAlignment" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for a file access property list.</param>
     /// <param name="threshold">Threshold value.</param>
@@ -2004,7 +1942,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the timing for storage space allocation.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetAllocTime
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetAllocTime" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="alloc_time">When to allocate dataset storage space.</param>
@@ -2017,9 +1955,9 @@ public sealed unsafe partial class H5P
         (hid_t plist_id, H5D.alloc_time_t alloc_time);
 
     /// <summary>
-    /// Sets two actions to perform when the size of a dataset’s dimension
+    /// Sets two actions to perform when the size of a dataset's dimension
     /// being appended reaches a specified boundary.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Pset_append_flush.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetAppendFlush" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier.</param>
     /// <param name="ndims">The number of elements for boundary.</param>
@@ -2039,7 +1977,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets tracking and indexing of attribute creation order.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetAttrCreationOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetAttrCreationOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object creation property list identifier</param>
     /// <param name="crt_order_flags">Flags specifying whether to track and
@@ -2055,7 +1993,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets attribute storage phase change thresholds.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetAttrPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetAttrPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object creation property list identifier</param>
     /// <param name="max_compact">Maximum number of attributes to be stored
@@ -2073,7 +2011,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets B-tree split ratios for a dataset transfer property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetBTreeRatios
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetBTreeRatios" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">The dataset transfer property list identifier.</param>
     /// <param name="left">The B-tree split ratio for left-most nodes.</param>
@@ -2090,7 +2028,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets type conversion and background buffers.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetBuffer
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetBuffer" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for the dataset transfer property
     /// list.</param>
@@ -2110,7 +2048,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the raw data chunk cache parameters.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetCache
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetCache" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">File access property list identifier.</param>
     /// <param name="mdc_nelmts">UNSUSED</param>
@@ -2130,7 +2068,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the character encoding used to encode link and attribute names.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetCharEncoding
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetCharEncoding" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Link creation or attribute creation property
     /// list identifier</param>
@@ -2145,7 +2083,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the size of the chunks used to store a chunked layout dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetChunk
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetChunk" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="ndims">The number of dimensions of each chunk.</param>
@@ -2163,7 +2101,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the size of the chunks used to store a chunked layout dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetChunk
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetChunk" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="ndims">The number of dimensions of each chunk.</param>
@@ -2178,7 +2116,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the edge chunk option in a dataset creation property list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/PartialEdgeChunks/H5Pset_chunk_opts.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetChunkOpts" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">Dataset creation property list identifier.</param>
     /// <param name="opts">Edge chunk option flag.</param>
@@ -2192,7 +2130,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the raw data chunk cache parameters.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetChunkCache
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetChunkCache" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier.</param>
     /// <param name="rdcc_nslots">The number of chunk slots in the raw data
@@ -2211,7 +2149,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets properties to be used when an object is copied.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetCopyObject
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetCopyObject" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier</param>
     /// <param name="copy_options">Copy option(s) to be set</param>
@@ -2224,7 +2162,7 @@ public sealed unsafe partial class H5P
         (hid_t ocpypl_id, uint copy_options);
 
     /// <summary>
-    /// Sets write tracking information for core driver, <code>H5FD_CORE</code>.
+    /// Sets write tracking information for core driver, <c>H5FD_CORE</c>.
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="is_enabled">Boolean value specifying whether feature
@@ -2243,7 +2181,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Specifies in property list whether to create missing intermediate
     /// groups.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetCreateIntermediateGroup
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetCreateIntermediateGroup" /> for further reference.</para>
     /// </summary>
     /// <param name="lcpl_id">Link creation property list identifier</param>
     /// <param name="crt_intermed_group">Flag specifying whether to create
@@ -2275,7 +2213,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets deflate (GNU gzip) compression method and compression level.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetDeflate
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetDeflate" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier.</param>
@@ -2289,7 +2227,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets a file driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetDriver
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetDriver" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">File access or data transfer property list
     /// identifier.</param>
@@ -2306,7 +2244,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the flag to create minimized dataset object headers.
-    /// See https://portal.hdfgroup.org/display/HDF5/H5P_SET_DSET_NO_ATTRS_HINT
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5P_SET_DSET_NO_ATTRS_HINT" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier</param>
     /// <param name="minimize">Flag indicating whether the library will or will not
@@ -2321,7 +2259,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets whether to enable error-detection when reading a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetEdcCheck
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetEdcCheck" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset transfer property list identifier.</param>
     /// <param name="check">Specifies whether error checking is enabled or
@@ -2337,7 +2275,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the external dataset storage file prefix in the dataset access
     /// property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetEfilePrefix
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetEfilePrefix" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl">Dataset access property list identifier.</param>
     /// <param name="prefix">Dataset external storage prefix.</param>
@@ -2354,7 +2292,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the external link traversal file access flag in a link access
     /// property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetELinkAccFlags
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetELinkAccFlags" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier</param>
     /// <param name="flags">The access flag for external link traversal.</param>
@@ -2369,7 +2307,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the external link traversal callback function in a link access
     /// property list.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetELinkCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetELinkCb" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier.</param>
     /// <param name="func">User-defined external link traversal callback
@@ -2387,7 +2325,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets a file access property list for use in accessing a file
     /// pointed to by an external link.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetELinkFapl
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetELinkFapl" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier</param>
     /// <param name="fapl_id">File access property list identifier</param>
@@ -2402,7 +2340,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the number of files that can be held open in an external link
     /// open file cache.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetELinkFileCacheSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetELinkFileCacheSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="efc_size">External link open file cache size in number
@@ -2418,7 +2356,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets prefix to be applied to external link paths.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetELinkPrefix
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetELinkPrefix" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">Link access property list identifier</param>
     /// <param name="prefix">Prefix to be applied to external link paths</param>
@@ -2434,7 +2372,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets estimated number of links and length of link names in a group.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetEstLinkInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetEstLinkInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="est_num_entries">Estimated number of links to be
@@ -2450,7 +2388,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Controls the library's behavior of evicting metadata associated with a closed object.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetEvictOnClose
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetEvictOnClose" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of a file access property list.</param>
     /// <param name="evict_on_close">Boolean flag, whether the HDF5 object
@@ -2465,7 +2403,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Adds an external file to the list of external files.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetExternal
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetExternal" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of a dataset creation property list.</param>
     /// <param name="name">Name of an external file.</param>
@@ -2498,7 +2436,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Modifies the file access property list to use the
-    /// <code>H5FD_CORE</code> driver.
+    /// <c>H5FD_CORE</c> driver.
     /// </summary>
     /// <param name="fapl">File access property list identifier.</param>
     /// <param name="increment">Size, in bytes, of memory increments.</param>
@@ -2514,7 +2452,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the file access property list to use the family driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplFamily
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplFamily" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="memb_size">Size in bytes of each file member.</param>
@@ -2530,7 +2468,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets up use of the direct I/O driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplDirect
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplDirect" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="alignment">Required memory alignment boundary</param>
@@ -2546,9 +2484,9 @@ public sealed unsafe partial class H5P
      size_t cbuf_size);
 
     /// <summary>
-    /// Sets up the logging virtual file driver (<code>H5FD_LOG</code>) for
+    /// Sets up the logging virtual file driver (<c>H5FD_LOG</c>) for
     /// use.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplLog
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplLog" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="logfile">Name of the log file.</param>
@@ -2566,8 +2504,8 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Modifies the file access property list to use the
-    /// <code>H5FD_SEC2</code> driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplSec2
+    /// <c>H5FD_SEC2</c> driver.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplSec2" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
@@ -2579,7 +2517,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Emulates the old split file driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplSplit
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplSplit" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="meta_ext">Metadata filename extension.</param>
@@ -2601,7 +2539,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the standard I/O driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplStdio
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplStdio" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
@@ -2613,7 +2551,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the Windows I/O driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFaplWindows
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFaplWindows" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -2625,7 +2563,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the file close degree.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFcloseDegree
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFcloseDegree" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="fc_degree">The file close degree property.</param>
@@ -2639,11 +2577,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets an initial file image in a memory buffer.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFileImage
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileImage" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="buf_ptr">Pointer to the initial file image, or
-    /// <code>NULL</code> if no initial file image is desired</param>
+    /// <c>NULL</c> if no initial file image is desired</param>
     /// <param name="buf_len">Size of the supplied buffer, or 0 (zero) if
     /// no initial image is desired</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -2656,11 +2594,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the callbacks for working with file images.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFileImageCallbacks
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileImageCallbacks" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="callbacks_ptr">Pointer to an instance of the
-    /// <code>H5FD.file_image_callbacks_t</code> structure.</param>
+    /// <c>H5FD.file_image_callbacks_t</c> structure.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename,
@@ -2671,25 +2609,8 @@ public sealed unsafe partial class H5P
         (hid_t fapl_id, ref H5FD.file_image_callbacks_t callbacks_ptr);
 
     /// <summary>
-    /// Sets the file space management strategy and/or free-space section
-    /// threshold for an HDF5 file.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FileSpace/H5Pset_file_space.htm
-    /// </summary>
-    /// <param name="fcpl">The file creation property list identifier.</param>
-    /// <param name="strategy">The strategy for file space management.</param>
-    /// <param name="threshold">The free-space section threshold. The
-    /// library default is 1, which is to track all free-space sections.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pset_file_space",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_file_space
-        (hid_t fcpl, H5F.file_space_type_t strategy, hsize_t threshold = 1);
-
-    /// <summary>
     /// Sets the file space page size for a file creation property list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileSpacePageSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileSpacePageSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl">The file creation property list identifier.</param>
     /// <param name="fsp_size">File space page size</param>
@@ -2705,7 +2626,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the file space handling strategy and persisting free-space
     /// values for a file creation property list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileSpaceStrategy
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFileSpaceStrategy" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl">The file creation property list identifier.</param>
     /// <param name="strategy">The file space handling strategy to be used.</param>
@@ -2725,7 +2646,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the time when fill values are written to a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFillTime
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFillTime" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="fill_time">When to write fill values to a dataset.</param>
@@ -2739,7 +2660,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the fill value for a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFillValue
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFillValue" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="type_id">Datatype of <paramref name="value"/>.</param>
@@ -2755,7 +2676,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Adds a filter to the filter pipeline.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFilter
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFilter" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier.</param>
@@ -2764,7 +2685,7 @@ public sealed unsafe partial class H5P
     /// <param name="flags">Bit vector specifying certain general
     /// properties of the filter.</param>
     /// <param name="cd_nelmts">Number of elements in
-    /// <code>cd_values</code>.</param>
+    /// <c>cd_values</c>.</param>
     /// <param name="cd_values">Auxiliary data for the filter.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -2777,23 +2698,20 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets user-defined filter callback function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFilterCallback
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5P_SET_FILTER_CALLBACK" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset transfer property list identifier.</param>
     /// <param name="func">User-defined filter callback function.</param>
-    /// <param name="op_data">User-defined input data for the callback
-    /// function.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
+    /// <param name="op_data">User-defined input data for the callback function.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pset_filter_callback",
                CallingConvention = CallingConvention.Cdecl),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_filter_callback
-        (hid_t plist, H5Z.filter_func_t func, IntPtr op_data);
+    public static extern herr_t set_filter_callback(hid_t plist, H5Z.filter_func_t func, IntPtr op_data);
 
     /// <summary>
     /// Sets up use of the Fletcher32 checksum filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetFletcher32
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetFletcher32" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset or group creation property list
     /// identifier.</param>
@@ -2819,7 +2737,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets number of I/O vectors to be read/written in hyperslab I/O.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetHyperVectorSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetHyperVectorSize" /> for further reference.</para>
     /// </summary>
     /// <param name="dxpl_id">Dataset transfer property list identifier.</param>
     /// <param name="vector_size">Number of I/O vectors to accumulate in
@@ -2836,7 +2754,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the size of the parameter used to control the B-trees for
     /// indexing chunked datasets.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetIstoreK
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetIstoreK" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="ik">1/2 rank of chunked storage B-tree</param>
@@ -2849,7 +2767,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the type of storage used to store the raw data for a dataset.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetLayout
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetLayout" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to query.</param>
     /// <param name="layout">Type of storage layout for raw data.</param>
@@ -2864,7 +2782,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets bounds on library versions, and indirectly format versions,
     /// to be used when creating objects.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetLibverBounds
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetLibverBounds" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">File access property list identifier</param>
     /// <param name="low">The earliest version of the library that will be
@@ -2887,7 +2805,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets creation order tracking and indexing for links in a group.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetLinkCreationOrder
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetLinkCreationOrder" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="crt_order_flags">Creation order flag(s)</param>
@@ -2902,7 +2820,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the parameters for conversion between compact and dense groups.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetLinkPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetLinkPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="max_compact">Maximum number of links for compact
@@ -2919,7 +2837,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Specifies the anticipated maximum size of a local heap.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetLocalHeapSizeHint
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetLocalHeapSizeHint" /> for further reference.</para>
     /// </summary>
     /// <param name="gcpl_id">Group creation property list identifier</param>
     /// <param name="size_hint">Anticipated maximum size in bytes of
@@ -2934,10 +2852,10 @@ public sealed unsafe partial class H5P
         (hid_t gcpl_id, size_t size_hint);
 
     /// <summary>
-    /// Sets the callback function that <code>H5Ocopy</code> will invoke
+    /// Sets the callback function that <c>H5Ocopy</c> will invoke
     /// before searching the entire destination file for a matching
     /// committed datatype.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetMcdtSearchCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMcdtSearchCb" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpypl_id">Object copy property list identifier</param>
     /// <param name="func">User-defined callback function</param>
@@ -2955,11 +2873,11 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Set the initial metadata cache configuration in the indicated File
     /// Access Property List to the supplied value.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetMdcConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMdcConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of the file access property list.</param>
     /// <param name="config_ptr">Pointer to the instance of
-    /// <code>H5AC.cache_config_t</code> containing the desired
+    /// <c>H5AC.cache_config_t</c> containing the desired
     /// configuration.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -2971,11 +2889,11 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the metadata cache image option for a file access property list.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMDCImageConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMDCImageConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">Identifier of the file access property list.</param>
     /// <param name="config_ptr">Pointer to the instance of
-    /// <code>H5AC.cache_image_config_t</code> containing the desired
+    /// <c>H5AC.cache_image_config_t</c> containing the desired
     /// configuration.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
@@ -2987,7 +2905,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets metadata cache logging options.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Pset_mdc_log_options.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMdcLogOptions" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="is_enabled">Whether logging is enabled.</param>
@@ -3007,7 +2925,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the minimum metadata block size.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetMetaBlockSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMetaBlockSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Minimum size, in bytes, of metadata block
@@ -3024,7 +2942,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Retrieves the number of read attempts from a file access property
     /// list.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Pset_metadata_read_attempts.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetMetadataReadAttempts" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl">Identifier for a file access property list.</param>
     /// <param name="attempts">The number of read attempts.</param>
@@ -3039,7 +2957,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets up the use of the N-Bit filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetNbit
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetNbit" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -3051,7 +2969,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets maximum number of soft or user-defined link traversals.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetNLinks
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetNLinks" /> for further reference.</para>
     /// </summary>
     /// <param name="lapl_id">File access property list identifier</param>
     /// <param name="nlinks">Maximum number of links to traverse</param>
@@ -3065,7 +2983,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the recording of times associated with an object.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetObjTrackTimes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetObjTrackTimes" /> for further reference.</para>
     /// </summary>
     /// <param name="ocpl_id">Object creation property list identifier</param>
     /// <param name="track_times">Boolean value, 1 or 0, specifying whether
@@ -3081,7 +2999,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets a callback function to invoke when an object flush occurs in
     /// the file.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Pset_object_flush_cb.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetObjectFlushCb" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier for a file access property list.</param>
     /// <param name="func">The user-defined callback function.</param>
@@ -3098,7 +3016,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the maximum size for the page buffer and the minimum
     /// percentage for metadata and raw data pages.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetPageBufferSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetPageBufferSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier</param>
     /// <param name="buf_size">Maximum size, in bytes, of the page buffer</param>
@@ -3119,7 +3037,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets up the use of the scale-offset filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetScaleoffset
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetScaleoffset" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <param name="scale_type">Flag indicating compression method.</param>
@@ -3135,7 +3053,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Configures the specified shared object header message index.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgIndex
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgIndex" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier.</param>
     /// <param name="index_num">Index being configured</param>
@@ -3154,7 +3072,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets number of shared object header message indexes.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgNIndexes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgNIndexes" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">File creation property list</param>
     /// <param name="nindexes">Number of shared object header message
@@ -3170,7 +3088,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets shared object header message storage phase change thresholds.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgPhaseChange
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSharedMesgPhaseChange" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="max_list">Threshold above which storage of a shared
@@ -3188,7 +3106,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets up use of the shuffle filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetShuffle
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetShuffle" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Dataset creation property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -3200,7 +3118,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the maximum size of the data sieve buffer.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSieveBufSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSieveBufSize" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Maximum size, in bytes, of data sieve buffer.</param>
@@ -3216,7 +3134,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the byte size of the offsets and lengths used to address
     /// objects in an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSizes
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSizes" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to modify.</param>
     /// <param name="sizeof_addr">Size of an object offset in bytes.</param>
@@ -3231,7 +3149,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the size of a contiguous block reserved for small data.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSmallData
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSmallData" /> for further reference.</para>
     /// </summary>
     /// <param name="fapl_id">File access property list identifier.</param>
     /// <param name="size">Maximum size, in bytes, of the small data block.</param>
@@ -3246,7 +3164,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the size of parameters used to control the symbol table nodes.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSymK
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSymK" /> for further reference.</para>
     /// </summary>
     /// <param name="fcpl_id">File creation property list identifier</param>
     /// <param name="ik">Symbol table tree rank</param>
@@ -3261,7 +3179,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets up use of the SZIP compression filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetSzip
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetSzip" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset creation property list identifier.</param>
     /// <param name="options_mask">A bit-mask conveying the desired SZIP
@@ -3278,7 +3196,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets user-defined datatype conversion callback function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetTypeConvCb
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetTypeConvCb" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Dataset transfer property list identifier.</param>
     /// <param name="func">User-defined type conversion callback function.</param>
@@ -3294,7 +3212,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets user block size.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetUserblock
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetUserblock" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier of property list to modify.</param>
     /// <param name="size">Size of the user-block in bytes.</param>
@@ -3307,7 +3225,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the mapping between virtual and source datasets.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pset_virtual.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetVirtual" /> for further reference.</para>
     /// </summary>
     /// <param name="dcpl_id">The identifier of the dataset creation
     /// property list that will be used when creating the virtual dataset.</param>
@@ -3318,7 +3236,7 @@ public sealed unsafe partial class H5P
     /// source dataset is or will be located.</param>
     /// <param name="src_dset_name">The path to the HDF5 dataset in the
     /// file specified by <paramref name="src_file_name"/>. </param>
-    /// <param name="src_space_id">The source dataset’s dataspace
+    /// <param name="src_space_id">The source dataset's dataspace
     /// identifier with a selection applied, possibly an unlimited
     /// selection</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -3333,7 +3251,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets prefix to be applied to VDS source file paths.
-    /// See https://portal.hdfgroup.org/display/HDF5/H5P_SET_VIRTUAL_PREFIX
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5P_SET_VIRTUAL_PREFIX" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl">Dataset access property list identifier.</param>
     /// <param name="prefix">Prefix to be applied to VDS source file paths.</param>
@@ -3351,7 +3269,7 @@ public sealed unsafe partial class H5P
     /// Sets the maximum number of missing source files and/or datasets
     /// with the printf-style names when getting the extent of an unlimited
     /// virtual dataset.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pset_virtual_printf_gap.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetVirtualPrintfGap" /> for further reference.</para>
     /// </summary>
     /// <param name="dapl_id">Dataset access property list identifier for
     /// the virtual dataset</param>
@@ -3370,7 +3288,7 @@ public sealed unsafe partial class H5P
     /// <summary>
     /// Sets the view of the virtual dataset (VDS) to include or exclude
     /// missing mapped elements.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/VDS/H5Pset_virtual_view.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetVirtualView" /> for further reference.</para>
     /// </summary>
     /// <param name="plist_id">Identifier of the virtual dataset access
     /// property list.</param>
@@ -3386,18 +3304,18 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Sets the memory manager for variable-length datatype allocation in
-    /// <code>H5Dread</code> and <code>H5Dvlen_reclaim</code>.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-SetVLMemManager
+    /// <c>H5Dread</c> and <c>H5Dvlen_reclaim</c>.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-SetVLMemManager" /> for further reference.</para>
     /// </summary>
     /// <param name="plist">Identifier for the dataset transfer property list.</param>
-    /// <param name="alloc">User's allocate routine, or <code>NULL</code>
-    /// for system <code>malloc</code>.</param>
+    /// <param name="alloc">User's allocate routine, or <c>NULL</c>
+    /// for system <c>malloc</c>.</param>
     /// <param name="alloc_info">Extra parameter for user's allocation
-    /// routine. Contents are ignored if preceding parameter is <code>NULL</code>.</param>
-    /// <param name="free">User's free routine, or <code>NULL</code>
-    /// for system <code>free</code>.</param>
+    /// routine. Contents are ignored if preceding parameter is <c>NULL</c>.</param>
+    /// <param name="free">User's free routine, or <c>NULL</c>
+    /// for system <c>free</c>.</param>
     /// <param name="free_info">Extra parameter for user's free
-    /// routine. Contents are ignored if preceding parameter is <code>NULL</code>.</param>
+    /// routine. Contents are ignored if preceding parameter is <c>NULL</c>.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Pset_vlen_mem_manager",
@@ -3409,7 +3327,7 @@ public sealed unsafe partial class H5P
 
     /// <summary>
     /// Removes a property from a property list class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5P.html#Property-Unregister
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5P.html#Property-Unregister" /> for further reference.</para>
     /// </summary>
     /// <param name="cls">Property list class from which to remove
     /// permanent property</param>

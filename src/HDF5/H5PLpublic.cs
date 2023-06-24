@@ -42,7 +42,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Append a plugin path to the plugin search path.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Append
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Append" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_path">The plugin path</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -54,7 +54,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Query the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Get
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Get" /> for further reference.</para>
     /// </summary>
     /// <param name="index">Index</param>
     /// <param name="pathname">Path name</param>
@@ -69,7 +69,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Query state of the loading of dynamic plugins.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-GetLoadingState
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-GetLoadingState" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_flags">List of dynamic plugin types that are
     /// enabled or disabled.</param>
@@ -82,7 +82,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Insert a plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Insert
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Insert" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_path">The plugin path</param>
     /// <param name="index">Index</param>
@@ -96,7 +96,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Insert a plugin path at the beginning of the list.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Prepend
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Prepend" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_path">The plugin path</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -108,7 +108,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Remove the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Remove
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Remove" /> for further reference.</para>
     /// </summary>
     /// <param name="index">Index</param>
     /// <returns>Returns a non-negative value if successful; otherwise
@@ -120,7 +120,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Replace the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Replace
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Replace" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_path">The plugin path</param>
     /// <param name="index">Index</param>
@@ -134,7 +134,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Control the loading of dynamic plugins.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5PL.html
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5PL.html#Plugin-SetLoadingState" /> for further reference.</para>
     /// </summary>
     /// <param name="plugin_flags">The list of dynamic plugin types to
     /// enable or disable.</param>
@@ -147,7 +147,7 @@ public sealed class H5PL
 
     /// <summary>
     /// Query the size of the current list of plugin paths.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5PL.html
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5PL.html#Plugin-Size" /> for further reference.</para>
     /// </summary>
     /// <param name="listsize">The size of the current list of plugin
     /// paths.</param>

@@ -10,7 +10,7 @@
     <AssemblyName>HDF.PInvoke</AssemblyName>
     <AssemblyOriginatorKeyFile>HDF.PInvoke.snk</AssemblyOriginatorKeyFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CS1591;CA1401</NoWarn>
+    <NoWarn>CS1591;CA1401;IDE1006;IDE0022</NoWarn>
 
     <PackageId>HDF.PInvoke.win-x64</PackageId>
     <Title>HDF.PInvoke for .NET (win-x64)</Title>
@@ -47,6 +47,10 @@
       <TargetPath>%(Filename)%(Extension)</TargetPath>
     </ContentWithTargetPath>
     <None Remove="native\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Marshallers\" />
   </ItemGroup>
   
 </Project>

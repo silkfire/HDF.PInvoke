@@ -26,7 +26,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-public sealed class H5
+public sealed partial class H5
 {
     static H5()
     {
@@ -40,6 +40,22 @@ public sealed class H5
     public const hsize_t HADDR_MAX = HADDR_UNDEF - 1;
 
     /// <summary>
+    /// Specifies the encoding to use when marshalling strings.
+    /// </summary>
+    public enum Encoding
+    {
+        /// <summary>
+        /// Encoding is ASCII.
+        /// </summary>
+        Ascii,
+
+        /// <summary>
+        /// Encoding is UTF-8.
+        /// </summary>
+        Utf8
+    }
+
+    /// <summary>
     /// Common iteration orders
     /// </summary>
     public enum iter_order_t : int
@@ -51,19 +67,19 @@ public sealed class H5
         /// <summary>
         /// Increasing order [value = 0].
         /// </summary>
-        INC,
+        INC = 0,
         /// <summary>
         /// Decreasing order [value = 1].
         /// </summary>
-        DEC,
+        DEC = 1,
         /// <summary>
         /// No particular order, whatever is fastest [value = 2].
         /// </summary>
-        NATIVE,
+        NATIVE = 2,
         /// <summary>
         /// Number of iteration orders [value = 3].
         /// </summary>
-        N
+        N = 3
     }
 
     ///<summary>
@@ -128,193 +144,107 @@ public sealed class H5
     /// <summary>
     /// Allocates memory that will later be freed internally by the HDF5
     /// Library.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-AllocateMemory
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-AllocateMemory" /> for further reference.</para>
     /// </summary>
-    /// <param name="size">
-    /// Specifies the size in bytes of the buffer to be allocated.
-    /// </param>
-    /// <param name="clear">
-    /// Specifies whether the new buffer is to be initialized to 0 (zero).
-    /// </param>
-    /// <returns>
-    /// On success, returns pointer to newly allocated buffer or returns
-    /// NULL if size is 0 (zero). Returns NULL on failure.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5allocate_memory",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern IntPtr allocate_memory
-        (IntPtr size, hbool_t clear);
+    /// <param name="size">Specifies the size in bytes of the buffer to be allocated.</param>
+    /// <param name="clear">Specifies whether the new buffer is to be initialized to 0 (zero).</param>
+    /// <returns>On success, returns pointer to newly allocated buffer or returns <c>NULL</c> if size is 0 (zero). Returns <c>NULL</c> on failure.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5allocate_memory"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial nint allocate_memory(nint size, hbool_t clear);
 
     /// <summary>
-    /// Flushes all data to disk, closes all open identifiers, and cleans
-    /// up memory.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-Close
+    /// Flushes all data to disk, closes all open identifiers, and cleans up memory.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-Close" /> for further reference.</para>
     /// </summary>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5close",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t close();
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5close"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t close();
 
     /// <summary>
     /// Instructs library not to install atexit cleanup routine.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-DontAtExit
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-DontAtExit" /> for further reference.</para>
     /// </summary>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5dont_atexit",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t dont_atexit();
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5dont_atexit"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t dont_atexit();
 
     /// <summary>
     /// Frees memory allocated by the HDF5 Library.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-FreeMemory
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-FreeMemory" /> for further reference.</para>
     /// </summary>
-    /// <param name="buf">
-    /// Buffer to be freed. Can be NULL.
-    /// </param>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5free_memory",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t free_memory(IntPtr buf);
+    /// <param name="buf">Buffer to be freed. Can be <c>NULL</c>.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5free_memory"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t free_memory(nint buf);
 
     /// <summary>
     /// Garbage collects on all free-lists of all types.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-GarbageCollect
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-GarbageCollect" /> for further reference.</para>
     /// </summary>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5garbage_collect",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t garbage_collect();
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5garbage_collect"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t garbage_collect();
 
     /// <summary>
     /// Returns the HDF library release number.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-Version
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-Version" /> for further reference.</para>
     /// </summary>
-    /// <param name="majnum">
-    /// The major version of the library.
-    /// </param>
-    /// <param name="minnum">
-    /// The minor version of the library.
-    /// </param>
-    /// <param name="relnum">
-    /// The release number of the library.
-    /// </param>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5get_libversion",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_libversion
-        (ref uint majnum, ref uint minnum, ref uint relnum);
+    /// <param name="majnum">The major version of the library.</param>
+    /// <param name="minnum">The minor version of the library.</param>
+    /// <param name="relnum">The release number of the library.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5get_libversion"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_libversion(ref uint majnum, ref uint minnum, ref uint relnum);
 
     /// <summary>
-    /// Determine whether the HDF5 Library was built with the thread-safety
-    /// feature enabled.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-IsLibraryThreadsafe
+    /// Determine whether the HDF5 Library was built with the thread-safety feature enabled.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-IsLibraryThreadsafe" /> for further reference.</para>
     /// </summary>
-    /// <param name="is_ts">
-    /// Boolean value indicating whether the library was built with
-    /// thread-safety enabled.
-    /// </param>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5is_library_threadsafe",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t is_library_threadsafe(ref hbool_t is_ts);
+    /// <param name="is_ts">Boolean value indicating whether the library was built with thread-safety enabled.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5is_library_threadsafe"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t is_library_threadsafe(ref hbool_t is_ts);
 
     /// <summary>
     /// Initializes the HDF5 library.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-Open
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-Open" /> for further reference.</para>
     /// </summary>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5open",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t open();
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5open"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t open();
 
     /// <summary>
-    /// Resizes and possibly re-allocates memory that will later be freed
-    /// internally by the HDF5 Library.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-ResizeMemory
+    /// Resizes and possibly re-allocates memory that will later be freed internally by the HDF5 Library.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-ResizeMemory" /> for further reference.</para>
     /// </summary>
-    /// <param name="mem">
-    /// Pointer to a buffer to be resized. May be NULL.
-    /// </param>
-    /// <param name="size">
-    /// New size of the buffer, in bytes.
-    /// </param>
-    /// <returns>
-    /// On success, returns pointer to resized or reallocated buffer or
-    /// returns NULL if size is 0 (zero). Returns NULL on failure.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5resize_memory",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern IntPtr resize_memory(IntPtr mem, IntPtr size);
+    /// <param name="mem">Pointer to a buffer to be resized. May be <c>NULL</c>.</param>
+    /// <param name="size">New size of the buffer, in bytes.</param>
+    /// <returns>On success, returns pointer to resized or reallocated buffer or returns <c>NULL</c> if size is 0 (zero). Returns <c>NULL</c> on failure.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5resize_memory"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial nint resize_memory(nint mem, nint size);
 
 
     /// <summary>
     /// Sets free-list size limits.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5.html#Library-SetFreeListLimits
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5.html#Library-SetFreeListLimits" /> for further reference.</para>
     /// </summary>
-    /// <param name="reg_global_lim">
-    /// The cumulative limit, in bytes, on memory used for all regular
-    /// free lists. (Default: 1MB)
-    /// </param>
-    /// <param name="reg_list_lim">
-    /// The limit, in bytes, on memory used for each regular free list.
-    /// (Default: 64KB)
-    /// </param>
-    /// <param name="arr_global_lim">
-    /// The cumulative limit, in bytes, on memory used for all array
-    /// free lists.(Default: 4MB)
-    /// </param>
-    /// <param name="arr_list_lim">
-    /// The limit, in bytes, on memory used for each array free list.
-    /// (Default: 256KB)
-    /// </param>
-    /// <param name="blk_global_lim">
-    /// The cumulative limit, in bytes, on memory used for all block
-    /// free lists and, separately, for all factory free lists.
-    /// (Default: 16MB)
-    /// </param>
-    /// <param name="blk_list_lim">
-    /// The limit, in bytes, on memory used for each block or factory
-    /// free list. (Default: 1MB)
-    /// </param>
-    /// <returns>
-    /// Returns a non-negative value if successful; otherwise returns a
-    /// negative value.
-    /// </returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5set_free_list_limits",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_free_list_limits
-    (int reg_global_lim, int reg_list_lim, int arr_global_lim,
-     int arr_list_lim, int blk_global_lim, int blk_list_lim);
+    /// <param name="reg_global_lim">The cumulative limit, in bytes, on memory used for all regular free lists. (Default: 1MB)</param>
+    /// <param name="reg_list_lim">The limit, in bytes, on memory used for each regular free list. (Default: 64KB)</param>
+    /// <param name="arr_global_lim">The cumulative limit, in bytes, on memory used for all array free lists. (Default: 4MB)</param>
+    /// <param name="arr_list_lim">The limit, in bytes, on memory used for each array free list. (Default: 256KB)</param>
+    /// <param name="blk_global_lim">The cumulative limit, in bytes, on memory used for all block free lists and, separately, for all factory free lists. (Default: 16MB)</param>
+    /// <param name="blk_list_lim">The limit, in bytes, on memory used for each block or factory free list. (Default: 1MB)</param>
+    /// <returns> Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5set_free_list_limits"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t set_free_list_limits(int reg_global_lim, int reg_list_lim, int arr_global_lim, int arr_list_lim, int blk_global_lim, int blk_list_lim);
 }

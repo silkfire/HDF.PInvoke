@@ -30,15 +30,19 @@ public partial class H5ATest
     [Fact]
     public void H5AiterateTest1()
     {
-        hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        var ieeeF32BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F32BE");
+        var ieeeF64BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F64BE");
+        var nativeB8NamePtr = Marshal.StringToHGlobalAnsi("NATIVE_B8");
+
+        hid_t att = H5A.create(m_v2_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
@@ -52,15 +56,15 @@ public partial class H5ATest
         // we should have 3 elements in the array list
         Assert.Equal(3, al.Count);
 
-        att = H5A.create(m_v0_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
@@ -71,6 +75,10 @@ public partial class H5ATest
         Assert.Equal(3, al.Count);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(ieeeF32BeNamePtr);
+        Marshal.FreeHGlobal(ieeeF64BeNamePtr);
+        Marshal.FreeHGlobal(nativeB8NamePtr);
     }
 
     [Fact]
@@ -91,15 +99,19 @@ public partial class H5ATest
     [Fact]
     public void H5AiterateTest3()
     {
-        hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        var ieeeF32BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F32BE");
+        var ieeeF64BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F64BE");
+        var nativeB8NamePtr = Marshal.StringToHGlobalAnsi("NATIVE_B8");
+
+        hid_t att = H5A.create(m_v2_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
@@ -113,15 +125,15 @@ public partial class H5ATest
         // we should have 3 elements in the array list
         Assert.Equal(3, al.Count);
 
-        att = H5A.create(m_v0_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
@@ -132,6 +144,10 @@ public partial class H5ATest
         Assert.Equal(3, al.Count);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(ieeeF32BeNamePtr);
+        Marshal.FreeHGlobal(ieeeF64BeNamePtr);
+        Marshal.FreeHGlobal(nativeB8NamePtr);
     }
 
     [Fact]

@@ -63,7 +63,7 @@ public partial class H5DTest
         Assert.True(H5T.set_cset(dtype, H5T.cset_t.UTF8) >= 0);
         Assert.True(H5T.set_strpad(dtype, H5T.str_t.SPACEPAD) >= 0);
 
-        hid_t dspace = H5S.create_simple(1, new hsize_t[] { (hsize_t)utf8strings.Count }, null);
+        hid_t dspace = H5S.create_simple(1, new[] { (hsize_t)utf8strings.Count }, null);
 
         hid_t dset = H5D.create(m_v0_test_file, "dset", dtype, dspace);
         Assert.True(dset >= 0);

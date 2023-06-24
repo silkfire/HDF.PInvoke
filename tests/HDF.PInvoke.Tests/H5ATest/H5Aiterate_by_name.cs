@@ -31,22 +31,26 @@ public partial class H5ATest
     [Fact]
     public void H5Aiterate_by_nameTest1()
     {
-        hid_t att = H5A.create(m_v2_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        var ieeeF32BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F32BE");
+        var ieeeF64BeNamePtr = Marshal.StringToHGlobalAnsi("IEEE_F64BE");
+        var nativeB8NamePtr = Marshal.StringToHGlobalAnsi("NATIVE_B8");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t att = H5A.create(m_v2_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
         ArrayList al = new ArrayList();
         hsize_t n = 0;
 
-        // if we define the callback as lambda we can simple capture the array list
-        H5A.operator_t cb = (hid_t location_id, IntPtr attr_name, ref H5A.info_t ainfo, IntPtr op_data) =>
+        int Callback(long location_id, nint attr_name, ref H5A.info_t ainfo, nint op_data)
         {
             Assert.Equal(-99L, op_data.ToInt64());
             int len = 0;
@@ -60,10 +64,10 @@ public partial class H5ATest
             al.Add(Encoding.UTF8.GetString(buf));
 
             return 0;
-        };
+        }
 
         // the op_data argument is simply tested as a constant
-        Assert.True(H5A.iterate_by_name(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, new IntPtr(-99)) >= 0);
+        Assert.True(H5A.iterate_by_name(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, Callback, new IntPtr(-99)) >= 0);
         // we should have 3 elements in the array list [now obsolete]
         Assert.True(al.Count == 3);
         Assert.DoesNotContain(al.ToArray(), s => s == null || string.IsNullOrEmpty(s.ToString()));
@@ -72,21 +76,21 @@ public partial class H5ATest
         Assert.Equal("IEEE_F64BE", al[1].ToString());
         Assert.Equal("NATIVE_B8", al[2].ToString());
 
-        att = H5A.create(m_v0_test_file, "IEEE_F32BE", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF32BeNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "IEEE_F64BE", H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, ieeeF64BeNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "NATIVE_B8", H5T.NATIVE_B8, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, nativeB8NamePtr, H5T.NATIVE_B8, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
         al.Clear();
         n = 0;
-        Assert.True(H5A.iterate_by_name(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, new IntPtr(-99)) >= 0);
+        Assert.True(H5A.iterate_by_name(m_v0_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, Callback, new IntPtr(-99)) >= 0);
         // we should have 3 elements in the array list [now obsolete]
         Assert.True(al.Count == 3);
         Assert.DoesNotContain(al.ToArray(), s => s == null || string.IsNullOrEmpty(s.ToString()));
@@ -94,11 +98,18 @@ public partial class H5ATest
         Assert.Equal("IEEE_F32BE", al[0].ToString());
         Assert.Equal("IEEE_F64BE", al[1].ToString());
         Assert.Equal("NATIVE_B8", al[2].ToString());
+
+        Marshal.FreeHGlobal(ieeeF32BeNamePtr);
+        Marshal.FreeHGlobal(ieeeF64BeNamePtr);
+        Marshal.FreeHGlobal(nativeB8NamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 
     [Fact]
     public void H5Aiterate_by_nameTest2()
     {
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
         IntPtr op_data = (IntPtr)hnd;
@@ -106,8 +117,10 @@ public partial class H5ATest
         // the callback is defined in H5ATest.cs
         H5A.operator_t cb = H5AFixture.DelegateMethod;
 
-        Assert.False(H5A.iterate_by_name(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
+        Assert.False(H5A.iterate_by_name(Utilities.RandomInvalidHandle(), dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 }

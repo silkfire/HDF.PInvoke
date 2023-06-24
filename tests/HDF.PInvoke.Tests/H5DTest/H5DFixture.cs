@@ -89,7 +89,7 @@ public sealed class H5DFixture : IDisposable
         Assert.True(H5T.set_cset(dtype, H5T.cset_t.UTF8) >= 0);
         Assert.True(H5T.set_strpad(dtype, H5T.str_t.SPACEPAD) >= 0);
 
-        hid_t dspace = H5S.create_simple(1, new hsize_t[] { (hsize_t)m_utf8strings.Count }, null);
+        hid_t dspace = H5S.create_simple(1, new[] { (hsize_t)m_utf8strings.Count }, null);
 
         m_v0_utf8_dset = H5D.create(m_v0_class_file, "UTF-8", dtype, dspace);
         Assert.True(m_v0_utf8_dset >= 0);

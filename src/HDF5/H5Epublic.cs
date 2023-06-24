@@ -141,59 +141,59 @@ public sealed partial class H5E
 
     /// <summary>
     /// Determines type of error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-AutoIsV2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-AutoIsV2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">The error stack identifier</param>
     /// <param name="is_stack">A flag indicating which error stack typedef
     /// the specified error stack conforms to.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eauto_is_v2",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eauto_is_v2"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t auto_is_v2
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t auto_is_v2
         (hid_t estack_id, ref uint is_stack);
 
     /// <summary>
     /// Clears the specified error stack or the error stack for the current
     /// thread.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-Clear2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-Clear2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclear2",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclear2"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t clear(hid_t estack_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t clear(hid_t estack_id);
 
     /// <summary>
     /// Closes an error message identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-CloseMsg
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-CloseMsg" /> for further reference.</para>
     /// </summary>
     /// <param name="msg_id">Error message identifier.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclose_msg",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclose_msg"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t close_msg(hid_t msg_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t close_msg(hid_t msg_id);
 
     /// <summary>
     /// Closes object handle for error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-CloseStack
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-CloseStack" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclose_stack",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eclose_stack"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t close_stack(hid_t estack_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t close_stack(hid_t estack_id);
 
     /// <summary>
     /// Add major error message to an error class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-CreateMsg
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-CreateMsg" /> for further reference.</para>
     /// </summary>
     /// <param name="cls">Error class identifier.</param>
     /// <param name="msg_type">The type of the error message.</param>
@@ -201,46 +201,38 @@ public sealed partial class H5E
     /// <returns>Returns a message identifier on success; otherwise returns
     /// a negative value.</returns>
     /// <remarks>ASCII strings ONLY.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ecreate_msg",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ecreate_msg", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t create_msg
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t create_msg
     (hid_t cls, type_t msg_type,
      [MarshalAs(UnmanagedType.LPStr)] string msg);
 
     /// <summary>
     /// Creates a new empty error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-CreateStack
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-CreateStack" /> for further reference.</para>
     /// </summary>
     /// <returns>Returns an error stack identifier on success; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ecreate_stack",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ecreate_stack"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t create_stack();
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t create_stack();
 
     /// <summary>
-    /// Returns the settings for the automatic error stack traversal
-    /// function and its data.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-GetAuto2
+    /// Returns the settings for the automatic error stack traversal function and its data.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-GetAuto2" /> for further reference.</para>
     /// </summary>
-    /// <param name="estack_id">Error stack identifier.
-    /// <code>H5E_DEFAULT</code> indicates the current stack.</param>
-    /// <param name="func">The function currently set to be called upon an
-    /// error condition.</param>
-    /// <param name="client_data">Data currently set to be passed to the
-    /// error function.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_auto2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_auto
-        (hid_t estack_id, ref auto_t func, ref ssize_t client_data);
+    /// <param name="estack_id">Error stack identifier. <see cref="DEFAULT"/> indicates the current stack.</param>
+    /// <param name="func">The function currently set to be called upon an error condition.</param>
+    /// <param name="client_data">Data currently set to be passed to the error function.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_auto2"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical] [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_auto(hid_t estack_id, ref auto_t func, ref ssize_t client_data);
 
     /// <summary>
     /// Retrieves error class name.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-GetClassName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-GetClassName" /> for further reference.</para>
     /// </summary>
     /// <param name="class_id">Error class identifier.</param>
     /// <param name="name">The name of the class to be queried.</param>
@@ -258,18 +250,18 @@ public sealed partial class H5E
 
     /// <summary>
     /// Returns copy of current error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-GetCurrentStack
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-GetCurrentStack" /> for further reference.</para>
     /// </summary>
     /// <returns>Returns an error stack identifier on success; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_current_stack",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_current_stack"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t get_current_stack();
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t get_current_stack();
 
     /// <summary>
     /// Retrieves an error message.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-GetMsg
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-GetMsg" /> for further reference.</para>
     /// </summary>
     /// <param name="msg_id">Idenfier for error message to be queried.</param>
     /// <param name="msg_type">The type of the error message.</param>
@@ -286,50 +278,49 @@ public sealed partial class H5E
 
     /// <summary>
     /// Retrieves the number of error messages in an error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-GetNum
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-GetNum" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_num",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eget_num"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_num(hid_t estack_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial ssize_t get_num(hid_t estack_id);
 
     /// <summary>
     /// Deletes specified number of error messages from the error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-Pop
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-Pop" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
-    /// <param name="count">The number of error messages to be deleted from
-    /// the top of error stack.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Epop",
-               CallingConvention = CallingConvention.Cdecl),
+    /// <param name="count">The number of error messages to be deleted from the top of error stack.</param>
+    /// <returns>Returns a non-negative value on success; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Epop"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t pop(hid_t estack_id, size_t count);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t pop(hid_t estack_id, size_t count);
 
     /// <summary>
     /// Prints the specified error stack in a default manner.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-Print2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-Print2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Identifier of the error stack to be printed.</param>
-    /// <param name="stream">File pointer, or stderr if NULL.</param>
+    /// <param name="stream">File pointer, or stderr if <c>NULL</c>.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eprint2",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eprint2"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t print
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t print
         (hid_t estack_id, ssize_t stream);
 
     /// <summary>
     /// Pushes new error record onto error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-Push2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-Push2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Identifier of the error stack to which the
     /// error record is to be pushed. If the identifier is
-    /// <code>H5E.DEFAULT</code> , the error record will be pushed to the
+    /// <c>H5E.DEFAULT</c> , the error record will be pushed to the
     /// current stack.</param>
     /// <param name="file">Name of the file in which the error was
     /// detected.</param>
@@ -344,88 +335,82 @@ public sealed partial class H5E
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Epush2",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Epush2", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t push
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t push
     (hid_t estack_id, string file, string func, uint line,
      hid_t class_id, hid_t major_id, hid_t minor_id, string msg);
 
     /// <summary>
     /// Registers a client library or application program to the HDF5 error
     /// API.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-RegisterClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-RegisterClass" /> for further reference.</para>
     /// </summary>
     /// <param name="cls_name">Name of the error class.</param>
     /// <param name="lib_name">Name of the client library or application to
     /// which the error class belongs.</param>
     /// <param name="version">Version of the client library or application
-    /// to which the error class belongs. A NULL can be passed in.</param>
+    /// to which the error class belongs. A <c>NULL</c> can be passed in.</param>
     /// <returns>Returns a class identifier on success; otherwise returns a
     /// negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eregister_class",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eregister_class"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t register_class
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t register_class
     ([MarshalAs(UnmanagedType.LPStr)] string cls_name,
      [MarshalAs(UnmanagedType.LPStr)] string lib_name,
      [MarshalAs(UnmanagedType.LPStr)] string version);
 
     /// <summary>
     /// Turns automatic error printing on or off.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-SetAuto2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-SetAuto2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
     /// <param name="func">Function to be called upon an error condition.</param>
     /// <param name="client_data">Data passed to the error function.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eset_auto2",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eset_auto2"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_auto
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t set_auto
         (hid_t estack_id, auto_t func, ssize_t client_data);
 
     /// <summary>
     /// Replaces the current error stack.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-SetCurrentStack
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-SetCurrentStack" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eset_current_stack",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eset_current_stack"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_current_stack(hid_t estack_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t set_current_stack(hid_t estack_id);
 
     /// <summary>
     /// Removes an error class.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-UnregisterClass
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-UnregisterClass" /> for further reference.</para>
     /// </summary>
     /// <param name="class_id">Error class identifier.</param>
     /// <returns>Returns a non-negative value on success; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eunregister_class",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Eunregister_class"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t unregister_class(hid_t class_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t unregister_class(hid_t class_id);
 
     /// <summary>
     /// Walks the specified error stack, calling the specified function.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5E.html#Error-Walk2
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5E.html#Error-Walk2" /> for further reference.</para>
     /// </summary>
     /// <param name="estack_id">Error stack identifier.</param>
-    /// <param name="direction">Direction in which the error stack is to be
-    /// walked.</param>
+    /// <param name="direction">Direction in which the error stack is to be walked.</param>
     /// <param name="func">Function to be called for each error encountered.</param>
-    /// <param name="client_data">Data to be passed with
-    /// <paramref name="func"/>.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ewalk2",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t walk
-    (hid_t estack_id, direction_t direction, walk_t func,
-     ssize_t client_data);
+    /// <param name="client_data">Data to be passed with <paramref name="func"/>.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Ewalk2"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t walk(hid_t estack_id, direction_t direction, walk_t func, ssize_t client_data);
 }

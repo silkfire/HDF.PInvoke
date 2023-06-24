@@ -31,7 +31,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-public sealed class H5F
+public sealed partial class H5F
 {
     static H5F()
     {
@@ -69,8 +69,8 @@ public sealed class H5F
     /// indicate that this file is open for writing in a
     /// single-writer/multi-reader (SWMR) scenario.  Note that the
     /// process(es) opening the file for reading must open the file
-    /// with <code>RDONLY</code> access, and use the special
-    /// <code>SWMR_READ</code> access flag.
+    /// with <c>RDONLY</c> access, and use the special
+    /// <c>SWMR_READ</c> access flag.
     /// </summary>
     public const uint ACC_SWMR_WRITE = 0x0020u;
 
@@ -78,7 +78,7 @@ public sealed class H5F
     /// indicate that this file is open for reading in a 
     /// single-writer/multi-reader (SWMR) scenario. Note that the
     /// process(es) opening the file for SWMR reading must also
-    /// open the file with the <code>RDONLY</code> flag.
+    /// open the file with the <c>RDONLY</c> flag.
     /// </summary>
     public const uint ACC_SWMR_READ = 0x0040u;
 
@@ -416,7 +416,7 @@ public sealed class H5F
     /// <summary>
     /// Data structure to report the collection of read retries for
     /// metadata items with checksum. Used by public routine
-    /// <code>H5F.get_metadata_read_retry_info</code>
+    /// <c>H5F.get_metadata_read_retry_info</c>
     /// </summary>
     /*
      * 
@@ -453,7 +453,7 @@ public sealed class H5F
     }
 
     /// <summary>
-    /// Callback for <code>H5P.set_object_flush_cb</code> in a file access
+    /// Callback for <c>H5P.set_object_flush_cb</c> in a file access
     /// property list
     /// </summary>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -461,33 +461,32 @@ public sealed class H5F
 
     /// <summary>
     /// Clears the external link open file cache.
-    /// https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-ClearELinkFileCache
+    /// https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-ClearELinkFileCache
     /// </summary>
     /// <param name="file_id">File identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Fclear_elink_file_cache",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fclear_elink_file_cache"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t clear_elink_file_cache(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t clear_elink_file_cache(hid_t file_id);
 
     /// <summary>
     /// Terminates access to an HDF5 file.
-    /// https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Close
+    /// https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Close
     /// </summary>
     /// <param name="file_id">Identifier of a file to which access is
     /// terminated.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fclose",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fclose"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t close(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t close(hid_t file_id);
 
     /// <summary>
     /// Creates an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-CreateS
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-CreateS" /> for further reference.</para>
     /// </summary>
     /// <param name="filename">Name of the file to access.</param>
     /// <param name="flags">File access flags (H5.ACC_*).</param>
@@ -498,17 +497,16 @@ public sealed class H5F
     /// <returns>Returns a file identifier if successful; otherwise returns
     /// a negative value.</returns>
     /// <remarks><paramref name="filename"/> MUST be an ASCII string.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fcreate",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fcreate", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t create
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t create
     (string filename, uint flags,
      hid_t create_plist = H5P.DEFAULT, hid_t access_plist = H5P.DEFAULT);
 
     /// <summary>
     /// Flushes all buffers associated with a file to disk.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Flush
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Flush" /> for further reference.</para>
     /// </summary>
     /// <param name="object_id">Identifier of object used to identify the
     /// file.</param>
@@ -516,62 +514,53 @@ public sealed class H5F
     /// action.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fflush",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t flush(hid_t object_id, scope_t scope);
-
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Fformat_convert_super",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t format_convert_super(hid_t fid);
-
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fflush"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t flush(hid_t object_id, scope_t scope);
 
     /// <summary>
     /// Returns a file access property list identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetAccessPlist
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetAccessPlist" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of file of which to get access
     /// property list</param>
     /// <returns>Returns a file access property list identifier if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_access_plist",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_access_plist"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t get_access_plist(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t get_access_plist(hid_t file_id);
 
     /// <summary>
     /// Returns a file creation property list identifier.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetCreatePlist
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetCreatePlist" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of file of which to get creation
     /// property list</param>
     /// <returns>Returns a file access property list identifier if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_create_plist",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_create_plist"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t get_create_plist(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t get_create_plist(hid_t file_id);
 
     /// <summary>
     /// Retrieves the setting for whether or not a file will create minimized dataset object headers.
-    /// See https://portal.hdfgroup.org/display/HDF5/H5F_GET_DSET_NO_ATTRS_HINT
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5F_GET_DSET_NO_ATTRS_HINT" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">File identifier</param>
     /// <param name="minimize">Flag indicating whether the library will or will not
     /// create minimized dataset object headers</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Fget_dset_no_attrs_hint",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_dset_no_attrs_hint"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_dset_no_attrs_hint(hid_t file_id, ref hbool_t minimize);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_dset_no_attrs_hint(hid_t file_id, ref hbool_t minimize);
 
     /// <summary>
     /// Retrieves a copy of the image of an existing, open file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetFileImage
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetFileImage" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Target file identifier</param>
     /// <param name="buf_ptr">Pointer to the buffer into which the image of
@@ -580,62 +569,56 @@ public sealed class H5F
     /// <returns>If successful, returns the size in bytes of the buffer
     /// required to store the file image if successful; otherwise returns
     /// a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_file_image",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_file_image"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_file_image
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial ssize_t get_file_image
         (hid_t file_id, ssize_t buf_ptr, ssize_t buf_len);
 
     /// <summary>
     /// Returns the size of an HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetFilesize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetFilesize" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of a currently-open HDF5
     /// file</param>
     /// <param name="size">Size of the file, in bytes.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_filesize",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_filesize"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_filesize
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_filesize
         (hid_t file_id, ref hsize_t size);
 
     /// <summary>
     /// Retrieves free-space section information for a file.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FileSpace/H5Fget_free_sections.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetFreeSections" /> for further reference.</para>
     /// </summary>
-    /// <param name="file_id">Identifier of a currently-open HDF5
-    /// file</param>
+    /// <param name="file_id">Identifier of a currently-open HDF5 file</param>
     /// <param name="type">The file memory allocation type.</param>
     /// <param name="nsects">The number of free-space sections.</param>
-    /// <param name="sect_info">Array of instances of
-    /// <code>H5F.sect_info_t</code> in which the free-space section
-    /// information is to be returned.</param>
-    /// <returns></returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_free_sections",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_free_sections
-    (hid_t file_id, mem_t type, size_t nsects,
-     sect_info_t[] sect_info);
+    /// <param name="sect_info">Array of instances of <see cref="H5F.sect_info_t"/> in which the free-space section information is to be returned.</param>
+    /// <returns>Returns the number of free-space sections for the specified free-space manager in the file; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_free_sections"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial ssize_t get_free_sections(hid_t file_id, mem_t type, size_t nsects, sect_info_t[] sect_info);
 
     /// <summary>
     /// Returns the amount of free space in a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetFreespace
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetFreespace" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of a currently-open HDF5
     /// file</param>
     /// <returns>Returns the amount of free space in the file if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_freespace",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_freespace"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hssize_t get_freespace(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hssize_t get_freespace(hid_t file_id);
 
     /// <summary>
     /// Returns global information for a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Object identifier for any object in the
     /// file.</param>
@@ -643,15 +626,15 @@ public sealed class H5F
     /// information.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_info2",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_info2"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_info
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_info
         (hid_t obj_id, ref info_t bh_info);
 
     /// <summary>
     /// Determines the read/write or read-only status of a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetIntent
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetIntent" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">File identifier for a currently-open HDF5
     /// file.</param>
@@ -659,62 +642,62 @@ public sealed class H5F
     /// with H5Fopen.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_intent",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_intent"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_intent(hid_t file_id, ref uint intent);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_intent(hid_t file_id, ref uint intent);
 
     /// <summary>
     /// Obtain current metadata cache configuration for target file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetMdcConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file</param>
     /// <param name="config_ptr">Pointer to the instance of
-    /// <code>H5AC_cache_config_t</code> in which the current metadata
+    /// <c>H5AC_cache_config_t</c> in which the current metadata
     /// cache configuration is to be reported.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_config",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_config"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_mdc_config
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_mdc_config
         (hid_t file_id, ref H5AC.cache_config_t config_ptr);
 
     /// <summary>
     /// Obtain target file's metadata cache hit rate.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetMdcHitRate
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcHitRate" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file</param>
     /// <param name="hit_rate_ptr">Pointer to the double in which the hit
     /// rate is returned.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_hit_rate",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_hit_rate"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_mdc_hit_rate
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_mdc_hit_rate
         (hid_t file_id, ref double hit_rate_ptr);
 
     /// <summary>
     /// Obtain information about a cache image if it exists.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcImageInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcImageInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file.</param>
     /// <param name="image_addr">Offset of the cache image if it exists,
-    /// or <code>HADDR_UNDEF</code> if it does not.</param>
+    /// or <c>HADDR_UNDEF</c> if it does not.</param>
     /// <param name="image_len">Length of the cache image if it exists,
     /// or 0 if it does not.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_image_info",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_image_info"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_mdc_image_info
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_mdc_image_info
         (hid_t file_id, ref haddr_t image_addr, ref haddr_t image_len);
 
     /// <summary>
     /// Gets the current metadata cache logging status.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Fget_mdc_logging_status.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcLoggingStatus" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of an open HDF5 file.</param>
     /// <param name="is_enabled">Whether logging is enabled.</param>
@@ -722,37 +705,36 @@ public sealed class H5F
     /// being logged.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.HighLevelApisDllFilename,
-               EntryPoint = "H5Fget_mdc_logging_status",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.HighLevelApisDllFilename, EntryPoint = "H5Fget_mdc_logging_status"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_mdc_logging_status
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_mdc_logging_status
     (hid_t file_id, ref hbool_t is_enabled,
      ref hbool_t is_currently_logging);
 
     /// <summary>
     /// Obtain current metadata cache size data for specified file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetMdcSize
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMdcSize" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file</param>
     /// <param name="max_size_ptr">Pointer to the location in which the
-    /// current cache maximum size is to be returned, or NULL if this datum
+    /// current cache maximum size is to be returned, or <c>NULL</c> if this datum
     /// is not desired.</param>
     /// <param name="min_clean_size_ptr">Pointer to the location in which
-    /// the current cache minimum clean size is to be returned, or NULL if
+    /// the current cache minimum clean size is to be returned, or <c>NULL</c> if
     /// that datum is not desired.</param>
     /// <param name="cur_size_ptr">Pointer to the location in which the
-    /// current cache size is to be returned, or NULL if that datum is not
+    /// current cache size is to be returned, or <c>NULL</c> if that datum is not
     /// desired.</param>
     /// <param name="cur_num_entries_ptr">Pointer to the location in which
     /// the current number of entries in the cache is to be returned, or
-    /// NULL if that datum is not desired.</param>
+    /// <c>NULL</c> if that datum is not desired.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_size",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_mdc_size"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_mdc_size
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_mdc_size
     (hid_t file_id, ref size_t max_size_ptr,
      ref size_t min_clean_size_ptr, ref size_t cur_size_ptr,
      ref int cur_num_entries_ptr);
@@ -760,23 +742,22 @@ public sealed class H5F
     /// <summary>
     /// Retrieves the collection of read retries for metadata entries with
     /// checksum.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Fget_metadata_read_retry_info.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetMetadataReadRetryInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier for a currently opened HDF5 file.</param>
     /// <param name="info">Struct containing the collection of read retries
     /// for metadata entries with checksum.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Fget_metadata_read_retry_info",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_metadata_read_retry_info"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_metadata_read_retry_info
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_metadata_read_retry_info
         (hid_t file_id, ref retry_info_t info);
 
     /// <summary>
     /// Retrieves name of file to which object belongs.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetName
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetName" /> for further reference.</para>
     /// </summary>
     /// <param name="obj_id">Identifier of the object for which the
     /// associated filename is sought.</param>
@@ -793,7 +774,7 @@ public sealed class H5F
 
     /// <summary>
     /// Returns the number of open object identifiers for an open file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetObjCount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetObjCount" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of a currently-open HDF5 file.
     /// </param>
@@ -801,15 +782,15 @@ public sealed class H5F
     /// returned.</param>
     /// <returns>Returns the number of open objects if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_obj_count",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_obj_count"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_obj_count
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial ssize_t get_obj_count
         (hid_t file_id, uint types);
 
     /// <summary>
     /// Returns a list of open object identifiers.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetObjIDs
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetObjIDs" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of a currently-open HDF5 file.</param>
     /// <param name="types">Type of object for which identifiers are to be
@@ -820,15 +801,15 @@ public sealed class H5F
     /// object identifiers.</param>
     /// <returns>Returns number of objects placed into obj_id_list if
     /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_obj_ids",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_obj_ids"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get_obj_ids
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial ssize_t get_obj_ids
         (hid_t file_id, uint types, size_t max_objs, ssize_t obj_id_list);
 
     /// <summary>
     /// Retrieves statistics about page access when it is enabled.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetPBStats
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetPBStats" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">File identifier</param>
     /// <param name="accesses">Two integer array for the number of metadata
@@ -862,7 +843,7 @@ public sealed class H5F
 
     /// <summary>
     /// Returns pointer to the file handle from the virtual file driver.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-GetVfdHandle
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-GetVfdHandle" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the file to be queried.</param>
     /// <param name="fapl">File access property list identifier.</param>
@@ -870,29 +851,28 @@ public sealed class H5F
     /// the low-level virtual file driver.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_vfd_handle",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fget_vfd_handle"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_vfd_handle
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t get_vfd_handle
         (hid_t file_id, hid_t fapl, ref ssize_t file_handle);
 
     /// <summary>
     /// Determines whether a file is in the HDF5 format.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-IsHDF5
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-IsHDF5" /> for further reference.</para>
     /// </summary>
-    /// <returns>When successful, returns a positive value, for TRUE,
-    /// or 0 (zero), for FALSE. On any error, including the case that
+    /// <returns>When successful, returns a positive value, for <c>TRUE</c>,
+    /// or 0 (zero), for <c>FALSE</c>. On any error, including the case that
     /// the file does not exist, returns a negative value.</returns>
     /// <remarks><paramref name="filename"/> MUST be an ASCII string.</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fis_hdf5",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fis_hdf5", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern htri_t is_hdf5(string filename);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial htri_t is_hdf5(string filename);
 
     /// <summary>
     /// Mounts a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Mount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Mount" /> for further reference.</para>
     /// </summary>
     /// <param name="loc">Identifier for of file or group in which name
     /// is defined.</param>
@@ -902,15 +882,15 @@ public sealed class H5F
     /// <param name="plist">File mount property list identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fmount",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fmount"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t mount
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t mount
         (hid_t loc, byte[] name, hid_t child, hid_t plist = H5P.DEFAULT);
 
     /// <summary>
     /// Mounts a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Mount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Mount" /> for further reference.</para>
     /// </summary>
     /// <param name="loc">Identifier for of file or group in which name
     /// is defined.</param>
@@ -921,157 +901,152 @@ public sealed class H5F
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fmount",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fmount", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t mount
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t mount
         (hid_t loc, string name, hid_t child, hid_t plist = H5P.DEFAULT);
 
     /// <summary>
     /// Opens an existing HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Open
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Open" /> for further reference.</para>
     /// </summary>
     /// <param name="filename">Name of the file to be opened.</param>
-    /// <param name="flags">File access flags. (<code>H5F_ACC_RDWR</code>
-    /// or <code>H5F_ACC_RDONLY</code>)</param>
+    /// <param name="flags">File access flags. (<c>H5F_ACC_RDWR</c>
+    /// or <c>H5F_ACC_RDONLY</c>)</param>
     /// <param name="plist">Identifier for the file access properties
     /// list.</param>
     /// <returns>Returns a file identifier if successful; otherwise returns
     /// a negative value.</returns>
     /// <remarks><paramref name="filename"/> MUST be an ASCII string!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fopen",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fopen", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t open
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t open
         (string filename, uint flags, hid_t plist = H5P.DEFAULT);
 
     /// <summary>
     /// Returns a new identifier for a previously-opened HDF5 file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Reopen
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Reopen" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of a file for which an additional
     /// identifier is required.</param>
     /// <returns>Returns a new file identifier if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Freopen",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Freopen"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern hid_t reopen(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial hid_t reopen(hid_t file_id);
 
     /// <summary>
     /// Reset hit rate statistics counters for the target file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-ResetMdcHitRateStats
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-ResetMdcHitRateStats" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Freset_mdc_hit_rate_stats",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Freset_mdc_hit_rate_stats"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t reset_mdc_hit_rate_stats(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t reset_mdc_hit_rate_stats(hid_t file_id);
 
     /// <summary>
     /// Resets the page buffer statistics.
-    /// See https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-ResetPBStats
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-ResetPBStats" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">File identifier</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Freset_page_buffering_stats",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Freset_page_buffering_stats"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t reset_page_buffering_stats(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t reset_page_buffering_stats(hid_t file_id);
 
     /// <summary>
     /// Sets the flag to create minimized dataset object headers.
-    /// See https://portal.hdfgroup.org/display/HDF5/H5F_SET_DSET_NO_ATTRS_HINT
+    /// <para>See <see href="https://portal.hdfgroup.org/display/HDF5/H5F_SET_DSET_NO_ATTRS_HINT" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">File identifier</param>
     /// <param name="minimize">Flag indicating whether the library will or will not
     /// create minimized dataset object headers</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename,
-               EntryPoint = "H5Fset_dset_no_attrs_hint",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fset_dset_no_attrs_hint"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_dset_no_attrs_hint(hid_t file_id, hbool_t minimize);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t set_dset_no_attrs_hint(hid_t file_id, hbool_t minimize);
 
     /// <summary>
     /// Attempt to configure metadata cache of target file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-SetMdcConfig
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-SetMdcConfig" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of the target file</param>
     /// <param name="config_ptr">Pointer to the instance of
-    /// <code>H5AC_cache_config_t</code> containing the desired
+    /// <c>H5AC_cache_config_t</c> containing the desired
     /// configuration.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fset_mdc_config",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fset_mdc_config"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_mdc_config
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t set_mdc_config
         (hid_t file_id, ref H5AC.cache_config_t config_ptr);
 
     /// <summary>
     /// Starts logging metadata cache events if logging was previously
     /// enabled.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Fstart_mdc_logging.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-StartMdcLogging" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of an open HDF5 file.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstart_mdc_logging",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstart_mdc_logging"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t start_mdc_logging(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t start_mdc_logging(hid_t file_id);
 
     /// <summary>
     /// Enables SWMR writing mode for a file.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/SWMR/H5Fstart_swmr_write.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-StartSwmrWrite" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">A file identifier.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstart_swmr_write",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstart_swmr_write"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t start_swmr_write(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t start_swmr_write(hid_t file_id);
 
     /// <summary>
     /// Stops logging metadata cache events if logging was previously
     /// enabled and is currently ongoing.
-    /// See https://www.hdfgroup.org/HDF5/docNewFeatures/FineTuneMDC/H5Fstop_mdc_logging.htm
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-StopMdcLogging" /> for further reference.</para>
     /// </summary>
     /// <param name="file_id">Identifier of an open HDF5 file.</param>
     /// <returns>Returns a non-negative value if successful. Otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstop_mdc_logging",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Fstop_mdc_logging"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t stop_mdc_logging(hid_t file_id);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t stop_mdc_logging(hid_t file_id);
 
     /// <summary>
     /// Unmounts a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Unmount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Unmount" /> for further reference.</para>
     /// </summary>
     /// <param name="loc">File or group identifier for the location at
     /// which the specified file is to be unmounted.</param>
     /// <param name="name">Name of the mount point.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Funmount",
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Funmount"),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t unmount(hid_t loc, byte[] name);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t unmount(hid_t loc, byte[] name);
 
     /// <summary>
     /// Unmounts a file.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5F.html#File-Unmount
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5F.html#File-Unmount" /> for further reference.</para>
     /// </summary>
     /// <param name="loc">File or group identifier for the location at
     /// which the specified file is to be unmounted.</param>
@@ -1079,9 +1054,8 @@ public sealed class H5F
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
     /// <remarks>ASCII strings ONLY!</remarks>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Funmount",
-               CharSet = CharSet.Ansi,
-               CallingConvention = CallingConvention.Cdecl),
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Funmount", StringMarshalling = StringMarshalling.Custom, StringMarshallingCustomType = typeof(System.Runtime.InteropServices.Marshalling.AnsiStringMarshaller)),
      SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t unmount(hid_t loc, string name);
+    [UnmanagedCallConv(CallConvs = new[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
+    public static partial herr_t unmount(hid_t loc, string name);
 }

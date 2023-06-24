@@ -59,7 +59,7 @@ public partial class H5TTest
 
         // write a 3 elements
 
-        string[] keys = new string[]
+        string[] keys = new[]
                         {
                             "Key0123456789ABC", "Key0123456789DEF", "Key0123456789GHI"
                         };

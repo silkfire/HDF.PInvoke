@@ -19,26 +19,33 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5AcloseTest1()
     {
-        hid_t att = H5A.create(H5AFixture.m_v0_class_file, "NAC", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        var nacNamePtr = Marshal.StringToHGlobalAnsi("NAC");
+        var sacNamePtr = Marshal.StringToHGlobalAnsi("SAC");
+
+        hid_t att = H5A.create(H5AFixture.m_v0_class_file, nacNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v2_class_file, "NAC", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        att = H5A.create(H5AFixture.m_v2_class_file, nacNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v0_class_file, "SAC", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(H5AFixture.m_v0_class_file, sacNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v2_class_file, "SAC", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(H5AFixture.m_v2_class_file, sacNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
+
+        Marshal.FreeHGlobal(nacNamePtr);
+        Marshal.FreeHGlobal(sacNamePtr);
         Assert.True(H5A.close(att) >= 0);
     }
 

@@ -21,10 +21,12 @@ using htri_t = System.Int32;
 using size_t = nint;
 using hid_t = System.Int64;
 
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.Marshalling;
 using System.Security;
 
-public sealed unsafe class H5Z
+public sealed partial class H5Z
 {
     static H5Z() { H5.open(); }
 
@@ -127,32 +129,62 @@ public sealed unsafe class H5Z
     /// <param name="buf"></param>
     /// <param name="buf_size"></param>
     /// <param name="op_data"></param>
-    /// <returns></returns>
+    /// <returns>Valid callback function return values are <see cref="cb_return_t.FAIL"/> and <see cref="cb_return_t.CONT"/>.</returns>
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate cb_return_t filter_func_t
-        (filter_t filter, size_t buf, size_t buf_size, size_t op_data);
+    public delegate cb_return_t filter_func_t(filter_t filter, size_t buf, size_t buf_size, size_t op_data);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate htri_t can_apply_func_t
-        (hid_t dcpl_id, hid_t type_id, hid_t space_id);
+    public delegate htri_t can_apply_func_t(hid_t dcpl_id, hid_t type_id, hid_t space_id);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate herr_t set_local_func_t
-        (hid_t dcpl_id, hid_t type_id, hid_t space_id);
+    public delegate herr_t set_local_func_t(hid_t dcpl_id, hid_t type_id, hid_t space_id);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate size_t func_t
-    (uint flags, size_t cd_nelmts, uint[] cd_values, size_t nbytes,
-     ref size_t buf_size, ref size_t buf);
+    public delegate size_t func_t(uint flags, size_t cd_nelmts, uint[] cd_values, size_t nbytes, ref size_t buf_size, ref size_t buf);
+
+
+    [CustomMarshaller(typeof(class_t), MarshalMode.ManagedToUnmanagedIn, typeof(ClassTMarshaller))]
+    private static unsafe class ClassTMarshaller
+    {
+        public struct ClassTUnmanaged
+        {
+            public int version;
+            public ushort id;
+            public uint encoder_present;
+            public uint decoder_present;
+            public byte* name;
+            public nint can_apply;
+            public nint set_local;
+            public nint filter;
+        }
+
+        public static ClassTUnmanaged ConvertToUnmanaged(class_t managed)
+        {
+            return new ClassTUnmanaged
+                   {
+                       version = managed.version,
+                       id = (ushort)managed.id,
+                       encoder_present = managed.encoder_present ? 1U : 0U,
+                       decoder_present = managed.decoder_present ? 1U : 0U,
+                       name = AnsiStringMarshaller.ConvertToUnmanaged(managed.name),
+                       can_apply = Marshal.GetFunctionPointerForDelegate(managed.can_apply),
+                       set_local = Marshal.GetFunctionPointerForDelegate(managed.set_local),
+                       filter = Marshal.GetFunctionPointerForDelegate(managed.filter),
+                   };
+        }
+
+        public static void Free(ClassTUnmanaged unmanaged) => AnsiStringMarshaller.Free(unmanaged.name);
+    }
 
     /// <summary>
     /// The filter table maps filter identification numbers to structs that
     /// contain a pointers to the filter function and timing statistics.
     /// </summary>
+    [NativeMarshalling(typeof(ClassTMarshaller))]
     public struct class_t
     {
         /// <summary>
-        /// Version number of the <code>class_t</code> struct
+        /// Version number of the <c>class_t</c> struct
         /// </summary>
         public int version;
         /// <summary>
@@ -162,15 +194,15 @@ public sealed unsafe class H5Z
         /// <summary>
         /// Does this filter have an encoder?
         /// </summary>
-        public uint encoder_present;
+        public bool encoder_present;
         /// <summary>
         /// Does this filter have a decoder?
         /// </summary>
-        public uint decoder_present;
+        public bool decoder_present;
         /// <summary>
         /// Comment for debugging
         /// </summary>
-        public byte* name;
+        public string name;
         /// <summary>
         /// The "can apply" callback for a filter
         /// </summary>
@@ -187,53 +219,48 @@ public sealed unsafe class H5Z
 
     /// <summary>
     /// Determines whether a filter is available.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5Z.html#Compression-FilterAvail
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5Z.html#Compression-FilterAvail" /> for further reference.</para>
     /// </summary>
     /// <param name="filter">Filter identifier.</param>
     /// <returns>Returns a Boolean value if successful;
     /// otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zfilter_avail",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern htri_t filter_avail(filter_t filter);
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zfilter_avail"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial htri_t filter_avail(filter_t filter);
 
     /// <summary>
     /// Retrieves information about a filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5Z.html#Compression-GetFilterInfo
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5Z.html#Compression-GetFilterInfo" /> for further reference.</para>
     /// </summary>
     /// <param name="filter">Identifier of the filter to query.</param>
     /// <param name="filter_config">A bit field encoding the returned
     /// filter information</param>
     /// <returns>Returns a non-negative value on success, a negative value
     /// on failure.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zget_filter_info",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_filter_info
-        (filter_t filter, ref uint filter_config);
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zget_filter_info"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t get_filter_info(filter_t filter, ref uint filter_config);
 
     /// <summary>
     /// Registers new filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5Z.html#Compression-Register
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5Z.html#Compression-Register" /> for further reference.</para>
     /// </summary>
     /// <param name="filter_class">A pointer to a buffer for the struct
     /// containing filter-definition information.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zregister",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t register(ref class_t filter_class);
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zregister"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t register(class_t filter_class);
 
     /// <summary>
     /// Unregisters a filter.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5Z.html#Compression-Unregister
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5Z.html#Compression-Unregister" /> for further reference.</para>
     /// </summary>
     /// <param name="filter">Identifier of the filter to be unregistered.</param>
     /// <returns>Returns a non-negative value if successful; otherwise
     /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zunregister",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t unregister(filter_t filter);
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5Zunregister"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t unregister(filter_t filter);
 }

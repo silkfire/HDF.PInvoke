@@ -25,7 +25,7 @@ using System.IO;
 
 public sealed class H5RFixture : IDisposable
 {
-    internal static string[] m_utf8strings = new string[] { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
+    internal static string[] m_utf8strings = new[] { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
     internal static hid_t m_v0_class_file = -1;
     internal static string m_v0_class_file_name;
     internal static hid_t m_v2_class_file = -1;

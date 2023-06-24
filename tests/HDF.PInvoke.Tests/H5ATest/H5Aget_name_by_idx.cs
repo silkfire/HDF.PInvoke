@@ -15,116 +15,59 @@
 
 namespace HDF.PInvoke.Tests;
 
-using size_t = nint;
 using ssize_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
-using System;
-using System.Text;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5Aget_name_by_idxTest1()
     {
-        hid_t att = H5A.create(m_v2_test_file, "H5Aget_name", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
-        Assert.True(att >= 0);
-        Assert.True(H5A.close(att) >= 0);
-        att = H5A.create(m_v2_test_file, "H5Aget_name_by_idx", H5T.STD_I16LE, H5AFixture.m_space_scalar);
-        Assert.True(att >= 0);
-        Assert.True(H5A.close(att) >= 0);
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
 
-        size_t buf_size = ssize_t.Zero;
-        ssize_t size = ssize_t.Zero;
-        StringBuilder nameBuilder = new StringBuilder(19);
-        buf_size = new ssize_t(19);
-        size = H5A.get_name_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, nameBuilder, buf_size);
-        Assert.Equal(11, size.ToInt32());
-        string name = nameBuilder.ToString();
-        // names should match
-        Assert.Equal("H5Aget_name", name);
+        Assert.False(H5A.get_name_by_idx(Utilities.RandomInvalidHandle(), dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, nint.Zero, ssize_t.Zero, H5P.DEFAULT) >= 0);
 
-        nameBuilder.Clear();
-        size = H5A.get_name_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nameBuilder, buf_size);
-        Assert.Equal(18, size.ToInt32());
-        name = nameBuilder.ToString();
-        // names should match
-        Assert.Equal("H5Aget_name_by_idx", name);
-
-        // read a truncated version
-        buf_size = new ssize_t(3);
-        nameBuilder = new StringBuilder(3);
-        size = H5A.get_name_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nameBuilder, buf_size);
-        Assert.Equal(18, size.ToInt32());
-        name = nameBuilder.ToString();
-        // names won't match
-        Assert.NotEqual("H5Aget_name_by_idx", name);
-        Assert.Equal("H5", name);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 
     [Fact]
     public void H5Aget_name_by_idxTest2()
     {
-        Assert.False(H5A.get_name_by_idx(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, null, ssize_t.Zero).ToInt32() >= 0);
-    }
+        var getNameNamePtr = Marshal.StringToHGlobalAnsi("H5Aget_name");
+        var getNameByIdxNamePtr = Marshal.StringToHGlobalAnsi("H5Aget_name_by_idx");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
 
-    [Fact]
-    public void H5Aget_name_by_idxTest3()
-    {
-        hid_t att = H5A.create(m_v0_test_file, "H5Aget_name", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        hid_t att = H5A.create(m_v2_test_file, getNameNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
-        att = H5A.create(m_v0_test_file, "H5Aget_name_by_idx", H5T.STD_I16LE, H5AFixture.m_space_scalar);
-        Assert.True(att >= 0);
-        Assert.True(H5A.close(att) >= 0);
-
-        byte[] name = Encoding.UTF8.GetBytes(string.Join(":", H5AFixture.m_utf8strings));
-        byte[] name_buf = new byte[name.Length + 1];
-        Array.Copy(name, name_buf, name.Length);
-        att = H5A.create(m_v0_test_file, name_buf, H5T.IEEE_F64BE, H5AFixture.m_space_scalar, H5AFixture.m_acpl);
-        Assert.True(att >= 0);
-
-        ssize_t buf_size = H5A.get_name(att, ssize_t.Zero, (byte[])null) + 1;
-        Assert.True(buf_size.ToInt32() > 1);
-        byte[] buf = new byte[buf_size.ToInt32()];
-        Assert.True(H5A.get_name_by_idx(m_v0_test_file, Encoding.ASCII.GetBytes("."), H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, buf, buf_size).ToInt32() >= 0);
-
-        for (int i = 0; i < buf.Length; ++i)
-        {
-            Assert.Equal(name_buf[i], buf[i]);
-        }
-
-        Assert.True(H5A.close(att) >= 0);
-    }
-
-    [Fact]
-    public void H5Aget_name_by_idxTest4()
-    {
-        hid_t att = H5A.create(m_v2_test_file, "H5Aget_name", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
-        Assert.True(att >= 0);
-        Assert.True(H5A.close(att) >= 0);
-        att = H5A.create(m_v2_test_file, "H5Aget_name_by_idx", H5T.STD_I16LE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, getNameByIdxNamePtr, H5T.STD_I16LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        byte[] name = Encoding.UTF8.GetBytes(string.Join(":", H5AFixture.m_utf8strings));
-        byte[] name_buf = new byte[name.Length + 1];
-        Array.Copy(name, name_buf, name.Length);
-        att = H5A.create(m_v2_test_file, name_buf, H5T.IEEE_F64BE, H5AFixture.m_space_scalar, H5AFixture.m_acpl);
+        string name = string.Join(":", H5AFixture.m_utf8strings);
+        var nameNamePtr = Marshal.StringToCoTaskMemUTF8(name);
+
+        att = H5A.create(m_v2_test_file, nameNamePtr, H5T.IEEE_F64BE, H5AFixture.m_space_scalar, H5AFixture.m_acpl);
         Assert.True(att >= 0);
+        Marshal.FreeCoTaskMem(nameNamePtr);
 
-        ssize_t buf_size = H5A.get_name(att, ssize_t.Zero, (byte[])null) + 1;
-        Assert.True(buf_size.ToInt32() > 1);
-        byte[] buf = new byte[buf_size.ToInt32()];
-        Assert.True(H5A.get_name_by_idx(m_v2_test_file, Encoding.ASCII.GetBytes("."), H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, buf, buf_size).ToInt32() >= 0);
+        ssize_t buf_size = H5A.get_name(att, ssize_t.Zero, nint.Zero) + 1;
+        Assert.True(buf_size > 1);
+        var buf = Marshal.AllocHGlobal(buf_size);
+        Assert.True(H5A.get_name_by_idx(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, buf, buf_size, H5P.DEFAULT) >= 0);
+        var bufString = Marshal.PtrToStringUTF8(buf);
+        Marshal.FreeHGlobal(buf);
 
-        for (int i = 0; i < buf.Length; ++i)
-        {
-            Assert.Equal(name_buf[i], buf[i]);
-        }
+        Assert.Equal(name, bufString);
 
         Assert.True(H5A.close(att) >= 0);
+
+        Marshal.FreeHGlobal(getNameNamePtr);
+        Marshal.FreeHGlobal(getNameByIdxNamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 }

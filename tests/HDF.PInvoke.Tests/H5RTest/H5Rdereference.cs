@@ -31,7 +31,7 @@ public partial class H5RTest
     public void H5RdereferenceTest1()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -61,7 +61,7 @@ public partial class H5RTest
     public void H5RdereferenceTest2()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -91,7 +91,7 @@ public partial class H5RTest
     public void H5RdereferenceTest3()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -132,7 +132,7 @@ public partial class H5RTest
     public void H5RdereferenceTest4()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 

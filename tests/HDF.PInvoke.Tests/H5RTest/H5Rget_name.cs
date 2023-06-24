@@ -29,7 +29,7 @@ public partial class H5RTest
     public void H5Rget_nameTest1()
     {
         byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
+        // make room for the trailing \0
         byte[] name = new byte[path.Length + 1];
         Array.Copy(path, name, path.Length);
 
@@ -43,7 +43,7 @@ public partial class H5RTest
         ssize_t size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, hnd.AddrOfPinnedObject(), (byte[])null, ssize_t.Zero);
         Assert.True(size.ToInt32() == name.Length);
 
-        // size does not include the trailling \0
+        // size does not include the trailing \0
         byte[] buf = new byte[size.ToInt32() + 1];
         size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, hnd.AddrOfPinnedObject(), buf, new ssize_t(buf.Length));
         Assert.True(size.ToInt32() == name.Length);
