@@ -20,6 +20,7 @@ using hbool_t = System.UInt32;
 using hid_t = System.Int64;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5SWMRTest
@@ -27,27 +28,37 @@ public partial class H5SWMRTest
     [Fact]
     public void H5Odisable_mdc_flushesTestSWMR1()
     {
-        hid_t grp = H5G.create(m_v3_test_file_swmr, "/A/B/C", H5SWMRFixture.m_lcpl);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("/A/B/C");
+
+        hid_t grp = H5G.create(m_v3_test_file_swmr, abcStringPtr, H5SWMRFixture.m_lcpl);
         Assert.True(grp >= 0);
         Assert.True(H5O.disable_mdc_flushes(grp) >= 0);
         Assert.True(H5G.flush(grp) >= 0);
         Assert.True(H5G.close(grp) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 
     [Fact]
     public void H5Odisable_mdc_flushesTestSWMR2()
     {
-        hid_t grp = H5G.create(m_v3_test_file_no_swmr, "/A/B/C", H5SWMRFixture.m_lcpl);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("/A/B/C");
+
+        hid_t grp = H5G.create(m_v3_test_file_no_swmr, abcStringPtr, H5SWMRFixture.m_lcpl);
         Assert.True(grp >= 0);
         Assert.True(H5O.disable_mdc_flushes(grp) >= 0);
         Assert.True(H5G.flush(grp) >= 0);
         Assert.True(H5G.close(grp) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 
     [Fact]
     public void H5Odisable_mdc_flushesTestSWMR3()
     {
-        hid_t grp = H5G.create(m_v3_test_file_swmr, "/A/B/C", H5SWMRFixture.m_lcpl);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("/A/B/C");
+
+        hid_t grp = H5G.create(m_v3_test_file_swmr, abcStringPtr, H5SWMRFixture.m_lcpl);
         Assert.True(grp >= 0);
 
         hbool_t flag = 11;
@@ -61,7 +72,8 @@ public partial class H5SWMRTest
         Assert.True(flag > 0);
 
         Assert.True(H5G.flush(grp) >= 0);
-
         Assert.True(H5G.close(grp) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 }

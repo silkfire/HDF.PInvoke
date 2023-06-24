@@ -17,15 +17,15 @@
 namespace HDF.PInvoke.HDF5;
 
 using herr_t = System.Int32;
+using size_t = nint;
 using ssize_t = nint;
 using uint32_t = System.UInt32;
 
-using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Text;
 
-public sealed class H5PL
+public sealed partial class H5PL
 {
     static H5PL() { H5.open(); }
 
@@ -41,120 +41,96 @@ public sealed class H5PL
     public const int ALL_PLUGIN = 0xffff;
 
     /// <summary>
-    /// Append a plugin path to the plugin search path.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Append
+    /// Inserts a plugin path at the end of the list.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Append" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_path">The plugin path</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLappend",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t append(string plugin_path);
+    /// <param name="search_path">The plugin path.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLappend"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t append(nint search_path);
 
     /// <summary>
     /// Query the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Get
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Get" /> for further reference.</para>
     /// </summary>
-    /// <param name="index">Index</param>
-    /// <param name="pathname">Path name</param>
-    /// <param name="size">Buffer size (in bytes)</param>
-    /// <returns>Returns the length of the path, a non-negative value if
-    /// successful; otherwise returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLget",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern ssize_t get(uint32_t index,
-                                     StringBuilder pathname, IntPtr size);
+    /// <param name="index">Index.</param>
+    /// <param name="path_buf">Pathname.</param>
+    /// <param name="buf_size">Buffer size (in bytes).</param>
+    /// <returns>Returns the length of the path, a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLget"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial ssize_t get(uint32_t index, nint path_buf, size_t buf_size);
 
     /// <summary>
-    /// Query state of the loading of dynamic plugins.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-GetLoadingState
+    /// Queries the state of the loading of dynamic plugins.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-GetLoadingState" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_flags">List of dynamic plugin types that are
-    /// enabled or disabled.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLget_loading_state",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t get_loading_state(ref int plugin_flags);
+    /// <param name="plugin_control_mask">List of dynamic plugin types that are enabled or disabled.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLget_loading_state"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t get_loading_state(ref uint32_t plugin_control_mask);
 
     /// <summary>
-    /// Insert a plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Insert
+    /// Inserts a plugin search path at a specified index.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Insert" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_path">The plugin path</param>
-    /// <param name="index">Index</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLinsert",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t insert(string plugin_path,
-                                       uint32_t index);
+    /// <param name="search_path">The plugin path.</param>
+    /// <param name="index">Index.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLinsert"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t insert(nint search_path, uint32_t index);
 
     /// <summary>
-    /// Insert a plugin path at the beginning of the list.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Prepend
+    /// Inserts a plugin search path at the beginning of the list.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Prepend" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_path">The plugin path</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLprepend",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t prepend(string plugin_path);
+    /// <param name="search_path">The plugin search path.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLprepend"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t prepend(nint search_path);
 
     /// <summary>
-    /// Remove the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Remove
+    /// Removes the plugin path at a specified index.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Remove" /> for further reference.</para>
     /// </summary>
-    /// <param name="index">Index</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLremove",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t remove(uint32_t index);
+    /// <param name="index">Index.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLremove"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t remove(uint32_t index);
 
     /// <summary>
     /// Replace the plugin path at the specified index.
-    /// See https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Replace
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc1.8/RM/RM_H5PL.html#Plugin-Replace" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_path">The plugin path</param>
-    /// <param name="index">Index</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLreplace",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t replace(string plugin_path,
-                                        uint32_t index);
+    /// <param name="search_path">The plugin search path.</param>
+    /// <param name="index">Index.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLreplace"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t replace(nint search_path, uint32_t index);
 
     /// <summary>
-    /// Control the loading of dynamic plugins.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5PL.html
+    /// Controls the loading of dynamic plugin types.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5PL.html#Plugin-SetLoadingState" /> for further reference.</para>
     /// </summary>
-    /// <param name="plugin_flags">The list of dynamic plugin types to
-    /// enable or disable.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLset_loading_state",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t set_loading_state(int plugin_flags);
+    /// <param name="plugin_control_mask">The list of dynamic plugin types to enable or disable.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLset_loading_state"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t set_loading_state(uint32_t plugin_control_mask);
 
     /// <summary>
-    /// Query the size of the current list of plugin paths.
-    /// See https://docs.hdfgroup.org/archive/support/HDF5/doc/RM/RM_H5PL.html
+    /// Retrieves the number of stored plugin paths.
+    /// <para>See <see href="https://support.hdfgroup.org/HDF5/doc/RM/RM_H5PL.html#Plugin-Size" /> for further reference.</para>
     /// </summary>
-    /// <param name="listsize">The size of the current list of plugin
-    /// paths.</param>
-    /// <returns>Returns a non-negative value if successful; otherwise
-    /// returns a negative value.</returns>
-    [DllImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLsize",
-               CallingConvention = CallingConvention.Cdecl),
-     SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
-    public static extern herr_t size(ref uint32_t listsize);
+    /// <param name="num_paths">Current length of the plugin search path list.</param>
+    /// <returns>Returns a non-negative value if successful; otherwise returns a negative value.</returns>
+    [LibraryImport(Constants.MainLibraryDllFilename, EntryPoint = "H5PLsize"), SuppressUnmanagedCodeSecurity, SecuritySafeCritical]
+    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+    public static partial herr_t size(ref uint32_t num_paths);
 }

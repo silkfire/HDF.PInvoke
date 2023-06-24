@@ -31,7 +31,7 @@ public partial class H5STest
         hid_t space = H5S.create_simple(dims.Length, dims, dims);
         Assert.True(space > 0);
         hsize_t[] sel = { 0, 1, 2, 0, 2, 2 };
-        Assert.True(H5S.select_elements(space, H5S.seloper_t.SET, new IntPtr(2), sel) >= 0);
+        Assert.True(H5S.select_elements(space, H5S.seloper_t.SET, new nint(2), sel) >= 0);
         hsize_t[] buf = new hsize_t[sel.Length];
         Assert.True(H5S.get_select_elem_pointlist(space, 0, 2, buf) >= 0);
 

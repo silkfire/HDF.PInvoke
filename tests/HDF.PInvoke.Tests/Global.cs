@@ -17,7 +17,9 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 
 public class GlobalFixture : IDisposable

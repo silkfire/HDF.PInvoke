@@ -25,37 +25,37 @@ public partial class H5Test
     [Fact]
     public void H5free_memoryTest1()
     {
-        IntPtr size = new IntPtr(1024 * 1024);
+        nint size = new nint(1024 * 1024);
 
         // uninitialized allocation
-        IntPtr ptr = H5.allocate_memory(size, 0);
-        Assert.False(ptr == IntPtr.Zero);
+        nint ptr = H5.allocate_memory(size, 0);
+        Assert.False(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
 
         // initialize with zeros
         ptr = H5.allocate_memory(size, 1);
-        Assert.False(ptr == IntPtr.Zero);
+        Assert.False(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
 
         // size = 0 -> NULL return
-        size = new IntPtr(0);
+        size = new nint(0);
         ptr = H5.allocate_memory(size, 0);
-        Assert.True(ptr == IntPtr.Zero);
+        Assert.True(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
     }
 
     [Fact]
     public void H5free_memoryTest2()
     {
-        IntPtr size = new IntPtr(1024 * 1024);
+        nint size = new nint(1024 * 1024);
 
         // uninitialized allocation
-        IntPtr ptr = Marshal.AllocHGlobal(size);
-        Assert.False(ptr == IntPtr.Zero);
+        nint ptr = Marshal.AllocHGlobal(size);
+        Assert.False(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
 
         // size = 0
-        size = new IntPtr(0);
+        size = new nint(0);
         ptr = Marshal.AllocHGlobal(size);
         Assert.True(H5.free_memory(ptr) >= 0);
     }

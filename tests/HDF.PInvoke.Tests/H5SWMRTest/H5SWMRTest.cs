@@ -19,7 +19,9 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 
@@ -35,10 +37,10 @@ public sealed partial class H5SWMRTest :  IClassFixture<H5SWMRFixture>, IDisposa
     {
         Utilities.DisableErrorPrinting();
 
-        m_v3_test_file_no_swmr = Utilities.H5TempFileNoSWMR(ref m_v3_test_file_name_no_swmr);
+        m_v3_test_file_no_swmr = Utilities.H5TempFileNoSWMR(out m_v3_test_file_name_no_swmr);
         Assert.True(m_v3_test_file_no_swmr >= 0);
 
-        m_v3_test_file_swmr = Utilities.H5TempFileSWMR(ref m_v3_test_file_name_swmr);
+        m_v3_test_file_swmr = Utilities.H5TempFileSWMR(out m_v3_test_file_name_swmr);
         Assert.True(m_v3_test_file_swmr >= 0);
     }
 

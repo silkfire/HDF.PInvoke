@@ -35,7 +35,7 @@ public partial class H5SWMRTest
 
         H5D.append_cb_t cb = H5SWMRFixture.append_func;
 
-        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
+        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, nint.Zero) >= 0);
 
         Assert.True(H5P.close(dapl) >= 0);
     }
@@ -50,13 +50,13 @@ public partial class H5SWMRTest
 
         H5D.append_cb_t cb = H5SWMRFixture.append_func;
 
-        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, IntPtr.Zero) >= 0);
+        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, nint.Zero) >= 0);
 
         hsize_t[] check_boundary = { 0, 0, 0 };
 
         H5D.append_cb_t check_cb = null;
 
-        IntPtr check_ptr = new IntPtr(4711);
+        nint check_ptr = new nint(4711);
 
         Assert.True(H5P.get_append_flush(dapl, 2, check_boundary, ref check_cb, ref check_ptr) >= 0);
 
@@ -66,7 +66,7 @@ public partial class H5SWMRTest
 
         Assert.True(check_cb == cb);
 
-        Assert.True(check_ptr == IntPtr.Zero);
+        Assert.True(check_ptr == nint.Zero);
 
         Assert.True(H5P.close(dapl) >= 0);
     }

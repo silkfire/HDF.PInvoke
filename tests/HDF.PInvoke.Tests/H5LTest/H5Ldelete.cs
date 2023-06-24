@@ -21,32 +21,43 @@ using hid_t = System.Int64;
 using HDF5;
 using Xunit;
 using System.Text;
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5LdeleteTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, Encoding.ASCII.GetBytes("A/B/C/D"), m_v0_test_file, Encoding.ASCII.GetBytes("shortcut")) >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+        var dStringPtr = Marshal.StringToHGlobalAnsi("D");
 
-        hid_t group = H5G.open(m_v0_test_file, "A/B/C");
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+
+        hid_t group = H5G.open(m_v0_test_file, abcStringPtr);
         Assert.True(group >= 0);
-        Assert.True(H5L.delete(group, "D") >= 0);
+        Assert.True(H5L.delete(group, dStringPtr) >= 0);
         Assert.True(H5G.close(group) >= 0);
 
-        Assert.True(H5L.exists(m_v0_test_file, "shortcut") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D") == 0);
+        Assert.True(H5L.exists(m_v0_test_file, shortcutStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdStringPtr) == 0);
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.create_hard(m_v2_test_file, Encoding.ASCII.GetBytes("A/B/C/D"), m_v2_test_file, Encoding.ASCII.GetBytes("shortcut")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, shortcutStringPtr) >= 0);
 
-        group = H5G.open(m_v2_test_file, "A/B/C");
+        group = H5G.open(m_v2_test_file, abcStringPtr);
         Assert.True(group >= 0);
-        Assert.True(H5L.delete(group, "D") >= 0);
+        Assert.True(H5L.delete(group, dStringPtr) >= 0);
         Assert.True(H5G.close(group) >= 0);
 
-        Assert.True(H5L.exists(m_v0_test_file, "shortcut") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D") == 0);
+        Assert.True(H5L.exists(m_v0_test_file, shortcutStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdStringPtr) == 0);
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
+        Marshal.FreeHGlobal(abcStringPtr);
+        Marshal.FreeHGlobal(dStringPtr);
     }
 }

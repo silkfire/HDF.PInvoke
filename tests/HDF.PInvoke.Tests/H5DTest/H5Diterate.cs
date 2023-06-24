@@ -31,7 +31,7 @@ public partial class H5DTest
     {
         int[] buf = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-        IntPtr count_ptr = Marshal.AllocHGlobal(sizeof(int));
+        nint count_ptr = Marshal.AllocHGlobal(sizeof(int));
         Marshal.WriteInt32(count_ptr, 0);
 
         hsize_t[] dims = { 10 };

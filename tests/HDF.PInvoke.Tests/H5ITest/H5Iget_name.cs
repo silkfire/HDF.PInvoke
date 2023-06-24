@@ -20,45 +20,50 @@ using ssize_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5ITest
 {
     [Fact]
     public void H5Iget_nameTest1()
     {
-        hid_t gid = H5G.create(m_v0_test_file, "AAAAAAAAAAAAAAAAAAAAA");
+        var aaaaaaaaaaaaaaaaaaaaaStringPtr = Marshal.StringToHGlobalAnsi("AAAAAAAAAAAAAAAAAAAAA");
+
+        hid_t gid = H5G.create(m_v0_test_file, aaaaaaaaaaaaaaaaaaaaaStringPtr);
         Assert.True(gid > 0);
 
-        ssize_t buf_size = H5I.get_name(gid, (StringBuilder)null,
-                                        ssize_t.Zero) + 1;
+        ssize_t buf_size = H5I.get_name(gid, nint.Zero, ssize_t.Zero) + 1;
         Assert.True(buf_size.ToInt32() > 1);
-        StringBuilder nameBuilder = new StringBuilder(buf_size.ToInt32());
-        ssize_t size = H5I.get_name(gid, nameBuilder, buf_size);
+        var buf = Marshal.AllocHGlobal(buf_size);
+        ssize_t size = H5I.get_name(gid, buf, buf_size);
         Assert.True(size.ToInt32() > 0);
-        Assert.True(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
+        Assert.Equal("/AAAAAAAAAAAAAAAAAAAAA", Marshal.PtrToStringAnsi(buf));
 
         Assert.True(H5G.close(gid) >= 0);
 
-        gid = H5G.create(m_v2_test_file, "AAAAAAAAAAAAAAAAAAAAA");
+        gid = H5G.create(m_v2_test_file, aaaaaaaaaaaaaaaaaaaaaStringPtr);
         Assert.True(gid > 0);
 
-        buf_size = H5I.get_name(gid, (StringBuilder)null, ssize_t.Zero) + 1;
+        buf_size = H5I.get_name(gid, nint.Zero, ssize_t.Zero) + 1;
         Assert.True(buf_size.ToInt32() > 1);
-        nameBuilder = new StringBuilder(buf_size.ToInt32());
-        size = H5I.get_name(gid, nameBuilder, buf_size);
+        buf = Marshal.AllocHGlobal(buf_size);
+        size = H5I.get_name(gid, buf, buf_size);
         Assert.True(size.ToInt32() > 0);
-        Assert.True(nameBuilder.ToString() == "/AAAAAAAAAAAAAAAAAAAAA");
+        Assert.Equal("/AAAAAAAAAAAAAAAAAAAAA", Marshal.PtrToStringAnsi(buf));
 
         Assert.True(H5G.close(gid) >= 0);
+
+        Marshal.FreeHGlobal(buf);
+        Marshal.FreeHGlobal(aaaaaaaaaaaaaaaaaaaaaStringPtr);
     }
 
     [Fact]
     public void H5Iget_nameTest2()
     {
-        ssize_t size = H5I.get_name(Utilities.RandomInvalidHandle(), null,
-                                    ssize_t.Zero);
+        ssize_t size = H5I.get_name(Utilities.RandomInvalidHandle(), nint.Zero, ssize_t.Zero);
         Assert.False(size.ToInt32() >= 0);
     }
 }

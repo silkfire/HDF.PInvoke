@@ -27,18 +27,18 @@ public partial class H5SWMRTest
     {
         H5F.retry_info_t info = new H5F.retry_info_t();
 
-        info.retries0 = new IntPtr(10);
-        info.retries6 = new IntPtr(60);
-        info.retries14 = new IntPtr(140);
-        info.retries20 = new IntPtr(200);
+        info.retries0 = new nint(10);
+        info.retries6 = new nint(60);
+        info.retries14 = new nint(140);
+        info.retries20 = new nint(200);
 
         Assert.True(H5F.get_metadata_read_retry_info(m_v3_test_file_swmr, ref info) >= 0);
 
         Assert.True(info.nbins == 2);
 
-        Assert.True(info.retries0 == IntPtr.Zero);
-        Assert.True(info.retries6 == IntPtr.Zero);
-        Assert.True(info.retries14 == IntPtr.Zero);
-        Assert.True(info.retries20 == IntPtr.Zero);
+        Assert.True(info.retries0 == nint.Zero);
+        Assert.True(info.retries6 == nint.Zero);
+        Assert.True(info.retries14 == nint.Zero);
+        Assert.True(info.retries20 == nint.Zero);
     }
 }

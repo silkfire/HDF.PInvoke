@@ -19,26 +19,37 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5OTest
 {
     [Fact]
     public void H5OopenTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C", H5OFixture.m_lcpl)) >= 0);
-        hid_t obj = H5O.open(m_v0_test_file, "A/B");
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+        var abStringPtr = Marshal.StringToHGlobalAnsi("A/B");
+
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcStringPtr, H5OFixture.m_lcpl)) >= 0);
+        hid_t obj = H5O.open(m_v0_test_file, abStringPtr);
         Assert.True(obj >= 0);
         Assert.True(H5O.close(obj) >= 0);
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C", H5OFixture.m_lcpl)) >= 0);
-        obj = H5O.open(m_v2_test_file, "A/B");
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, abcStringPtr, H5OFixture.m_lcpl)) >= 0);
+        obj = H5O.open(m_v2_test_file, abStringPtr);
         Assert.True(obj >= 0);
         Assert.True(H5O.close(obj) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
+        Marshal.FreeHGlobal(abStringPtr);
     }
 
     [Fact]
     public void H5OopenTest2()
     {
-        Assert.False(H5O.open(Utilities.RandomInvalidHandle(), ".") >= 0);
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        Assert.False(H5O.open(Utilities.RandomInvalidHandle(), dotStringPtr) >= 0);
+
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 }

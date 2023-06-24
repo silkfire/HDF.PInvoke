@@ -19,6 +19,7 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
@@ -28,36 +29,48 @@ public partial class H5ATest
         // use test-local files, because we don't know what's out there
         // at the class level, create two attributes in each file
 
-        hid_t att = H5A.create(m_v0_test_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        var dnaNamePtr = Marshal.StringToHGlobalAnsi("DNA");
+        var dsaNamePtr = Marshal.StringToHGlobalAnsi("DSA");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t att = H5A.create(m_v0_test_file, dnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        att = H5A.create(m_v2_test_file, dnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v0_test_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, dsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(m_v2_test_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, dsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
         // we have two attributes, delete the one in first position twice
-        Assert.True(H5A.delete_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
-        Assert.True(H5A.delete_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v0_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v0_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
 
         // we have two attributes, first delete the one in second position
         // then the one in first position
-        Assert.True(H5A.delete_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
-        Assert.True(H5A.delete_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1) >= 0);
+        Assert.True(H5A.delete_by_idx(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0) >= 0);
+
+        Marshal.FreeHGlobal(dnaNamePtr);
+        Marshal.FreeHGlobal(dsaNamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 
     [Fact]
     public void H5Adelete_by_idxTest2()
     {
-        Assert.False(H5A.delete_by_idx(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 10) >= 0);
-        Assert.False(H5A.delete_by_idx(H5AFixture.m_v0_class_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024) >= 0);
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
+        Assert.False(H5A.delete_by_idx(Utilities.RandomInvalidHandle(), dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 10) >= 0);
+        Assert.False(H5A.delete_by_idx(H5AFixture.m_v0_class_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024) >= 0);
+
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 }

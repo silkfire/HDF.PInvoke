@@ -17,39 +17,60 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.Text;
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5LmoveTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
-        Assert.True(H5L.move(m_v0_test_file, "shortcut", m_v0_test_file, "A/B/C/D/E") >= 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D/E") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D/shortcut") == 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
+        var abcdeStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D/E");
+        var abcdShortcutStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D/shortcut");
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file, "shortcut") >= 0);
-        Assert.True(H5L.move(m_v2_test_file, "shortcut", m_v2_test_file, "A/B/C/D/E") >= 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D/E") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B/C/D/shortcut") == 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+        Assert.True(H5L.move(m_v0_test_file, shortcutStringPtr, m_v0_test_file, abcdeStringPtr) >= 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdeStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdShortcutStringPtr) == 0);
+
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, shortcutStringPtr) >= 0);
+        Assert.True(H5L.move(m_v2_test_file, shortcutStringPtr, m_v2_test_file, abcdeStringPtr) >= 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdeStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, abcdShortcutStringPtr) == 0);
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
+        Marshal.FreeHGlobal(abcdeStringPtr);
+        Marshal.FreeHGlobal(abcdShortcutStringPtr);
     }
 
     [Fact]
     public void H5LmoveTest2()
     {
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
+        var firstUtf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[0]);
+
         int size = Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[0]).Length;
         byte[] target = new byte[size + 1];
         Array.Copy(Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[0]), target, size);
 
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
-        Assert.True(H5L.move(m_v0_test_file, Encoding.ASCII.GetBytes("shortcut"), m_v0_test_file, target, H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+        Assert.True(H5L.move(m_v0_test_file, shortcutStringPtr, m_v0_test_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
-        Assert.True(H5L.exists(m_v0_test_file, target) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, firstUtf8StringPtr) > 0);
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
+        Marshal.FreeCoTaskMem(firstUtf8StringPtr);
     }
 }

@@ -19,8 +19,11 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5FTest
 {
@@ -28,14 +31,18 @@ public partial class H5FTest
     public void H5FcreateTest1()
     {
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_EXCL);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_EXCL);
         // this is expected, because Path.GetTempFileName() creates
         // an empty file
         Assert.False(file >= 0);
 
-        file = H5F.create(fname, H5F.ACC_TRUNC);
+        file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 }

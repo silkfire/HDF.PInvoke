@@ -16,10 +16,12 @@
 
 namespace HDF.PInvoke.Tests;
 
+using size_t = nint;
+
 using HDF5;
 
-using System;
-using System.Text;
+using System.Runtime.InteropServices;
+
 using Xunit;
 
 public partial class H5FTest
@@ -27,17 +29,26 @@ public partial class H5FTest
     [Fact]
     public void H5Fget_nameTest1()
     {
-        StringBuilder nameBuilder = new StringBuilder(256);
+        var size = H5F.get_name(m_v0_test_file, nint.Zero, size_t.Zero);
+        Assert.True(size >= 0);
 
-        Assert.True(H5F.get_name(m_v0_test_file, nameBuilder, new IntPtr(nameBuilder.Capacity)).ToInt32() >= 0);
+        var buf = Marshal.AllocHGlobal(size.ToInt32() + 1);
+        size = H5F.get_name(m_v0_test_file, buf, size.ToInt32() + 1);
+        Assert.True(size >= 0);
 
-        string name = nameBuilder.ToString();
+        string name = Marshal.PtrToStringAnsi(buf);
         // names should match
         Assert.Equal(m_v0_test_file_name, name);
 
-        Assert.True(H5F.get_name(m_v2_test_file, nameBuilder, new IntPtr(nameBuilder.Capacity)).ToInt32() >= 0);
 
-        name = nameBuilder.ToString();
+        size = H5F.get_name(m_v2_test_file, nint.Zero, size_t.Zero);
+        Assert.True(size >= 0);
+
+        buf = Marshal.AllocHGlobal(size.ToInt32() + 1);
+        size = H5F.get_name(m_v2_test_file, buf, size.ToInt32() + 1);
+        Assert.True(size >= 0);
+
+        name = Marshal.PtrToStringAnsi(buf);
         // names should match
         Assert.Equal(m_v2_test_file_name, name);
     }
@@ -45,8 +56,6 @@ public partial class H5FTest
     [Fact]
     public void H5Fget_nameTest2()
     {
-        StringBuilder nameBuilder = new StringBuilder(256);
-
-        Assert.True(H5F.get_name(Utilities.RandomInvalidHandle(), nameBuilder, new IntPtr(nameBuilder.Capacity)).ToInt32() < 0);
+        Assert.True(H5F.get_name(Utilities.RandomInvalidHandle(), nint.Zero, size_t.Zero).ToInt32() < 0);
     }
 }

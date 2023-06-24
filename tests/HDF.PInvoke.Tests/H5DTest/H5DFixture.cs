@@ -21,7 +21,9 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.Collections;
 using System.IO;
@@ -44,10 +46,13 @@ public sealed class H5DFixture : IDisposable
 
     public H5DFixture()
     {
+        var asciiStringPtr = Marshal.StringToHGlobalAnsi("ASCII");
+        var utf8StringPtr = Marshal.StringToHGlobalAnsi("ASCII");
+
         // create test files which persists across file tests
-        m_v0_class_file = Utilities.H5TempFile(ref m_v0_class_file_name, H5F.libver_t.EARLIEST);
+        m_v0_class_file = Utilities.H5TempFile(out m_v0_class_file_name, H5F.libver_t.EARLIEST);
         Assert.True(m_v0_class_file >= 0);
-        m_v2_class_file = Utilities.H5TempFile(ref m_v2_class_file_name);
+        m_v2_class_file = Utilities.H5TempFile(out m_v2_class_file_name);
         Assert.True(m_v2_class_file >= 0);
 
         m_space_null = H5S.create(H5S.class_t.NULL);
@@ -61,8 +66,8 @@ public sealed class H5DFixture : IDisposable
         hsize_t[] dims = { 256 };
 
         hid_t space = H5S.create_simple(1, dims, null);
-        m_v0_ascii_dset = H5D.create(m_v0_class_file, "ASCII", H5T.FORTRAN_S1, space);
-        m_v2_ascii_dset = H5D.create(m_v2_class_file, "ASCII", H5T.FORTRAN_S1, space);
+        m_v0_ascii_dset = H5D.create(m_v0_class_file, asciiStringPtr, H5T.FORTRAN_S1, space);
+        m_v2_ascii_dset = H5D.create(m_v2_class_file, asciiStringPtr, H5T.FORTRAN_S1, space);
         Assert.True(H5S.close(space) >= 0);
 
         // we write from C and must provide null-terminated strings
@@ -74,7 +79,7 @@ public sealed class H5DFixture : IDisposable
         }
 
         hid_t mem_type = H5T.copy(H5T.C_S1);
-        Assert.True(H5T.set_size(mem_type, new IntPtr(2)) >= 0);
+        Assert.True(H5T.set_size(mem_type, new nint(2)) >= 0);
 
         GCHandle hnd = GCHandle.Alloc(wdata, GCHandleType.Pinned);
         Assert.True(H5D.write(m_v0_ascii_dset, mem_type, H5S.ALL, H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject()) >= 0);
@@ -89,15 +94,15 @@ public sealed class H5DFixture : IDisposable
         Assert.True(H5T.set_cset(dtype, H5T.cset_t.UTF8) >= 0);
         Assert.True(H5T.set_strpad(dtype, H5T.str_t.SPACEPAD) >= 0);
 
-        hid_t dspace = H5S.create_simple(1, new hsize_t[] { (hsize_t)m_utf8strings.Count }, null);
+        hid_t dspace = H5S.create_simple(1, new[] { (hsize_t)m_utf8strings.Count }, null);
 
-        m_v0_utf8_dset = H5D.create(m_v0_class_file, "UTF-8", dtype, dspace);
+        m_v0_utf8_dset = H5D.create(m_v0_class_file, utf8StringPtr, dtype, dspace);
         Assert.True(m_v0_utf8_dset >= 0);
-        m_v2_utf8_dset = H5D.create(m_v2_class_file, "UTF-8", dtype, dspace);
+        m_v2_utf8_dset = H5D.create(m_v2_class_file, utf8StringPtr, dtype, dspace);
         Assert.True(m_v2_utf8_dset >= 0);
 
         GCHandle[] hnds = new GCHandle[m_utf8strings.Count];
-        IntPtr[] wdata1 = new IntPtr[m_utf8strings.Count];
+        nint[] wdata1 = new nint[m_utf8strings.Count];
 
         for (int i = 0; i < m_utf8strings.Count; ++i)
         {
@@ -117,11 +122,14 @@ public sealed class H5DFixture : IDisposable
 
         Assert.True(H5S.close(dspace) >= 0);
         Assert.True(H5T.close(dtype) >= 0);
+
+        Marshal.FreeHGlobal(asciiStringPtr);
+        Marshal.FreeHGlobal(utf8StringPtr);
     }
 
     // Callback for H5D.iterate
     // op_data is a pointer to a counter and we keep adding the elements
-    internal static herr_t DelegateMethod(IntPtr elem, hid_t type_id, uint ndim, hsize_t[] point, IntPtr op_data)
+    internal static herr_t DelegateMethod(nint elem, hid_t type_id, uint ndim, hsize_t[] point, nint op_data)
     {
         int count = Marshal.ReadInt32(op_data) + Marshal.ReadInt32(elem);
         Marshal.WriteInt32(op_data, count);

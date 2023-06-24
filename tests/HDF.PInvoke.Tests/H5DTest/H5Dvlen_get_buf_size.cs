@@ -20,8 +20,9 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
+
 using System.Runtime.InteropServices;
 
 public partial class H5DTest
@@ -29,6 +30,8 @@ public partial class H5DTest
     [Fact]
     public void H5Dvlen_get_buf_sizeTest1()
     {
+        var vlenStringPtr = Marshal.StringToHGlobalAnsi("vlen");
+
         // write a VLEN dataset
 
         hid_t vlen = H5T.vlen_create(H5T.NATIVE_INT);
@@ -39,10 +42,10 @@ public partial class H5DTest
         Assert.True(space >= 0);
 
 
-        hid_t dset = H5D.create(m_v0_test_file, "vlen", vlen, space);
-        Assert.True(space >= 0);
-        hid_t dset1 = H5D.create(m_v2_test_file, "vlen", vlen, space);
-        Assert.True(space >= 0);
+        hid_t dset = H5D.create(m_v0_test_file, vlenStringPtr, vlen, space);
+        Assert.True(dset >= 0);
+        hid_t dset1 = H5D.create(m_v2_test_file, vlenStringPtr, vlen, space);
+        Assert.True(dset1 >= 0);
 
         H5T.hvl_t[] wdata = new H5T.hvl_t[dims[0]];
         GCHandle[] whndl = new GCHandle[wdata.Length];
@@ -51,7 +54,7 @@ public partial class H5DTest
         {
             jagged[i] = new int[i + 1];
             whndl[i] = GCHandle.Alloc(jagged[i], GCHandleType.Pinned);
-            wdata[i].len = new IntPtr(i + 1);
+            wdata[i].len = new nint(i + 1);
             wdata[i].p = whndl[i].AddrOfPinnedObject();
         }
 
@@ -77,5 +80,7 @@ public partial class H5DTest
         Assert.True(H5D.close(dset) >= 0);
         Assert.True(H5T.close(vlen) >= 0);
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(vlenStringPtr);
     }
 }

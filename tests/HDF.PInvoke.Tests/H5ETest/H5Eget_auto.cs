@@ -27,7 +27,7 @@ public partial class H5ETest
     public void H5Eget_autoTest1()
     {
         H5E.auto_t cb = null;
-        IntPtr client_data = IntPtr.Zero;
+        nint client_data = nint.Zero;
         Assert.True(H5E.get_auto(H5E.DEFAULT, ref cb, ref client_data) >= 0);
     }
 }

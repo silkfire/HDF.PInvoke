@@ -19,22 +19,29 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5FTest
 {
     [Fact]
     public void H5FcloseTest1()
     {
-        string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        var fname = Path.GetTempFileName();
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
-        file = H5F.open(fname, H5F.ACC_RDONLY);
+        file = H5F.open(fnameStringPtr, H5F.ACC_RDONLY);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     [Fact]

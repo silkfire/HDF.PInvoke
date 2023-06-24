@@ -19,38 +19,53 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5Adelete_by_nameTest1()
     {
-        hid_t att = H5A.create(H5AFixture.m_v0_class_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        var dnaNamePtr = Marshal.StringToHGlobalAnsi("DNA");
+        var dsaNamePtr = Marshal.StringToHGlobalAnsi("DSA");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t att = H5A.create(H5AFixture.m_v0_class_file, dnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v2_class_file, "DNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        att = H5A.create(H5AFixture.m_v2_class_file, dnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v0_class_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(H5AFixture.m_v0_class_file, dsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create(H5AFixture.m_v2_class_file, "DSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create(H5AFixture.m_v2_class_file, dsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        Assert.True(H5A.delete_by_name(H5AFixture.m_v0_class_file, ".", "DNA") >= 0);
-        Assert.True(H5A.delete_by_name(H5AFixture.m_v0_class_file, ".", "DSA") >= 0);
-        Assert.True(H5A.delete_by_name(H5AFixture.m_v2_class_file, ".", "DNA") >= 0);
-        Assert.True(H5A.delete_by_name(H5AFixture.m_v2_class_file, ".", "DSA") >= 0);
+        Assert.True(H5A.delete_by_name(H5AFixture.m_v0_class_file, dotNamePtr, dnaNamePtr) >= 0);
+        Assert.True(H5A.delete_by_name(H5AFixture.m_v0_class_file, dotNamePtr, dsaNamePtr) >= 0);
+        Assert.True(H5A.delete_by_name(H5AFixture.m_v2_class_file, dotNamePtr, dnaNamePtr) >= 0);
+        Assert.True(H5A.delete_by_name(H5AFixture.m_v2_class_file, dotNamePtr, dsaNamePtr) >= 0);
+
+        Marshal.FreeHGlobal(dnaNamePtr);
+        Marshal.FreeHGlobal(dsaNamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 
     [Fact]
     public void H5Adelete_by_nameTest2()
     {
-        Assert.False(H5A.delete_by_name(Utilities.RandomInvalidHandle(), "A", ".") >= 0);
-        Assert.False(H5A.delete_by_name(m_v0_test_file, ".", ".") >= 0);
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
+        Assert.False(H5A.delete_by_name(Utilities.RandomInvalidHandle(), aNamePtr, dotNamePtr) >= 0);
+        Assert.False(H5A.delete_by_name(m_v0_test_file, dotNamePtr, dotNamePtr) >= 0);
+
+        Marshal.FreeHGlobal(aNamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 }

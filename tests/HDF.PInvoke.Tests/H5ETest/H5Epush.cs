@@ -17,20 +17,39 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5ETest
 {
     [Fact]
     public void H5EpushTest1()
     {
-        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        var helloCStringPtr = Marshal.StringToHGlobalAnsi("hello.c");
+        var sqrtStringPtr = Marshal.StringToHGlobalAnsi("sqrt");
+        var helloWorldStringPtr = Marshal.StringToHGlobalAnsi("Hello, World!");
+
+        Assert.True(H5E.push(H5E.DEFAULT, helloCStringPtr, sqrtStringPtr, 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, helloWorldStringPtr) >= 0);
         Assert.True(H5E.get_num(H5E.DEFAULT).ToInt32() > 0);
+
+        Marshal.FreeHGlobal(helloCStringPtr);
+        Marshal.FreeHGlobal(sqrtStringPtr);
+        Marshal.FreeHGlobal(helloWorldStringPtr);
     }
 
     [Fact]
     public void H5EpushTest2()
     {
-        Assert.False(H5E.push(Utilities.RandomInvalidHandle(), "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        var helloCStringPtr = Marshal.StringToHGlobalAnsi("hello.c");
+        var sqrtStringPtr = Marshal.StringToHGlobalAnsi("sqrt");
+        var helloWorldStringPtr = Marshal.StringToHGlobalAnsi("Hello, World!");
+
+        Assert.False(H5E.push(Utilities.RandomInvalidHandle(), helloCStringPtr, sqrtStringPtr, 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, helloWorldStringPtr) >= 0);
+
+        Marshal.FreeHGlobal(helloCStringPtr);
+        Marshal.FreeHGlobal(sqrtStringPtr);
+        Marshal.FreeHGlobal(helloWorldStringPtr);
     }
 }

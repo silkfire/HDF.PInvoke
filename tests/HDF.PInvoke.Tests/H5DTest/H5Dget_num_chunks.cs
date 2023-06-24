@@ -20,13 +20,18 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5Dget_num_chunksTest1()
     {
+        var earlyBirdStringPtr = Marshal.StringToHGlobalAnsi("Early Bird");
+
         hsize_t[] dims = { 10, 10 };
         hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
         hid_t space = H5S.create_simple(2, dims, max_dims);
@@ -38,7 +43,7 @@ public partial class H5DTest
         Assert.True(H5P.set_alloc_time(dcpl, H5D.alloc_time_t.EARLY) >= 0);
         Assert.True(H5P.set_fill_time(dcpl, H5D.fill_time_t.ALLOC) >= 0);
 
-        hid_t dset = H5D.create(m_v0_test_file, "Early Bird", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        hid_t dset = H5D.create(m_v0_test_file, earlyBirdStringPtr, H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
         // This should work but doesn't:
@@ -53,7 +58,7 @@ public partial class H5DTest
 
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "Early Bird", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        dset = H5D.create(m_v2_test_file, earlyBirdStringPtr, H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
         // This should work but doesn't:
@@ -67,5 +72,7 @@ public partial class H5DTest
         Assert.Equal(9UL, nchunks);
 
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(earlyBirdStringPtr);
     }
 }

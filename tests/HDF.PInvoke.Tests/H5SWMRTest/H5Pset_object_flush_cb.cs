@@ -32,7 +32,7 @@ public partial class H5SWMRTest
 
         H5F.flush_cb_t cb = H5SWMRFixture.flush_func;
 
-        Assert.True(H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
+        Assert.True(H5P.set_object_flush_cb(fapl, cb, nint.Zero) >= 0);
 
         Assert.True(H5P.close(fapl) >= 0);
     }
@@ -45,17 +45,17 @@ public partial class H5SWMRTest
 
         H5F.flush_cb_t cb = H5SWMRFixture.flush_func;
 
-        Assert.True(H5P.set_object_flush_cb(fapl, cb, IntPtr.Zero) >= 0);
+        Assert.True(H5P.set_object_flush_cb(fapl, cb, nint.Zero) >= 0);
 
         H5F.flush_cb_t check_cb = null;
 
-        IntPtr check_ptr = new IntPtr(4711);
+        nint check_ptr = new nint(4711);
 
         Assert.True(H5P.get_object_flush_cb(fapl, ref check_cb, ref check_ptr) >= 0);
 
         Assert.True(check_cb == cb);
 
-        Assert.True(check_ptr == IntPtr.Zero);
+        Assert.True(check_ptr == nint.Zero);
 
         Assert.True(H5P.close(fapl) >= 0);
     }

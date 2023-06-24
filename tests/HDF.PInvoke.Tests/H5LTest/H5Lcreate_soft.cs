@@ -17,26 +17,23 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
-    public void H5Lcreate_softTest1()
+    public void H5Lcreate_softTest()
     {
-        Assert.True(H5L.create_soft("/A/B/C/D", m_v0_test_file, "this/is/a/soft/link", H5LFixture.m_lcpl) >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("/A/B/C/D");
+        var thisIsASoftLinkStringPtr = Marshal.StringToHGlobalAnsi("this/is/a/soft/link");
 
-        Assert.True(H5L.create_soft("/A/B/C/D", m_v2_test_file, "this/is/a/soft/link", H5LFixture.m_lcpl) >= 0);
-    }
+        Assert.True(H5L.create_soft(abcdStringPtr, m_v0_test_file, thisIsASoftLinkStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(abcdStringPtr, m_v2_test_file, thisIsASoftLinkStringPtr, H5LFixture.m_lcpl) >= 0);
 
-    [Fact]
-    public void H5Lcreate_softTest2()
-    {
-        string sym_path = string.Join("/", H5LFixture.m_utf8strings);
-
-        Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("/A/B/C/D"), m_v0_test_file, Encoding.UTF8.GetBytes(sym_path), H5LFixture.m_lcpl_utf8) >= 0);
-
-        Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("/A/B/C/D"), m_v2_test_file, Encoding.UTF8.GetBytes(sym_path), H5LFixture.m_lcpl_utf8) >= 0);
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(thisIsASoftLinkStringPtr);
     }
 }

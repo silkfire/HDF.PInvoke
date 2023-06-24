@@ -28,6 +28,8 @@ public partial class H5SWMRTest
     [Fact]
     public void H5DflushTestSWMR1()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
         hsize_t[] dims = { 6, 6 };
         hsize_t[] maxdims = { 6, H5S.UNLIMITED };
         hsize_t[] chunk_dims = { 2, 5 };
@@ -40,8 +42,7 @@ public partial class H5SWMRTest
         Assert.True(dcpl >= 0);
         Assert.True(H5P.set_chunk(dcpl, 2, chunk_dims) >= 0);
 
-        hid_t dst = H5D.create(m_v3_test_file_no_swmr, "dset",
-                               H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
+        hid_t dst = H5D.create(m_v3_test_file_no_swmr, dsetStringPtr, H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
         Assert.True(dst >= 0);
 
         GCHandle hnd = GCHandle.Alloc(cbuf, GCHandleType.Pinned);
@@ -55,11 +56,15 @@ public partial class H5SWMRTest
         Assert.True(H5D.close(dst) >= 0);
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5S.close(dsp) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]
     public void H5DflushTestSWMR2()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
         hsize_t[] dims = { 6, 6 };
         hsize_t[] maxdims = { 6, H5S.UNLIMITED };
         hsize_t[] chunk_dims = { 2, 5 };
@@ -72,7 +77,7 @@ public partial class H5SWMRTest
         Assert.True(dcpl >= 0);
         Assert.True(H5P.set_chunk(dcpl, 2, chunk_dims) >= 0);
 
-        hid_t dst = H5D.create(m_v3_test_file_swmr, "dset", H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
+        hid_t dst = H5D.create(m_v3_test_file_swmr, dsetStringPtr, H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
         Assert.True(dst >= 0);
 
         GCHandle hnd = GCHandle.Alloc(cbuf, GCHandleType.Pinned);
@@ -82,9 +87,10 @@ public partial class H5SWMRTest
         hnd.Free();
 
         Assert.True(H5D.flush(dst) >= 0);
-
         Assert.True(H5D.close(dst) >= 0);
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5S.close(dsp) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 }

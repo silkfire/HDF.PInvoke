@@ -24,8 +24,8 @@ using System.Runtime.InteropServices;
 public sealed class H5MM
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr allocate_t(size_t size, IntPtr alloc_info);
+    public delegate nint allocate_t(size_t size, nint alloc_info);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr free_t(IntPtr mem, IntPtr free_info);
+    public delegate nint free_t(nint mem, nint free_info);
 }

@@ -19,27 +19,38 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5DopenTest1()
     {
-        Assert.True(H5D.close(H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
-        hid_t dset = H5D.open(m_v0_test_file, "dset");
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
+        Assert.True(H5D.close(H5D.create(m_v0_test_file, dsetStringPtr, H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
+        hid_t dset = H5D.open(m_v0_test_file, dsetStringPtr);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
 
-        Assert.True(H5D.close(H5D.create(m_v2_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
-        dset = H5D.open(m_v0_test_file, "dset");
+        Assert.True(H5D.close(H5D.create(m_v2_test_file, dsetStringPtr, H5T.IEEE_F64BE, H5DFixture.m_space_null)) >= 0);
+        dset = H5D.open(m_v0_test_file, dsetStringPtr);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]
     public void H5DopenTest2()
     {
-        Assert.False(H5D.open(Utilities.RandomInvalidHandle(), "dset") >= 0);
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
+        Assert.False(H5D.open(Utilities.RandomInvalidHandle(), dsetStringPtr) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 }

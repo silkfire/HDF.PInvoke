@@ -19,10 +19,13 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 public sealed class H5TSFixture : IDisposable
 {
@@ -35,11 +38,15 @@ public sealed class H5TSFixture : IDisposable
 
     public H5TSFixture()
     {
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(m_shared_file_name);
+
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         Assert.True(fapl >= 0);
         Assert.True(H5P.set_libver_bounds(fapl, H5F.libver_t.LATEST) >= 0);
-        m_shared_file_id = H5F.create(m_shared_file_name, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
+        m_shared_file_id = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
         Assert.True(H5P.close(fapl) >= 0);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     public void Dispose()

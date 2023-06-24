@@ -19,24 +19,31 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5ITest
 {
     [Fact]
     public void H5Iget_typeTest1()
     {
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+
         Assert.True(H5I.get_type(H5IFixture.m_v0_class_file) == H5I.type_t.FILE);
-        hid_t gid = H5G.create(m_v0_test_file, "A");
+        hid_t gid = H5G.create(m_v0_test_file, aStringPtr);
         Assert.True(gid > 0);
         Assert.True(H5I.get_type(gid) == H5I.type_t.GROUP);
         Assert.True(H5G.close(gid) >= 0);
 
         Assert.True(H5I.get_type(H5IFixture.m_v2_class_file) == H5I.type_t.FILE);
-        gid = H5G.create(m_v2_test_file, "A");
+        gid = H5G.create(m_v2_test_file, aStringPtr);
         Assert.True(gid > 0);
         Assert.True(H5I.get_type(gid) == H5I.type_t.GROUP);
         Assert.True(H5G.close(gid) >= 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
     }
 
     [Fact]

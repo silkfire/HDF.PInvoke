@@ -19,6 +19,7 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
 
 public partial class H5TTest
@@ -26,7 +27,7 @@ public partial class H5TTest
     [Fact]
     public void H5Tarray_createTest1()
     {
-        hsize_t[] dims = new hsize_t[] { 3, 3 };
+        hsize_t[] dims = { 3, 3 };
         hid_t dtype = H5T.array_create(H5T.IEEE_F64LE, (uint)dims.Length, dims);
         Assert.True(dtype >= 0);
         Assert.True(H5T.close(dtype) >= 0);
@@ -35,7 +36,7 @@ public partial class H5TTest
     [Fact]
     public void H5Tarray_createTest2()
     {
-        hsize_t[] dims = new hsize_t[] { 3, 3 };
+        hsize_t[] dims = { 3, 3 };
         hid_t dtype = H5T.array_create(H5T.IEEE_F64LE, 0, dims);
         Assert.False(dtype >= 0);
     }
@@ -43,7 +44,7 @@ public partial class H5TTest
     [Fact]
     public void H5Tarray_createTest3()
     {
-        hsize_t[] dims = new hsize_t[] { 3, 3 };
+        hsize_t[] dims = { 3, 3 };
         hid_t dtype = H5T.array_create(Utilities.RandomInvalidHandle(), (uint)dims.Length, dims);
         Assert.False(dtype >= 0);
     }

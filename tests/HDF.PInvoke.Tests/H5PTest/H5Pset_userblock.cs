@@ -19,8 +19,11 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5PTest
 {
@@ -41,7 +44,9 @@ public partial class H5PTest
         Assert.True(H5P.set_userblock(fcpl, 1024) >= 0);
 
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC, fcpl);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, fcpl);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
 
@@ -51,6 +56,8 @@ public partial class H5PTest
 
         File.Delete(fname);
         Assert.True(H5P.close(fcpl) >= 0);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     [Fact]

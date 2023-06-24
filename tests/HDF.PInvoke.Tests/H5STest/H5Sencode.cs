@@ -20,7 +20,10 @@ using size_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5STest
 {
@@ -32,9 +35,9 @@ public partial class H5STest
         Assert.True(space > 0);
 
         size_t nalloc = new size_t();
-        Assert.True(H5S.encode(space, null, ref nalloc) >= 0);
+        Assert.True(H5S.encode(space, nint.Zero, ref nalloc) >= 0);
 
-        byte[] buf = new byte[nalloc.ToInt32()];
+        var buf = Marshal.AllocHGlobal(nalloc);
         Assert.True(H5S.encode(space, buf, ref nalloc) >= 0);
 
         Assert.True(H5S.close(space) >= 0);
@@ -44,6 +47,6 @@ public partial class H5STest
     public void H5SencodeTest2()
     {
         size_t nalloc = size_t.Zero;
-        Assert.False(H5S.encode(Utilities.RandomInvalidHandle(), null, ref nalloc) >= 0);
+        Assert.False(H5S.encode(Utilities.RandomInvalidHandle(), nint.Zero, ref nalloc) >= 0);
     }
 }

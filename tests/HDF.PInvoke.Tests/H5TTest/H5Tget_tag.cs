@@ -19,8 +19,9 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
+
 using System.Runtime.InteropServices;
 
 public partial class H5TTest
@@ -28,25 +29,26 @@ public partial class H5TTest
     [Fact]
     public void H5Tget_tagTest1()
     {
-        hid_t dtype = H5T.create(H5T.class_t.OPAQUE, new IntPtr(1024));
+        var maryHadALittleLambString = "Mary had a little lamb...";
+        var maryHadALittleLambStringPtr = Marshal.StringToHGlobalAnsi(maryHadALittleLambString);
+        
+        hid_t dtype = H5T.create(H5T.class_t.OPAQUE, new nint(1024));
         Assert.True(dtype >= 0);
+        Assert.True(H5T.set_tag(dtype, maryHadALittleLambStringPtr) >= 0);
 
-        Assert.True(H5T.set_tag(dtype, "Mary had a little lamb...") >= 0);
-
-        IntPtr tag = H5T.get_tag(dtype);
+        nint tag = H5T.get_tag(dtype);
         Assert.True(tag.ToInt64() >= 0);
-
-        Assert.True(Marshal.PtrToStringAnsi(tag) == "Mary had a little lamb...");
-
+        Assert.Equal(maryHadALittleLambString, Marshal.PtrToStringAnsi(tag));
         Assert.True(H5.free_memory(tag) >= 0);
-
         Assert.True(H5T.close(dtype) >= 0);
+
+        Marshal.FreeHGlobal(maryHadALittleLambStringPtr);
     }
 
     [Fact]
     public void H5Tget_tagTest2()
     {
-        IntPtr tag = H5T.get_tag(Utilities.RandomInvalidHandle());
-        Assert.Equal(IntPtr.Zero, tag);
+        nint tag = H5T.get_tag(Utilities.RandomInvalidHandle());
+        Assert.Equal(nint.Zero, tag);
     }
 }

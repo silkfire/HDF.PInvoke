@@ -16,6 +16,7 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5OTest
@@ -23,29 +24,45 @@ public partial class H5OTest
     [Fact]
     public void H5Oget_info_by_idxTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AA")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AAA")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "AAAA")) >= 0);
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var aaStringPtr = Marshal.StringToHGlobalAnsi("AA");
+        var aaaStringPtr = Marshal.StringToHGlobalAnsi("AAA");
+        var aaaaStringPtr = Marshal.StringToHGlobalAnsi("AAAA");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, aStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, aaStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, aaaStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, aaaaStringPtr)) >= 0);
 
         H5O.info_t info = new H5O.info_t();
-        Assert.True(H5O.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
+        Assert.True(H5O.get_info_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
         Assert.True(info.type == H5O.type_t.GROUP);
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AA")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AAA")) >= 0);
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "AAAA")) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, aStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, aaStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, aaaStringPtr)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, aaaaStringPtr)) >= 0);
 
         info = new H5O.info_t();
-        Assert.True(H5O.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
+        Assert.True(H5O.get_info_by_idx(m_v2_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 2, ref info) >= 0);
         Assert.True(info.type == H5O.type_t.GROUP);
+
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(aaStringPtr);
+        Marshal.FreeHGlobal(aaaStringPtr);
+        Marshal.FreeHGlobal(aaaaStringPtr);
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 
     [Fact]
     public void H5Oget_info_by_idxTest2()
     {
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+
         H5O.info_t info = new H5O.info_t();
-        Assert.False(H5O.get_info_by_idx(Utilities.RandomInvalidHandle(), "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, 44, ref info) >= 0);
+        Assert.False(H5O.get_info_by_idx(Utilities.RandomInvalidHandle(), aStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 44, ref info) >= 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
     }
 }

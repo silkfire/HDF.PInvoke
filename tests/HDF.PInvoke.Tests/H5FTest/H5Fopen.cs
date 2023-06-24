@@ -20,8 +20,10 @@ using hid_t = System.Int64;
 
 using HDF5;
 
-using System.IO;
 using Xunit;
+
+using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5FTest
 {
@@ -29,23 +31,31 @@ public partial class H5FTest
     public void H5FopenTest1()
     {
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
 
-        file = H5F.open(fname, H5F.ACC_RDONLY);
+        file = H5F.open(fnameStringPtr, H5F.ACC_RDONLY);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
 
-        file = H5F.open(fname, H5F.ACC_RDWR);
+        file = H5F.open(fnameStringPtr, H5F.ACC_RDWR);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     [Fact]
     public void H5FopenTest2()
     {
-        Assert.False(H5F.open("", H5F.ACC_RDONLY) >= 0);
+        var emptyStringPtr = Marshal.StringToHGlobalAnsi("");
+
+        Assert.False(H5F.open(emptyStringPtr, H5F.ACC_RDONLY) >= 0);
+
+        Marshal.FreeHGlobal(emptyStringPtr);
     }
 }

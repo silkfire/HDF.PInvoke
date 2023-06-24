@@ -19,35 +19,48 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5Aget_info_by_idxTest1()
     {
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+        var bNamePtr = Marshal.StringToHGlobalAnsi("B");
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
         H5A.info_t info = new H5A.info_t();
-        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        hid_t att = H5A.create(m_v2_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
-        att = H5A.create(m_v2_test_file, "B", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v2_test_file, bNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        Assert.True(H5A.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
-        Assert.True(H5A.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v2_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
 
-        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        att = H5A.create(m_v0_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
-        Assert.True(H5A.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
+        Assert.True(H5A.get_info_by_idx(m_v0_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
 
-        Assert.False(H5A.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+        Assert.False(H5A.get_info_by_idx(m_v0_test_file, dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, ref info) >= 0);
+
+        Marshal.FreeHGlobal(aNamePtr);
+        Marshal.FreeHGlobal(bNamePtr);
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 
     [Fact]
     public void H5Aget_info_by_idxTest2()
     {
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+
         H5A.info_t info = new H5A.info_t();
-        Assert.False(H5A.get_info_by_idx(Utilities.RandomInvalidHandle(), ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024, ref info) >= 0);
+        Assert.False(H5A.get_info_by_idx(Utilities.RandomInvalidHandle(), dotNamePtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1024, ref info) >= 0);
+
+        Marshal.FreeHGlobal(dotNamePtr);
     }
 }

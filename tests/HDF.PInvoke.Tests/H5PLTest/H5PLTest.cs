@@ -19,7 +19,9 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 
@@ -36,10 +38,10 @@ public sealed partial class H5PLTest : IClassFixture<H5PLFixture>, IDisposable
         Utilities.DisableErrorPrinting();
 
         // create test-local files
-        m_v0_test_file = Utilities.H5TempFile(ref m_v0_test_file_name, H5F.libver_t.EARLIEST);
+        m_v0_test_file = Utilities.H5TempFile(out m_v0_test_file_name, H5F.libver_t.EARLIEST);
         Assert.True(m_v0_test_file >= 0);
 
-        m_v2_test_file = Utilities.H5TempFile(ref m_v2_test_file_name);
+        m_v2_test_file = Utilities.H5TempFile(out m_v2_test_file_name);
         Assert.True(m_v2_test_file >= 0);
     }
 

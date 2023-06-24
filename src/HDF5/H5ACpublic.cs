@@ -29,7 +29,7 @@ public sealed unsafe class H5AC
 
     public const int MAX_TRACE_FILE_NAME_LEN = 1024;
 
-    public enum metadata_write_strategy_t : int
+    public enum metadata_write_strategy_t
     {
         PROCESS_0_ONLY = 0,
         DISTRIBUTED = 1
@@ -37,7 +37,7 @@ public sealed unsafe class H5AC
 
 
     /// <summary>
-    /// Cache configuration struct used by H5F.[get,set]_mdc_config()
+    /// Cache configuration struct used by <see cref="H5P.get_mdc_config"/> and <see cref="H5P.set_mdc_config"/>
     /// </summary>
     public struct cache_config_t
     {
@@ -108,12 +108,12 @@ public sealed unsafe class H5AC
             evictions_enabled = 0;
 
             set_initial_size = 0;
-            initial_size = IntPtr.Zero;
+            initial_size = nint.Zero;
 
             min_clean_fraction = 0.0;
 
-            max_size = IntPtr.Zero;
-            min_size = IntPtr.Zero;
+            max_size = nint.Zero;
+            min_size = nint.Zero;
 
             epoch_length = 0;
 
@@ -124,7 +124,7 @@ public sealed unsafe class H5AC
             increment = 0.0;
 
             apply_max_increment = 0;
-            max_increment = IntPtr.Zero;
+            max_increment = nint.Zero;
 
             flash_incr_mode = H5C.cache_flash_incr_mode.OFF;
             flash_multiple = 0.0;
@@ -137,7 +137,7 @@ public sealed unsafe class H5AC
             decrement = 0.0;
 
             apply_max_decrement = 0;
-            max_decrement = IntPtr.Zero;
+            max_decrement = nint.Zero;
 
             epochs_before_eviction = 0;
 
@@ -156,8 +156,7 @@ public sealed unsafe class H5AC
     public const int CACHE_IMAGE__ENTRY_AGEOUT__MAX = 100;
 
     /// <summary>
-    /// Cache image configuration struct used by
-    /// H5F.[get,set]_mdc_image_config()
+    /// Cache image configuration struct used by <see cref="H5P.get_mdc_image_config"/> and <see cref="H5P.set_mdc_image_config"/>.
     /// </summary>
     public struct cache_image_config_t
     {

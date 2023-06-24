@@ -20,57 +20,71 @@ using Xunit;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-using System.Text;
 
 public partial class H5OTest
 {
     [Fact]
     public void H5Ovisit_by_nameTest1()
     {
-        Assert.True(H5G.create(m_v0_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
 
-        Assert.True(H5G.create(m_v2_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file, "shortcut") >= 0);
+        Assert.True(H5G.create(m_v0_test_file, abcdStringPtr, H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+
+        Assert.True(H5G.create(m_v2_test_file, abcdStringPtr, H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, shortcutStringPtr) >= 0);
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
+
         // the callback is defined in H5LTest.cs
         H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
-        Assert.True(H5O.visit_by_name(m_v0_test_file, "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        Assert.True(H5O.visit_by_name(m_v0_test_file, aStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
         // we should have 4 elements in the array list
         Assert.True(al.Count == 4);
 
-        Assert.True(H5O.visit_by_name(m_v2_test_file, "A", H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        Assert.True(H5O.visit_by_name(m_v2_test_file, aStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
         // we should have 8 (4 + 4) elements in the array list
         Assert.True(al.Count == 8);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
+        Marshal.FreeHGlobal(aStringPtr);
     }
 
     [Fact]
     public void H5Ovisit_by_nameTest2()
     {
-        string path = string.Join("/", H5OFixture.m_utf8strings);
-        Assert.True(H5G.create(m_v0_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
-        Assert.True(H5G.create(m_v2_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
+        var path = string.Join("/", H5OFixture.m_utf8strings);
+        var pathStringPtr = Marshal.StringToCoTaskMemUTF8(path);
+        var firstUtf8StringPtr = Marshal.StringToCoTaskMemUTF8(path);
+
+        Assert.True(H5G.create(m_v0_test_file, pathStringPtr, H5OFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5G.create(m_v2_test_file, pathStringPtr, H5OFixture.m_lcpl_utf8) >= 0);
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         // the callback is defined in H5LTest.cs
         H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
-        Assert.True(H5O.visit_by_name(m_v0_test_file, Encoding.UTF8.GetBytes(H5OFixture.m_utf8strings[0]), H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        Assert.True(H5O.visit_by_name(m_v0_test_file, firstUtf8StringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
         // we should have 5 elements in the array list
         Assert.True(al.Count == 5);
 
-        Assert.True(H5O.visit_by_name(m_v2_test_file, Encoding.UTF8.GetBytes(H5OFixture.m_utf8strings[0]), H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
+        Assert.True(H5O.visit_by_name(m_v2_test_file, firstUtf8StringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, cb, op_data) >= 0);
         // we should have 10 (5 + 5) elements in the array list
         Assert.True(al.Count == 10);
 
         hnd.Free();
+
+        Marshal.FreeCoTaskMem(pathStringPtr);
+        Marshal.FreeCoTaskMem(firstUtf8StringPtr);
     }
 }

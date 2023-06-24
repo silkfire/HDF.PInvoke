@@ -37,7 +37,7 @@ public partial class H5PTest
         conf.version = H5AC.CURR_CACHE_IMAGE_CONFIG_VERSION;
         conf.entry_ageout = H5AC.CACHE_IMAGE__ENTRY_AGEOUT__NONE;
 
-        IntPtr config_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(conf));
+        nint config_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(conf));
         Marshal.StructureToPtr(conf, config_ptr, false);
 
         H5AC.cache_image_config_t conf1 = new H5AC.cache_image_config_t();

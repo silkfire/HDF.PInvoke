@@ -21,7 +21,9 @@ using herr_t = System.Int32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -36,7 +38,7 @@ public sealed class H5SWMRFixture : IDisposable
     public H5SWMRFixture()
     {
         // create test files which persists across file tests
-        m_v3_class_file = Utilities.H5TempFileSWMR(ref m_v3_class_file_name);
+        m_v3_class_file = Utilities.H5TempFileSWMR(out m_v3_class_file_name);
         Assert.True(m_v3_class_file >= 0);
 
         m_lcpl = H5P.create(H5P.LINK_CREATE);
@@ -59,8 +61,10 @@ public sealed class H5SWMRFixture : IDisposable
         Assert.True(dcpl >= 0);
         Assert.True(H5P.set_chunk(dcpl, 2, chunk_dims) >= 0);
 
-        hid_t dst = H5D.create(m_v3_class_file, "int6x6", H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
+        var int6x6StringPtr = Marshal.StringToHGlobalAnsi("int6x6");
+        hid_t dst = H5D.create(m_v3_class_file, int6x6StringPtr, H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl);
         Assert.True(dst >= 0);
+        Marshal.FreeHGlobal(int6x6StringPtr);
 
         GCHandle hnd = GCHandle.Alloc(cbuf, GCHandleType.Pinned);
 
@@ -79,7 +83,7 @@ public sealed class H5SWMRFixture : IDisposable
     // H5Pset_object_flush_cb. We assume that a pointer to a counter in
     // unmanaged memory is passed as user data (op_data).
 
-    internal static herr_t append_func(hid_t dset_id, hsize_t[] cur_dims, IntPtr op_data)
+    internal static herr_t append_func(hid_t dset_id, hsize_t[] cur_dims, nint op_data)
     {
         int append_ct = Marshal.ReadInt32(op_data);
         Marshal.WriteInt32(op_data, ++append_ct);
@@ -87,7 +91,7 @@ public sealed class H5SWMRFixture : IDisposable
         return 0;
     }
 
-    internal static herr_t flush_func(hid_t obj_id, IntPtr op_data)
+    internal static herr_t flush_func(hid_t obj_id, nint op_data)
     {
         int flush_ct = Marshal.ReadInt32(op_data);
         Marshal.WriteInt32(op_data, ++flush_ct);

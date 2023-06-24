@@ -19,6 +19,7 @@ using hid_t = System.Int64;
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5SWMRTest
@@ -26,9 +27,13 @@ public partial class H5SWMRTest
     [Fact]
     public void H5DrefreshTestSWMR1()
     {
-        hid_t dst = H5D.open(H5SWMRFixture.m_v3_class_file, "int6x6");
+        var int6x6StringPtr = Marshal.StringToHGlobalAnsi("int6x6");
+
+        hid_t dst = H5D.open(H5SWMRFixture.m_v3_class_file, int6x6StringPtr);
         Assert.True(dst >= 0);
         Assert.True(H5D.refresh(dst) >= 0);
         Assert.True(H5D.close(dst) >= 0);
+
+        Marshal.FreeHGlobal(int6x6StringPtr);
     }
 }

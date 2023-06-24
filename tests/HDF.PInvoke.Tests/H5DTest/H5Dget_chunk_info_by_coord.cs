@@ -23,12 +23,15 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5Dget_chunk_info_by_coordTest1()
     {
+        var earlyBird2StringPtr = Marshal.StringToHGlobalAnsi("Early Bird2");
+
         hsize_t[] dims = { 10, 10 };
         hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
         hid_t space = H5S.create_simple(2, dims, max_dims);
@@ -40,7 +43,7 @@ public partial class H5DTest
         Assert.True(H5P.set_alloc_time(dcpl, H5D.alloc_time_t.EARLY) >= 0);
         Assert.True(H5P.set_fill_time(dcpl, H5D.fill_time_t.ALLOC) >= 0);
 
-        hid_t dset = H5D.create(m_v0_test_file, "Early Bird2", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        hid_t dset = H5D.create(m_v0_test_file, earlyBird2StringPtr, H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
         hsize_t size = 0;
@@ -54,7 +57,7 @@ public partial class H5DTest
 
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "Early Bird2", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        dset = H5D.create(m_v2_test_file, earlyBird2StringPtr, H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
         Assert.True(H5D.get_chunk_info_by_coord(dset, offset, ref filter_mask, ref addr, ref size) >= 0);
@@ -63,11 +66,15 @@ public partial class H5DTest
         Assert.True(addr > 0);
 
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(earlyBird2StringPtr);
     }
 
     [Fact]
     public void H5Dget_chunk_info_by_coordTest2()
     {
+        var earlyBird3StringPtr = Marshal.StringToHGlobalAnsi("Early Bird3");
+
         hsize_t[] dims = { 10, 10 };
         hsize_t[] max_dims = { H5S.UNLIMITED, H5S.UNLIMITED };
         hid_t space = H5S.create_simple(2, dims, max_dims);
@@ -77,7 +84,7 @@ public partial class H5DTest
         hsize_t[] chunk = { 4, 4 };
         Assert.True(H5P.set_chunk(dcpl, 2, chunk) >= 0);
 
-        hid_t dset = H5D.create(m_v0_test_file, "Early Bird3", H5T.IEEE_F32BE,
+        hid_t dset = H5D.create(m_v0_test_file, earlyBird3StringPtr, H5T.IEEE_F32BE,
                                 space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
@@ -92,7 +99,7 @@ public partial class H5DTest
 
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "Early Bird3", H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
+        dset = H5D.create(m_v2_test_file, earlyBird3StringPtr, H5T.IEEE_F32BE, space, H5P.DEFAULT, dcpl);
         Assert.True(dset >= 0);
 
         size = 100;
@@ -103,5 +110,7 @@ public partial class H5DTest
         Assert.Equal(H5.HADDR_UNDEF, addr);
 
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(earlyBird3StringPtr);
     }
 }

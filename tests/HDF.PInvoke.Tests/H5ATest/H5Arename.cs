@@ -20,28 +20,41 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5ArenameTest1()
     {
-        hid_t att = H5A.create(m_v2_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
-        Assert.True(att >= 0);
-        Assert.True(H5A.close(att) >= 0);
-        Assert.True(H5A.rename(m_v2_test_file, "A", "new A") >= 0);
-        Assert.False(H5A.rename(m_v2_test_file, "A", "new A") >= 0);
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+        var newANamePtr = Marshal.StringToHGlobalAnsi("new A");
 
-        att = H5A.create(m_v0_test_file, "A", H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        hid_t att = H5A.create(m_v2_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
-        Assert.True(H5A.rename(m_v0_test_file, "A", "new A") >= 0);
+        Assert.True(H5A.rename(m_v2_test_file, aNamePtr, newANamePtr) >= 0);
+        Assert.False(H5A.rename(m_v2_test_file, aNamePtr, newANamePtr) >= 0);
+
+        att = H5A.create(m_v0_test_file, aNamePtr, H5T.IEEE_F64LE, H5AFixture.m_space_scalar);
+        Assert.True(att >= 0);
+        Assert.True(H5A.close(att) >= 0);
+        Assert.True(H5A.rename(m_v0_test_file, aNamePtr, newANamePtr) >= 0);
+
+        Marshal.FreeHGlobal(aNamePtr);
+        Marshal.FreeHGlobal(newANamePtr);
     }
 
     [Fact]
     public void H5ArenameTest2()
     {
-        Assert.False(H5A.rename(Utilities.RandomInvalidHandle(), "foo", "bar") >= 0);
-        Assert.False(H5A.rename(m_v0_test_file, "foo", "bar") >= 0);
+        var fooNamePtr = Marshal.StringToHGlobalAnsi("foo");
+        var barNamePtr = Marshal.StringToHGlobalAnsi("bar");
+
+        Assert.False(H5A.rename(Utilities.RandomInvalidHandle(), fooNamePtr, barNamePtr) >= 0);
+        Assert.False(H5A.rename(m_v0_test_file, fooNamePtr, barNamePtr) >= 0);
+
+        Marshal.FreeHGlobal(fooNamePtr);
+        Marshal.FreeHGlobal(barNamePtr);
     }
 }

@@ -22,60 +22,95 @@ using ssize_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5Lget_name_by_idxTest1()
     {
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "A", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "AB", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "ABC", H5LFixture.m_lcpl) >= 0);
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var slashStringPtr = Marshal.StringToHGlobalAnsi("/");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var abStringPtr = Marshal.StringToHGlobalAnsi("AB");
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("ABC");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+        var v2ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v2_class_file_name);
+
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, slashStringPtr, m_v0_test_file, aStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, slashStringPtr, m_v0_test_file, abStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, slashStringPtr, m_v0_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
 
         size_t buf_size = ssize_t.Zero;
-        ssize_t size = H5L.get_name_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, null, buf_size);
+        ssize_t size = H5L.get_name_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nint.Zero, buf_size);
         Assert.True(size.ToInt32() == 2);
         buf_size = new ssize_t(size.ToInt32() + 1);
-        StringBuilder nameBuilder = new StringBuilder(buf_size.ToInt32());
-        size = H5L.get_name_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nameBuilder, buf_size);
-        Assert.True(nameBuilder.ToString() == "AB");
+        var buf = Marshal.AllocHGlobal(buf_size);
+        size = H5L.get_name_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, buf, buf_size);
+        Assert.Equal("AB", Marshal.PtrToStringAnsi(buf));
+        Marshal.FreeHGlobal(buf);
 
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "A", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "AB", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "ABC", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, slashStringPtr, m_v2_test_file, aStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, slashStringPtr, m_v2_test_file, abStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, slashStringPtr, m_v2_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
 
         buf_size = ssize_t.Zero;
-        size = H5L.get_name_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, null, buf_size);
+        size = H5L.get_name_by_idx(m_v2_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nint.Zero, buf_size);
         Assert.True(size.ToInt32() == 2);
         buf_size = new ssize_t(size.ToInt32() + 1);
-        nameBuilder = new StringBuilder(buf_size.ToInt32());
-        size = H5L.get_name_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, nameBuilder, buf_size);
-        Assert.True(nameBuilder.ToString() == "AB");
+
+        buf = Marshal.AllocHGlobal(buf_size);
+        size = H5L.get_name_by_idx(m_v2_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 1, buf, buf_size);
+        Assert.Equal("AB", Marshal.PtrToStringAnsi(buf));
+        Marshal.FreeHGlobal(buf);
+
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(slashStringPtr);
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(abStringPtr);
+        Marshal.FreeHGlobal(abcStringPtr);
+        Marshal.FreeHGlobal(dotStringPtr);
+        Marshal.FreeHGlobal(v2ClassFileNameStringPtr);
     }
 
     [Fact]
     public void H5Lget_name_by_idxTest2()
     {
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var slashStringPtr = Marshal.StringToHGlobalAnsi("/");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
         hid_t lcpl = H5P.copy(H5LFixture.m_lcpl);
         Assert.True(lcpl >= 0);
         Assert.True(H5P.set_char_encoding(lcpl, H5T.cset_t.UTF8) >= 0);
 
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", H5LFixture.m_v0_class_file, H5LFixture.m_utf8strings[i], lcpl) >= 0);
+            var utf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[i]);
+
+            Assert.True(H5L.create_external(v0ClassFileNameStringPtr, slashStringPtr, H5LFixture.m_v0_class_file, utf8StringPtr, lcpl) >= 0);
+
+            Marshal.FreeCoTaskMem(utf8StringPtr);
         }
 
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
             size_t buf_size = ssize_t.Zero;
-            ssize_t size = H5L.get_name_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, (hsize_t)i, null, buf_size);
+            ssize_t size = H5L.get_name_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, (hsize_t)i, nint.Zero, buf_size);
             buf_size = new ssize_t(size.ToInt32() + 1);
-            StringBuilder nameBuilder = new StringBuilder(buf_size.ToInt32());
-            size = H5L.get_name_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, (hsize_t)i, nameBuilder, buf_size);
+            
+            var buf = Marshal.AllocHGlobal(buf_size);
+            size = H5L.get_name_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, (hsize_t)i, buf, buf_size);
+            Marshal.FreeHGlobal(buf);
         }
 
         Assert.True(H5P.close(lcpl) >= 0);
+
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(slashStringPtr);
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 }

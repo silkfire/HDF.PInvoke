@@ -16,16 +16,21 @@
 namespace HDF.PInvoke.Tests;
 
 using hid_t = System.Int64;
+using ssize_t = nint;
 
 using HDF5;
+
+using Xunit;
+
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 
 internal class Utilities
 {
     public static void DisableErrorPrinting()
     {
-        H5E.set_auto(H5E.DEFAULT, null, IntPtr.Zero);
+        H5E.set_auto(H5E.DEFAULT, null, ssize_t.Zero);
     }
 
     /// <summary>
@@ -36,69 +41,74 @@ internal class Utilities
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         if (fapl < 0)
         {
-            throw new ApplicationException("H5P.create failed.");
+            Assert.Fail("H5P.create failed");
         }
 
         if (H5P.set_libver_bounds(fapl, version) < 0)
         {
-            throw new ApplicationException("H5P.set_libver_bounds failed.");
+            Assert.Fail("H5P.set_libver_bounds failed");
         }
 
         // use the core VFD, 64K increments, no backing store
-        if (H5P.set_fapl_core(fapl, new IntPtr(65536), 0) < 0)
+        if (H5P.set_fapl_core(fapl, new nint(65_536), 0) < 0)
         {
-            throw new ApplicationException("H5P.set_fapl_core failed.");
+            Assert.Fail("H5P.set_fapl_core failed");
         }
 
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
         if (file < 0)
         {
-            throw new ApplicationException("H5F.create failed.");
+            Assert.Fail("H5F.create failed");
         }
 
         if (H5P.close(fapl) < 0)
         {
-            throw new ApplicationException("H5P.close failed.");
+            Assert.Fail("H5P.close failed");
         }
+
+        Marshal.FreeHGlobal(fnameStringPtr);
 
         return file;
     }
 
     /// <summary>
-    /// Create a temporary HDF5 file IN MEMORY and return its name and
-    /// a file handle.
+    /// Create a temporary HDF5 file IN MEMORY and return its name and a file handle.
     /// </summary>
-    public static hid_t H5TempFile(ref string fileName, H5F.libver_t version = H5F.libver_t.LATEST, bool backing_store = false)
+    public static hid_t H5TempFile(out string filename, H5F.libver_t version = H5F.libver_t.LATEST, bool backing_store = false)
     {
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         if (fapl < 0)
         {
-            throw new ApplicationException("H5P.create failed.");
+            Assert.Fail("H5P.create failed");
         }
 
         if (H5P.set_libver_bounds(fapl, version) < 0)
         {
-            throw new ApplicationException("H5P.set_libver_bounds failed.");
+            Assert.Fail("H5P.set_libver_bounds failed");
         }
 
         // use the core VFD, 64K increments, no backing store
-        if (H5P.set_fapl_core(fapl, new IntPtr(65536), (uint)(backing_store ? 1 : 0)) < 0)
+        if (H5P.set_fapl_core(fapl, new nint(65536), (uint)(backing_store ? 1 : 0)) < 0)
         {
-            throw new ApplicationException("H5P.set_fapl_core failed.");
+            Assert.Fail("H5P.set_fapl_core failed");
         }
 
-        fileName = Path.GetTempFileName();
-        hid_t file = H5F.create(fileName, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
+        filename = Path.GetTempFileName();
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(filename);
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
         if (file < 0)
         {
-            throw new ApplicationException("H5F.create failed.");
+            Assert.Fail("H5F.create failed");
         }
 
         if (H5P.close(fapl) < 0)
         {
-            throw new ApplicationException("H5P.close failed.");
+            Assert.Fail("H5P.close failed");
         }
+
+        Marshal.FreeHGlobal(fnameStringPtr);
 
         return file;
     }
@@ -107,35 +117,38 @@ internal class Utilities
     /// Create a temporary HDF5 with SWMR access and return
     /// its name and a file handle.
     /// </summary>
-    public static hid_t H5TempFileNoSWMR(ref string fileName)
+    public static hid_t H5TempFileNoSWMR(out string filename)
     {
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         if (fapl < 0)
         {
-            throw new ApplicationException("H5P.create failed.");
+            Assert.Fail("H5P.create failed");
         }
 
         if (H5P.set_libver_bounds(fapl, H5F.libver_t.LATEST) < 0)
         {
-            throw new ApplicationException("H5P.set_libver_bounds failed.");
+            Assert.Fail("H5P.set_libver_bounds failed");
         }
 
         if (H5P.set_fclose_degree(fapl, H5F.close_degree_t.STRONG) < 0)
         {
-            throw new ApplicationException("H5P.set_fclose_degree failed.");
+            Assert.Fail("H5P.set_fclose_degree failed");
         }
 
-        fileName = Path.GetTempFileName();
-        hid_t file = H5F.create(fileName, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
+        filename = Path.GetTempFileName();
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(filename);
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
         if (file < 0)
         {
-            throw new ApplicationException("H5F.create failed.");
+            Assert.Fail("H5F.create failed");
         }
 
         if (H5P.close(fapl) < 0)
         {
-            throw new ApplicationException("H5P.close failed.");
+            Assert.Fail("H5P.close failed");
         }
+
+        Marshal.FreeHGlobal(fnameStringPtr);
 
         return file;
     }
@@ -144,41 +157,44 @@ internal class Utilities
     /// Create a temporary HDF5 with SWMR access and return
     /// its name and a file handle.
     /// </summary>
-    public static hid_t H5TempFileSWMR(ref string fileName)
+    public static hid_t H5TempFileSWMR(out string filename)
     {
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         if (fapl < 0)
         {
-            throw new ApplicationException("H5P.create failed.");
+            Assert.Fail("H5P.create failed");
         }
 
         if (H5P.set_libver_bounds(fapl, H5F.libver_t.LATEST) < 0)
         {
-            throw new ApplicationException("H5P.set_libver_bounds failed.");
+            Assert.Fail("H5P.set_libver_bounds failed");
         }
 
         if (H5P.set_fclose_degree(fapl, H5F.close_degree_t.STRONG) < 0)
         {
-            throw new ApplicationException("H5P.set_fclose_degree failed.");
+            Assert.Fail("H5P.set_fclose_degree failed");
         }
 
-        fileName = Path.GetTempFileName();
-        hid_t file = H5F.create(fileName, H5F.ACC_TRUNC | H5F.ACC_SWMR_WRITE, H5P.DEFAULT, fapl);
+        filename = Path.GetTempFileName();
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(filename);
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC | H5F.ACC_SWMR_WRITE, H5P.DEFAULT, fapl);
         if (file < 0)
         {
-            throw new ApplicationException("H5F.create failed.");
+            Assert.Fail("H5F.create failed");
         }
 
         if (H5P.close(fapl) < 0)
         {
-            throw new ApplicationException("H5P.close failed.");
+            Assert.Fail("H5P.close failed");
         }
+
+        Marshal.FreeHGlobal(fnameStringPtr);
 
         return file;
     }
 
     /// <summary>
-    /// Return a random INVALID handle.
+    /// Returns a random invalid handle.
     /// </summary>
     public static hid_t RandomInvalidHandle()
     {

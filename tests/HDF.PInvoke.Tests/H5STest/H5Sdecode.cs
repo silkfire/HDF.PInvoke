@@ -20,7 +20,10 @@ using size_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5STest
 {
@@ -32,9 +35,9 @@ public partial class H5STest
         Assert.True(space > 0);
 
         size_t nalloc = new size_t();
-        Assert.True(H5S.encode(space, null, ref nalloc) >= 0);
+        Assert.True(H5S.encode(space, nint.Zero, ref nalloc) >= 0);
 
-        byte[] buf = new byte[nalloc.ToInt32()];
+        var buf = Marshal.AllocHGlobal(nalloc);
         Assert.True(H5S.encode(space, buf, ref nalloc) >= 0);
 
         Assert.True(H5S.close(space) >= 0);
@@ -42,10 +45,9 @@ public partial class H5STest
         space = H5S.decode(buf);
         Assert.True(space >= 0);
 
-        Assert.True(H5S.get_simple_extent_ndims(space) == dims.Length);
+        Assert.Equal(dims.Length, H5S.get_simple_extent_ndims(space));
         hsize_t[] tdims = new hsize_t[dims.Length];
-        Assert.True(
-                      H5S.get_simple_extent_dims(space, tdims, null) == dims.Length);
+        Assert.Equal(dims.Length, H5S.get_simple_extent_dims(space, tdims, null));
 
         for (int i = 0; i < dims.Length; ++i)
         {
@@ -58,6 +60,6 @@ public partial class H5STest
     [Fact]
     public void H5SdecodeTest2()
     {
-        Assert.False(H5S.decode(null) >= 0);
+        Assert.False(H5S.decode(nint.Zero) >= 0);
     }
 }

@@ -19,20 +19,27 @@ using hbool_t = System.UInt32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.Threading;
+using System.Runtime.InteropServices;
 
 public partial class H5TSTest
 {
     private void AttributeCreateProcedure()
     {
-        string name = Thread.CurrentThread.Name;
+        var threadNamePtr = Marshal.StringToHGlobalAnsi(Thread.CurrentThread.Name);
+
         hid_t space = H5S.create(H5S.class_t.NULL);
         Assert.True(space >= 0);
 
-        Assert.True(H5A.close(H5A.create(H5TSFixture.m_shared_file_id, name, H5T.STD_I32BE, space)) >= 0);
+        Assert.True(H5A.close(H5A.create(H5TSFixture.m_shared_file_id, threadNamePtr, H5T.STD_I32BE, space)) >= 0);
+        Marshal.FreeHGlobal(threadNamePtr);
 
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(threadNamePtr);
     }
 
     [Fact]
@@ -44,10 +51,10 @@ public partial class H5TSTest
         if (flag > 0)
         {
             // Create the new Thread and use the FileCreateProcedure method
-            _fixture.Thread1 = new Thread(new ThreadStart(AttributeCreateProcedure)) { Name = "Thread1" };
-            _fixture.Thread2 = new Thread(new ThreadStart(AttributeCreateProcedure)) { Name = "Thread2" };
-            _fixture.Thread3 = new Thread(new ThreadStart(AttributeCreateProcedure)) { Name = "Thread3" };
-            _fixture.Thread4 = new Thread(new ThreadStart(AttributeCreateProcedure)) { Name = "Thread4" };
+            _fixture.Thread1 = new Thread(AttributeCreateProcedure) { Name = "Thread1" };
+            _fixture.Thread2 = new Thread(AttributeCreateProcedure) { Name = "Thread2" };
+            _fixture.Thread3 = new Thread(AttributeCreateProcedure) { Name = "Thread3" };
+            _fixture.Thread4 = new Thread(AttributeCreateProcedure) { Name = "Thread4" };
 
             // Start running the thread
             _fixture.Thread4.Start();

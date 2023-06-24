@@ -19,24 +19,27 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5PTest
 {
     [Fact]
     public void H5Pset_virtual_prefixTest1()
     {
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+
         hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
         Assert.True(dapl >= 0);
-        string prefix = "foo";
-        Assert.True(H5P.set_virtual_prefix(dapl, prefix) >= 0);
+        Assert.True(H5P.set_virtual_prefix(dapl, fooStringPtr) >= 0);
 
-        StringBuilder sb = new StringBuilder(4);
-        IntPtr size = new IntPtr(4);
-        Assert.True(H5P.get_virtual_prefix(dapl, sb, size).ToInt32() == 3);
-
+        nint size = new nint(4);
+        var prefixBuf = Marshal.AllocHGlobal(size);
+        Assert.Equal(3, H5P.get_virtual_prefix(dapl, prefixBuf, size).ToInt32());
         Assert.True(H5P.close(dapl) >= 0);
+
+        Marshal.FreeHGlobal(fooStringPtr);
     }
 }

@@ -19,34 +19,47 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5ATest
 {
     [Fact]
     public void H5Acreate_by_nameTest1()
     {
-        hid_t att = H5A.create_by_name(H5AFixture.m_v0_class_file, ".", "BNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        var dotNamePtr = Marshal.StringToHGlobalAnsi(".");
+        var bnaNamePtr = Marshal.StringToHGlobalAnsi("BNA");
+        var bsaNamePtr = Marshal.StringToHGlobalAnsi("BSA");
+
+        hid_t att = H5A.create_by_name(H5AFixture.m_v0_class_file, dotNamePtr, bnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create_by_name(H5AFixture.m_v2_class_file, ".", "BNA", H5T.IEEE_F32BE, H5AFixture.m_space_null);
+        att = H5A.create_by_name(H5AFixture.m_v2_class_file, dotNamePtr, bnaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create_by_name(H5AFixture.m_v0_class_file, ".", "BSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create_by_name(H5AFixture.m_v0_class_file, dotNamePtr, bsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
 
-        att = H5A.create_by_name(H5AFixture.m_v2_class_file, ".", "BSA", H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
+        att = H5A.create_by_name(H5AFixture.m_v2_class_file, dotNamePtr, bsaNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_scalar);
         Assert.True(att >= 0);
         Assert.True(H5A.close(att) >= 0);
+
+        Marshal.FreeHGlobal(dotNamePtr);
+        Marshal.FreeHGlobal(bnaNamePtr);
+        Marshal.FreeHGlobal(bsaNamePtr);
     }
 
     [Fact]
     public void H5Acreate_by_nameTest2()
     {
-        Assert.False(H5A.create(Utilities.RandomInvalidHandle(), "A", H5T.IEEE_F32BE, H5AFixture.m_space_null) >= 0);
-        Assert.False(H5A.create(m_v0_test_file, "A", Utilities.RandomInvalidHandle(), H5AFixture.m_space_null) >= 0);
-        Assert.False(H5A.create(m_v2_test_file, "A", H5T.IEEE_F32BE, Utilities.RandomInvalidHandle()) >= 0);
+        var aNamePtr = Marshal.StringToHGlobalAnsi("A");
+
+        Assert.False(H5A.create(Utilities.RandomInvalidHandle(), aNamePtr, H5T.IEEE_F32BE, H5AFixture.m_space_null) >= 0);
+        Assert.False(H5A.create(m_v0_test_file, aNamePtr, Utilities.RandomInvalidHandle(), H5AFixture.m_space_null) >= 0);
+        Assert.False(H5A.create(m_v2_test_file, aNamePtr, H5T.IEEE_F32BE, Utilities.RandomInvalidHandle()) >= 0);
+
+        Marshal.FreeHGlobal(aNamePtr);
     }
 }

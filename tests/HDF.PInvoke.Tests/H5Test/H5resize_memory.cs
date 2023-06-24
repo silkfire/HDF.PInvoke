@@ -25,70 +25,70 @@ public partial class H5Test
     [Fact]
     public void H5resize_memoryTest1()
     {
-        IntPtr size = new IntPtr(1024 * 1024);
+        nint size = new nint(1024 * 1024);
 
         // uninitialized allocation
-        IntPtr ptr = H5.allocate_memory(size, 0);
-        Assert.False(ptr == IntPtr.Zero);
+        nint ptr = H5.allocate_memory(size, 0);
+        Assert.False(ptr == nint.Zero);
 
         // reallocate
-        size = new IntPtr(1024 * 1024 * 10);
-        IntPtr ptr1 = H5.resize_memory(ptr, size);
-        Assert.False(ptr1 == IntPtr.Zero);
+        size = new nint(1024 * 1024 * 10);
+        nint ptr1 = H5.resize_memory(ptr, size);
+        Assert.False(ptr1 == nint.Zero);
         Assert.True(H5.free_memory(ptr1) >= 0);
 
         // reallocate from NULL -> allocation
-        ptr = H5.resize_memory(IntPtr.Zero, size);
-        Assert.False(ptr == IntPtr.Zero);
+        ptr = H5.resize_memory(nint.Zero, size);
+        Assert.False(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
 
         // reallocate to size zero -> free
         ptr = H5.allocate_memory(size, 1);
-        Assert.False(ptr == IntPtr.Zero);
-        size = new IntPtr(0);
+        Assert.False(ptr == nint.Zero);
+        size = new nint(0);
         ptr1 = H5.resize_memory(ptr, size);
-        Assert.True(ptr1 == IntPtr.Zero);
+        Assert.True(ptr1 == nint.Zero);
 
         // H5resize_memory(NULL, 0)	Returns NULL (undefined in C standard).
-        size = new IntPtr(0);
-        Assert.True(H5.resize_memory(IntPtr.Zero, size) == IntPtr.Zero);
+        size = new nint(0);
+        Assert.True(H5.resize_memory(nint.Zero, size) == nint.Zero);
     }
 
     [Fact]
     public void H5resize_memoryTest2()
     {
-        IntPtr size = new IntPtr(1024 * 1024);
+        nint size = new nint(1024 * 1024);
 
         // uninitialized allocation
-        IntPtr ptr = H5.allocate_memory(size, 0);
-        Assert.False(ptr == IntPtr.Zero);
+        nint ptr = H5.allocate_memory(size, 0);
+        Assert.False(ptr == nint.Zero);
 
         // reallocate
-        size = new IntPtr(1024 * 1024 * 10);
-        IntPtr ptr1 = Marshal.ReAllocHGlobal(ptr, size);
-        Assert.False(ptr1 == IntPtr.Zero);
+        size = new nint(1024 * 1024 * 10);
+        nint ptr1 = Marshal.ReAllocHGlobal(ptr, size);
+        Assert.False(ptr1 == nint.Zero);
         Assert.True(H5.free_memory(ptr1) >= 0);
 
         // reallocate to size zero -> free
         ptr = H5.allocate_memory(size, 1);
-        Assert.False(ptr == IntPtr.Zero);
-        size = new IntPtr(0);
+        Assert.False(ptr == nint.Zero);
+        size = new nint(0);
         ptr1 = Marshal.ReAllocHGlobal(ptr, size);
-        Assert.False(ptr1 == IntPtr.Zero);
+        Assert.False(ptr1 == nint.Zero);
 
         // H5resize_memory(NULL, 0)	Returns NULL (undefined in C standard).
-        size = new IntPtr(0);
-        //Assert.True(Marshal.ReAllocHGlobal(IntPtr.Zero, size) == IntPtr.Zero);
+        size = new nint(0);
+        //Assert.True(Marshal.ReAllocHGlobal(nint.Zero, size) == nint.Zero);
     }
 
     [Fact]
     public void H5resize_memoryTest3()
     {
-        IntPtr size = new IntPtr(1024 * 1024);
+        nint size = new nint(1024 * 1024);
 
         // reallocate from NULL -> allocation
-        IntPtr ptr = Marshal.ReAllocHGlobal(IntPtr.Zero, size);
-        Assert.False(ptr == IntPtr.Zero);
+        nint ptr = Marshal.ReAllocHGlobal(nint.Zero, size);
+        Assert.False(ptr == nint.Zero);
         Assert.True(H5.free_memory(ptr) >= 0);
     }
 
@@ -96,7 +96,7 @@ public partial class H5Test
     public void H5resize_memoryTest4()
     {
         // H5resize_memory(NULL, 0)	Returns NULL (undefined in C standard).
-        IntPtr size = new IntPtr(0);
-        Assert.NotEqual(IntPtr.Zero, Marshal.ReAllocHGlobal(IntPtr.Zero, size));
+        nint size = new nint(0);
+        Assert.NotEqual(nint.Zero, Marshal.ReAllocHGlobal(nint.Zero, size));
     }
 }

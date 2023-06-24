@@ -19,24 +19,31 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5ITest
 {
     [Fact]
     public void H5Iis_validTest1()
     {
-        hid_t gid = H5G.create(m_v0_test_file, "A");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+
+        hid_t gid = H5G.create(m_v0_test_file, aStringPtr);
         Assert.True(gid > 0);
         Assert.True(H5I.is_valid(gid) > 0);
         Assert.True(H5G.close(gid) >= 0);
         Assert.True(H5I.is_valid(gid) == 0);
 
-        gid = H5G.create(m_v2_test_file, "A");
+        gid = H5G.create(m_v2_test_file, aStringPtr);
         Assert.True(gid > 0);
         Assert.True(H5I.is_valid(gid) > 0);
         Assert.True(H5G.close(gid) >= 0);
         Assert.True(H5I.is_valid(gid) == 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
     }
 
     [Fact]

@@ -16,6 +16,7 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5OTest
@@ -23,23 +24,33 @@ public partial class H5OTest
     [Fact]
     public void H5Oget_info_by_nameTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C", H5OFixture.m_lcpl)) >= 0);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+        var abStringPtr = Marshal.StringToHGlobalAnsi("A/B");
+
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcStringPtr, H5OFixture.m_lcpl)) >= 0);
 
         H5O.info_t info = new H5O.info_t();
-        Assert.True(H5O.get_info_by_name(m_v0_test_file, "A/B", ref info) >= 0);
+        Assert.True(H5O.get_info_by_name(m_v0_test_file, abStringPtr, ref info) >= 0);
         Assert.True(info.type == H5O.type_t.GROUP);
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C", H5OFixture.m_lcpl)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, abcStringPtr, H5OFixture.m_lcpl)) >= 0);
 
         info = new H5O.info_t();
-        Assert.True(H5O.get_info_by_name(m_v2_test_file, "A/B", ref info) >= 0);
+        Assert.True(H5O.get_info_by_name(m_v2_test_file, abcStringPtr, ref info) >= 0);
         Assert.True(info.type == H5O.type_t.GROUP);
+
+        Marshal.FreeHGlobal(abcStringPtr);
+        Marshal.FreeHGlobal(abStringPtr);
     }
 
     [Fact]
     public void H5Oget_info_by_nameTest2()
     {
+        var dotStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+
         H5O.info_t info = new H5O.info_t();
-        Assert.False(H5O.get_info_by_name(Utilities.RandomInvalidHandle(), ".", ref info) >= 0);
+        Assert.False(H5O.get_info_by_name(Utilities.RandomInvalidHandle(), dotStringPtr, ref info) >= 0);
+
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 }

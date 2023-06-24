@@ -19,42 +19,37 @@ using ssize_t = nint;
 
 using HDF5;
 using Xunit;
-using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 public partial class H5RTest
 {
     [Fact]
     public void H5Rget_nameTest1()
     {
-        byte[] path = Encoding.UTF8.GetBytes(string.Join("/", H5RFixture.m_utf8strings));
-        // make room for the trailling \0
-        byte[] name = new byte[path.Length + 1];
-        Array.Copy(path, name, path.Length);
+        var path = string.Join("/", H5RFixture.m_utf8strings);
+        var pathStringPtr = Marshal.StringToCoTaskMemUTF8(path);
 
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, path, H5RFixture.m_lcpl_utf8)) >= 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, pathStringPtr, H5RFixture.m_lcpl_utf8)) >= 0);
 
-        byte[] refer = new byte[H5R.OBJ_REF_BUF_SIZE];
-        GCHandle hnd = GCHandle.Alloc(refer, GCHandleType.Pinned);
+        var refer = new byte[H5R.OBJ_REF_BUF_SIZE];
+        var referPtr = Marshal.AllocHGlobal(refer.Length);
+        Marshal.Copy(refer, 0, referPtr, refer.Length);
 
-        Assert.True(H5R.create(hnd.AddrOfPinnedObject(), m_v0_test_file, name, H5R.type_t.OBJECT, -1) >= 0);
+        Assert.True(H5R.create(referPtr, m_v0_test_file, pathStringPtr, H5R.type_t.OBJECT, -1) >= 0);
 
-        ssize_t size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, hnd.AddrOfPinnedObject(), (byte[])null, ssize_t.Zero);
-        Assert.True(size.ToInt32() == name.Length);
+        ssize_t size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, referPtr, nint.Zero, ssize_t.Zero);
+        Assert.True(size.ToInt32() == path.Length);
 
-        // size does not include the trailling \0
-        byte[] buf = new byte[size.ToInt32() + 1];
-        size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, hnd.AddrOfPinnedObject(), buf, new ssize_t(buf.Length));
-        Assert.True(size.ToInt32() == name.Length);
+        var bufLen = size.ToInt32() + 1;
+        var bufPtr = Marshal.AllocHGlobal(bufLen);
+        size = H5R.get_name(m_v0_test_file, H5R.type_t.OBJECT, referPtr, bufPtr, new ssize_t(bufLen));
+        Assert.True(size.ToInt32() == path.Length);
+        var buf = Marshal.PtrToStringUTF8(bufPtr);
 
-        hnd.Free();
-
-        // we need to account for the leading "/", which was not included
-        // in path
-        for (int i = 0; i < name.Length; ++i)
+        // we need to account for the leading "/", which was not included in path
+        for (int i = 0; i < path.Length; ++i)
         {
-            Assert.True(name[i] == buf[i + 1]);
+            Assert.True(path[i] == buf[i + 1]);
         }
     }
 }

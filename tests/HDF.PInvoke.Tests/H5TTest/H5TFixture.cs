@@ -19,7 +19,9 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 
@@ -33,9 +35,9 @@ public sealed class H5TFixture : IDisposable
     public H5TFixture()
     {
         // create test files which persists across file tests
-        m_v0_class_file = Utilities.H5TempFile(ref m_v0_class_file_name, H5F.libver_t.EARLIEST);
+        m_v0_class_file = Utilities.H5TempFile(out m_v0_class_file_name, H5F.libver_t.EARLIEST);
         Assert.True(m_v0_class_file >= 0);
-        m_v2_class_file = Utilities.H5TempFile(ref m_v2_class_file_name);
+        m_v2_class_file = Utilities.H5TempFile(out m_v2_class_file_name);
         Assert.True(m_v2_class_file >= 0);
     }
 

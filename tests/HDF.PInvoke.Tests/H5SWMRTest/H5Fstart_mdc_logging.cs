@@ -20,40 +20,51 @@ using hbool_t = System.UInt32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5SWMRTest
 {
     [Fact]
     public void H5Fstart_mdc_loggingTestSWMR1()
     {
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("/A/B/C");
+
         hid_t fapl = H5P.create(H5P.FILE_ACCESS);
         Assert.True(fapl >= 0);
         Assert.True(H5P.set_libver_bounds(fapl, H5F.libver_t.LATEST) >= 0);
 
         hbool_t is_enabled = 1;
         string location = "mdc.log";
+        var locationStringPtr = Marshal.StringToHGlobalAnsi(location);
         hbool_t start_on_access = 0;
 
-        Assert.True(H5P.set_mdc_log_options(fapl, is_enabled, location, start_on_access) >= 0);
+        Assert.True(H5P.set_mdc_log_options(fapl, is_enabled, locationStringPtr, start_on_access) >= 0);
 
         string fileName = Path.GetTempFileName();
-        hid_t file = H5F.create(fileName, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fileName);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC, H5P.DEFAULT, fapl);
         Assert.True(file >= 0);
 
         Assert.True(H5F.start_mdc_logging(file) >= 0);
 
-        hid_t group = H5G.create(file, "/A/B/C", H5SWMRFixture.m_lcpl);
+        hid_t group = H5G.create(file, abcStringPtr, H5SWMRFixture.m_lcpl);
         Assert.True(group >= 0);
         Assert.True(H5G.close(group) >= 0);
 
         Assert.True(H5F.stop_mdc_logging(file) >= 0);
 
         Assert.True(H5F.close(file) >= 0);
-
         Assert.True(H5P.close(fapl) >= 0);
 
-        File.Delete("mdc.log");
+        File.Delete(location);
+
+        Marshal.FreeHGlobal(abcStringPtr);
+        Marshal.FreeHGlobal(fnameStringPtr);
+        Marshal.FreeHGlobal(locationStringPtr);
     }
 }

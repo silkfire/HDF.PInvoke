@@ -19,24 +19,30 @@ namespace HDF.PInvoke.Tests;
 using hsize_t = System.UInt64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-using System.Text;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5LiterateTest1()
     {
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "A", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "B", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v0_test_file, "C", H5LFixture.m_lcpl) >= 0);
+        var thisIsASoftLinkStringPtr = Marshal.StringToHGlobalAnsi("this/is/a/soft/link");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var bStringPtr = Marshal.StringToHGlobalAnsi("B");
+        var cStringPtr = Marshal.StringToHGlobalAnsi("C");
+
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v0_test_file, aStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v0_test_file, bStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v0_test_file, cStringPtr, H5LFixture.m_lcpl) >= 0);
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         hsize_t n = 0;
         // the callback is defined in H5LTest.cs
         H5L.iterate_t cb = H5LFixture.DelegateMethod;
@@ -44,9 +50,9 @@ public partial class H5LTest
         // we should have 3 elements in the array list
         Assert.True(al.Count == 3);
 
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "A", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "B", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_soft("this/is/a/soft/link", m_v2_test_file, "C", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v2_test_file, aStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v2_test_file, bStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v2_test_file, cStringPtr, H5LFixture.m_lcpl) >= 0);
 
         n = 0;
         Assert.True(H5L.iterate(m_v2_test_file, H5.index_t.NAME, H5.iter_order_t.NATIVE, ref n, cb, op_data) >= 0);
@@ -54,6 +60,11 @@ public partial class H5LTest
         Assert.True(al.Count == 6);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(thisIsASoftLinkStringPtr);
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(bStringPtr);
+        Marshal.FreeHGlobal(cStringPtr);
     }
 
     [Fact]
@@ -61,7 +72,7 @@ public partial class H5LTest
     {
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         hsize_t n = 0;
         // the callback is defined in H5ATest.cs
         H5L.iterate_t cb = H5LFixture.DelegateMethod;
@@ -74,16 +85,21 @@ public partial class H5LTest
     [Fact]
     public void H5LiterateTest3()
     {
+        var thisIsASoftLinkStringPtr = Marshal.StringToHGlobalAnsi("this/is/a/soft/link");
+
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("this/is/a/soft/link"), m_v0_test_file, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]), H5LFixture.m_lcpl_utf8) >= 0);
+            var utf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[i]);
 
-            Assert.True(H5L.create_soft(Encoding.ASCII.GetBytes("this/is/a/soft/link"), m_v2_test_file, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]), H5LFixture.m_lcpl_utf8) >= 0);
+            Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v0_test_file, utf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
+            Assert.True(H5L.create_soft(thisIsASoftLinkStringPtr, m_v2_test_file, utf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
+
+            Marshal.FreeCoTaskMem(utf8StringPtr);
         }
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         hsize_t n = 0;
         // the callback is defined in H5LTest.cs
         H5L.iterate_t cb = H5LFixture.DelegateMethod;
@@ -95,5 +111,7 @@ public partial class H5LTest
         Assert.True(al.Count == 2 * H5LFixture.m_utf8strings.Length);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(thisIsASoftLinkStringPtr);
     }
 }

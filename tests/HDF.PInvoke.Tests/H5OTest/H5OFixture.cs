@@ -19,8 +19,10 @@ namespace HDF.PInvoke.Tests;
 using herr_t = System.Int32;
 using hid_t = System.Int64;
 
-using Xunit;
 using HDF5;
+
+using Xunit;
+
 using System;
 using System.IO;
 using System.Collections;
@@ -29,7 +31,7 @@ using System.Text;
 
 public sealed class H5OFixture : IDisposable
 {
-    internal static string[] m_utf8strings = new string[] { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
+    internal static string[] m_utf8strings = { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
     internal static hid_t m_v0_class_file = -1;
     internal static string m_v0_class_file_name;
     internal static hid_t m_v2_class_file = -1;
@@ -41,9 +43,9 @@ public sealed class H5OFixture : IDisposable
     public H5OFixture()
     {
         // create test files which persists across file tests
-        m_v0_class_file = Utilities.H5TempFile(ref m_v0_class_file_name, H5F.libver_t.EARLIEST);
+        m_v0_class_file = Utilities.H5TempFile(out m_v0_class_file_name, H5F.libver_t.EARLIEST);
         Assert.True(m_v0_class_file >= 0);
-        m_v2_class_file = Utilities.H5TempFile(ref m_v2_class_file_name);
+        m_v2_class_file = Utilities.H5TempFile(out m_v2_class_file_name);
         Assert.True(m_v2_class_file >= 0);
 
         m_lcpl = H5P.create(H5P.LINK_CREATE);
@@ -56,7 +58,7 @@ public sealed class H5OFixture : IDisposable
     // Callback for H5O.visit and H5O.visit_by_name
     // We expect an array list as op_data, add the attribute names to the
     // array list as we go
-    internal static herr_t DelegateMethod(hid_t obj, IntPtr name, ref H5O.info_t info, IntPtr op_data)
+    internal static herr_t DelegateMethod(hid_t obj, nint name, ref H5O.info_t info, nint op_data)
     {
         GCHandle hnd = (GCHandle)op_data;
         ArrayList al = hnd.Target as ArrayList;

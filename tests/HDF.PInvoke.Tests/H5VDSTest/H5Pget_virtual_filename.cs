@@ -21,22 +21,25 @@ using ssize_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5VDSTest
 {
     [Fact]
     public void H5Pget_virtual_filenameTestVDS1()
     {
-        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, "VDS");
+        var vdsStringPtr = Marshal.StringToHGlobalAnsi("VDS");
+
+        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, vdsStringPtr);
         Assert.True(vds >= 0);
 
         hid_t dcpl = H5D.get_create_plist(vds);
         Assert.True(dcpl >= 0);
 
-        IntPtr count = IntPtr.Zero;
+        nint count = nint.Zero;
         Assert.True(H5P.get_virtual_count(dcpl, ref count) >= 0);
         Assert.True(3 == count.ToInt32());
 
@@ -45,15 +48,18 @@ public partial class H5VDSTest
         for (int i = 0; i < count.ToInt32(); ++i)
         {
             size_t index = new ssize_t(i);
-            ssize_t len = H5P.get_virtual_filename(dcpl, index, null, IntPtr.Zero);
+            ssize_t len = H5P.get_virtual_filename(dcpl, index, nint.Zero, nint.Zero);
             Assert.True(len.ToInt32() > 0);
-            StringBuilder name = new StringBuilder(len.ToInt32() + 1);
-            len = H5P.get_virtual_filename(dcpl, index, name, len + 1);
+            var nameBuf = Marshal.AllocHGlobal(len.ToInt32() + 1);
+            len = H5P.get_virtual_filename(dcpl, index, nameBuf, len + 1);
             Assert.True(len.ToInt32() > 0);
-            Assert.True(name.ToString() == names[i]);
+            Assert.Equal(names[i], Marshal.PtrToStringAnsi(nameBuf));
+            Marshal.FreeHGlobal(vdsStringPtr);
         }
 
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5D.close(vds) >= 0);
+
+        Marshal.FreeHGlobal(vdsStringPtr);
     }
 }

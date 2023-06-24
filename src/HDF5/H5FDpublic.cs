@@ -42,30 +42,30 @@ public sealed class H5FD
     }
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr image_malloc_t
-        (size_t size, file_image_op_t file_image_op, IntPtr udata);
+    public delegate nint image_malloc_t
+        (size_t size, file_image_op_t file_image_op, nint udata);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr image_memcpy_t
-    (IntPtr dest, IntPtr src, size_t size, file_image_op_t file_image_op,
-     IntPtr udata);
+    public delegate nint image_memcpy_t
+    (nint dest, nint src, size_t size, file_image_op_t file_image_op,
+     nint udata);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr image_realloc_t
-        (IntPtr ptr, size_t size, file_image_op_t file_image_op, IntPtr udata);
+    public delegate nint image_realloc_t
+        (nint ptr, size_t size, file_image_op_t file_image_op, nint udata);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate herr_t image_free_t
-        (IntPtr ptr, file_image_op_t file_image_op, IntPtr udata);
+        (nint ptr, file_image_op_t file_image_op, nint udata);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate IntPtr udata_copy_t(IntPtr udata);
+    public delegate nint udata_copy_t(nint udata);
 
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    public delegate herr_t udata_free_t(IntPtr udata);
+    public delegate herr_t udata_free_t(nint udata);
 
     /// <summary>
-    /// Define structure to hold file image callbacks
+    /// Defines a structure to hold file image callbacks.
     /// </summary>
     public struct file_image_callbacks_t
     {
@@ -81,6 +81,6 @@ public sealed class H5FD
 
         public udata_free_t udata_free;
 
-        public IntPtr udata;
+        public nint udata;
     }
 }

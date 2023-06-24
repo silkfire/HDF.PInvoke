@@ -19,6 +19,7 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5VDSTest
@@ -26,7 +27,9 @@ public partial class H5VDSTest
     [Fact]
     public void H5Pget_layoutTestVDS1()
     {
-        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, "VDS");
+        var vdsStringPtr = Marshal.StringToHGlobalAnsi("VDS");
+
+        hid_t vds = H5D.open(H5VDSFixture.m_vds_class_file, vdsStringPtr);
         Assert.True(vds >= 0);
 
         hid_t dcpl = H5D.get_create_plist(vds);
@@ -37,5 +40,7 @@ public partial class H5VDSTest
 
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5D.close(vds) >= 0);
+
+        Marshal.FreeHGlobal(vdsStringPtr);
     }
 }

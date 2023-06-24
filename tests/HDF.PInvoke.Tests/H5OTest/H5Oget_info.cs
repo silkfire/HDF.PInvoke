@@ -19,13 +19,16 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5OTest
 {
     [Fact]
     public void H5Oget_infoTest1()
     {
-        hid_t gid = H5G.create(m_v0_test_file, "A/B/C", H5OFixture.m_lcpl);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+
+        hid_t gid = H5G.create(m_v0_test_file, abcStringPtr, H5OFixture.m_lcpl);
         Assert.True(gid >= 0);
 
         H5O.info_t info = new H5O.info_t();
@@ -34,7 +37,7 @@ public partial class H5OTest
 
         Assert.True(H5G.close(gid) >= 0);
 
-        gid = H5G.create(m_v2_test_file, "A/B/C", H5OFixture.m_lcpl);
+        gid = H5G.create(m_v2_test_file, abcStringPtr, H5OFixture.m_lcpl);
         Assert.True(gid >= 0);
 
         info = new H5O.info_t();
@@ -42,6 +45,8 @@ public partial class H5OTest
         Assert.True(info.type == H5O.type_t.GROUP);
 
         Assert.True(H5G.close(gid) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 
     [Fact]

@@ -25,17 +25,17 @@ public partial class H5FTest
     [Fact]
     public void H5Fget_vfd_handleTest1()
     {
-        IntPtr hnd = IntPtr.Zero;
+        nint hnd = nint.Zero;
         Assert.True(H5F.get_vfd_handle(H5FFixture.m_v0_class_file, H5P.DEFAULT, ref hnd) >= 0);
-        Assert.True(hnd != IntPtr.Zero);
+        Assert.True(hnd != nint.Zero);
         Assert.True(H5F.get_vfd_handle(H5FFixture.m_v2_class_file, H5P.DEFAULT, ref hnd) >= 0);
-        Assert.True(hnd != IntPtr.Zero);
+        Assert.True(hnd != nint.Zero);
     }
 
     [Fact]
     public void H5Fget_vfd_handleTest2()
     {
-        IntPtr hnd = new IntPtr();
+        nint hnd = new nint();
         Assert.False(H5F.get_vfd_handle(Utilities.RandomInvalidHandle(), H5P.DEFAULT, ref hnd) >= 0);
     }
 }

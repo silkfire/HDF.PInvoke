@@ -17,6 +17,9 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
+using System.Runtime.InteropServices;
+
 using Xunit;
 
 public partial class H5LTest
@@ -24,7 +27,17 @@ public partial class H5LTest
     [Fact]
     public void H5Lcreate_externalTest1()
     {
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "A/B/C", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "A/B/C", H5LFixture.m_lcpl) >= 0);
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var v2ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v2_class_file_name);
+        var slashStringPtr = Marshal.StringToHGlobalAnsi("/");
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, slashStringPtr, m_v0_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, slashStringPtr, m_v2_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
+
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(v2ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(slashStringPtr);
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 }

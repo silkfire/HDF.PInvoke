@@ -18,35 +18,54 @@ using hid_t = System.Int64;
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5TTest
 {
     [Fact]
     public void H5TcommitTest1()
     {
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+        var barStringPtr = Marshal.StringToHGlobalAnsi("bar");
+
         hid_t dtype = H5T.copy(H5T.IEEE_F64LE);
         Assert.True(dtype >= 0);
-        Assert.True(H5T.commit(m_v0_test_file, "foo", dtype) >= 0);
+        Assert.True(H5T.commit(m_v0_test_file, fooStringPtr, dtype) >= 0);
         // can't commit twice
-        Assert.False(H5T.commit(m_v0_test_file, "bar", dtype) >= 0);
+        Assert.False(H5T.commit(m_v0_test_file, barStringPtr, dtype) >= 0);
         // can't commit to different files
-        Assert.False(H5T.commit(m_v2_test_file, "bar", dtype) >= 0);
+        Assert.False(H5T.commit(m_v2_test_file, barStringPtr, dtype) >= 0);
         Assert.True(H5T.close(dtype) >= 0);
+
+        Marshal.FreeHGlobal(fooStringPtr);
+        Marshal.FreeHGlobal(barStringPtr);
     }
 
     [Fact]
     public void H5TcommitTest2()
     {
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+        var barStringPtr = Marshal.StringToHGlobalAnsi("bar");
+
         // can't commit pre-defined types
-        Assert.False(H5T.commit(m_v0_test_file, "foo", H5T.IEEE_F64BE) >= 0);
-        Assert.False(H5T.commit(m_v2_test_file, "bar", H5T.IEEE_F64BE) >= 0);
+        Assert.False(H5T.commit(m_v0_test_file, fooStringPtr, H5T.IEEE_F64BE) >= 0);
+        Assert.False(H5T.commit(m_v2_test_file, barStringPtr, H5T.IEEE_F64BE) >= 0);
+
+        Marshal.FreeHGlobal(fooStringPtr);
+        Marshal.FreeHGlobal(barStringPtr);
     }
 
     [Fact]
     public void H5TcommitTest3()
     {
-        Assert.False(H5T.commit(m_v0_test_file, "foo", Utilities.RandomInvalidHandle()) >= 0);
-        Assert.False(H5T.commit(Utilities.RandomInvalidHandle(), "foo", Utilities.RandomInvalidHandle()) >= 0);
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+
+        Assert.False(H5T.commit(m_v0_test_file, fooStringPtr, Utilities.RandomInvalidHandle()) >= 0);
+        Assert.False(H5T.commit(Utilities.RandomInvalidHandle(), fooStringPtr, Utilities.RandomInvalidHandle()) >= 0);
+
+        Marshal.FreeHGlobal(fooStringPtr);
     }
 }

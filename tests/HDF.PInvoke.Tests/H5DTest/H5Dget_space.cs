@@ -20,17 +20,21 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5Dget_spaceTest1()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
         hsize_t[] dims = { 1024, 2048 };
         hid_t space = H5S.create_simple(3, dims, null);
 
-        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.STD_I16LE, space);
+        hid_t dset = H5D.create(m_v0_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
         hid_t space1 = H5D.get_space(dset);
         Assert.True(space1 >= 0);
@@ -38,15 +42,17 @@ public partial class H5DTest
         Assert.True(H5S.close(space1) >= 0);
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "dset", H5T.STD_I16LE, space);
+        dset = H5D.create(m_v2_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
+
         space1 = H5D.get_space(dset);
         Assert.True(space1 >= 0);
         Assert.True(H5S.extent_equal(space, space1) > 0);
         Assert.True(H5S.close(space1) >= 0);
         Assert.True(H5D.close(dset) >= 0);
-
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]

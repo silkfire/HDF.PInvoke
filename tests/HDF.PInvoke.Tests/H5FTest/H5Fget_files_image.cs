@@ -20,7 +20,9 @@ using ssize_t = nint;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -30,7 +32,9 @@ public partial class H5FTest
     public void H5Fget_files_imageTest1()
     {
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
 
         ssize_t buf_len = new ssize_t();
@@ -46,13 +50,17 @@ public partial class H5FTest
 
         Assert.True(H5F.close(file) >= 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     [Fact]
     public void H5Fget_files_imageTest2()
     {
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
 
         ssize_t buf_len = new ssize_t();
@@ -68,5 +76,7 @@ public partial class H5FTest
 
         Assert.True(H5F.close(file) >= 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 }

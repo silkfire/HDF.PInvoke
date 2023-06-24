@@ -19,30 +19,43 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5GTest
 {
     [Fact]
     public void H5Gget_info_by_indexTest1()
     {
-        hid_t group = H5G.create(m_v0_test_file, "A");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t group = H5G.create(m_v0_test_file, aStringPtr);
         Assert.True(group >= 0);
         H5G.info_t info = new H5G.info_t();
-        Assert.True(H5G.get_info_by_idx(m_v0_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
+        Assert.True(H5G.get_info_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
         Assert.True(H5G.close(group) >= 0);
 
-        group = H5G.create(m_v2_test_file, "A");
+        group = H5G.create(m_v2_test_file, aStringPtr);
         Assert.True(group >= 0);
-        Assert.True(H5G.get_info_by_idx(m_v2_test_file, ".", H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
+        Assert.True(H5G.get_info_by_idx(m_v2_test_file, dotStringPtr, H5.index_t.NAME, H5.iter_order_t.NATIVE, 0, ref info) >= 0);
         Assert.True(H5G.close(group) >= 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 
     [Fact]
     public void H5Gget_info_by_indexTest2()
     {
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
         H5G.info_t info = new H5G.info_t();
-        Assert.True(H5G.get_info_by_idx(m_v0_test_file, ".", H5.index_t.CRT_ORDER, H5.iter_order_t.NATIVE, 0, ref info) < 0);
-        Assert.True(H5G.get_info_by_idx(m_v2_test_file, ".", H5.index_t.CRT_ORDER, H5.iter_order_t.NATIVE, 0, ref info) < 0);
+        Assert.True(H5G.get_info_by_idx(m_v0_test_file, dotStringPtr, H5.index_t.CRT_ORDER, H5.iter_order_t.NATIVE, 0, ref info) < 0);
+        Assert.True(H5G.get_info_by_idx(m_v2_test_file, dotStringPtr, H5.index_t.CRT_ORDER, H5.iter_order_t.NATIVE, 0, ref info) < 0);
+
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 }

@@ -20,7 +20,9 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -43,15 +45,24 @@ public sealed class H5VDSFixture : IDisposable
 
     private static void createVDS()
     {
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var bStringPtr = Marshal.StringToHGlobalAnsi("B");
+        var cStringPtr = Marshal.StringToHGlobalAnsi("C");
+        var vdsStringPtr = Marshal.StringToHGlobalAnsi("VDS");
+
         // create files
-        m_a_class_file = Utilities.H5TempFile(ref m_a_class_file_name, H5F.libver_t.LATEST, true);
+        m_a_class_file = Utilities.H5TempFile(out m_a_class_file_name, H5F.libver_t.LATEST, true);
         Assert.True(m_a_class_file >= 0);
-        m_b_class_file = Utilities.H5TempFile(ref m_b_class_file_name, H5F.libver_t.LATEST, true);
+        m_b_class_file = Utilities.H5TempFile(out m_b_class_file_name, H5F.libver_t.LATEST, true);
         Assert.True(m_b_class_file >= 0);
-        m_c_class_file = Utilities.H5TempFile(ref m_c_class_file_name, H5F.libver_t.LATEST, true);
+        m_c_class_file = Utilities.H5TempFile(out m_c_class_file_name, H5F.libver_t.LATEST, true);
         Assert.True(m_c_class_file >= 0);
-        m_vds_class_file = Utilities.H5TempFile(ref m_vds_class_file_name);
+        m_vds_class_file = Utilities.H5TempFile(out m_vds_class_file_name);
         Assert.True(m_vds_class_file >= 0);
+
+        var aClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(m_a_class_file_name);
+        var bClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(m_b_class_file_name);
+        var cClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(m_c_class_file_name);
 
         //
         // create target datasets
@@ -60,25 +71,24 @@ public sealed class H5VDSFixture : IDisposable
         Assert.True(dcpl >= 0);
         int fill_value = 1;
         GCHandle hnd = GCHandle.Alloc(fill_value, GCHandleType.Pinned);
-        Assert.True(H5P.set_fill_value(dcpl, H5T.NATIVE_INT,
-                                         hnd.AddrOfPinnedObject()) >= 0);
+        Assert.True(H5P.set_fill_value(dcpl, H5T.NATIVE_INT, hnd.AddrOfPinnedObject()) >= 0);
 
         hsize_t[] dims = { 6 };
         hid_t src_dsp = H5S.create_simple(1, dims, null);
 
         // A
         fill_value = 1;
-        hid_t a = H5D.create(m_a_class_file, "A", H5T.STD_I32LE, src_dsp);
+        hid_t a = H5D.create(m_a_class_file, aStringPtr, H5T.STD_I32LE, src_dsp);
         Assert.True(a >= 0);
         Assert.True(H5D.close(a) >= 0);
         // B
         fill_value = 2;
-        hid_t b = H5D.create(m_b_class_file, "B", H5T.STD_I32LE, src_dsp);
+        hid_t b = H5D.create(m_b_class_file, bStringPtr, H5T.STD_I32LE, src_dsp);
         Assert.True(b >= 0);
         Assert.True(H5D.close(b) >= 0);
         // B
         fill_value = 3;
-        hid_t c = H5D.create(m_c_class_file, "C", H5T.STD_I32LE, src_dsp);
+        hid_t c = H5D.create(m_c_class_file, cStringPtr, H5T.STD_I32LE, src_dsp);
         Assert.True(c >= 0);
         Assert.True(H5D.close(c) >= 0);
 
@@ -95,17 +105,17 @@ public sealed class H5VDSFixture : IDisposable
 
         start[0] = 0;
         Assert.True(H5S.select_hyperslab(vds_dsp, H5S.seloper_t.SET, start, null, count, block) >= 0);
-        Assert.True(H5P.set_virtual(dcpl, vds_dsp, m_a_class_file_name, "A", src_dsp) >= 0);
+        Assert.True(H5P.set_virtual(dcpl, vds_dsp, aClassFileNameStringPtr, aStringPtr, src_dsp) >= 0);
 
         start[0] = 1;
         Assert.True(H5S.select_hyperslab(vds_dsp, H5S.seloper_t.SET, start, null, count, block) >= 0);
-        Assert.True(H5P.set_virtual(dcpl, vds_dsp, m_b_class_file_name, "B", src_dsp) >= 0);
+        Assert.True(H5P.set_virtual(dcpl, vds_dsp, bClassFileNameStringPtr, bClassFileNameStringPtr, src_dsp) >= 0);
 
         start[0] = 2;
         Assert.True(H5S.select_hyperslab(vds_dsp, H5S.seloper_t.SET, start, null, count, block) >= 0);
-        Assert.True(H5P.set_virtual(dcpl, vds_dsp, m_c_class_file_name, "C", src_dsp) >= 0);
+        Assert.True(H5P.set_virtual(dcpl, vds_dsp, cClassFileNameStringPtr, cClassFileNameStringPtr, src_dsp) >= 0);
 
-        hid_t vds = H5D.create(m_vds_class_file, "VDS", H5T.STD_I32LE, vds_dsp, H5P.DEFAULT, dcpl, H5P.DEFAULT);
+        hid_t vds = H5D.create(m_vds_class_file, vdsStringPtr, H5T.STD_I32LE, vds_dsp, H5P.DEFAULT, dcpl, H5P.DEFAULT);
         Assert.True(vds >= 0);
         Assert.True(H5D.close(vds) >= 0);
 
@@ -119,6 +129,14 @@ public sealed class H5VDSFixture : IDisposable
         Assert.True(H5F.close(m_a_class_file) >= 0);
         Assert.True(H5F.close(m_b_class_file) >= 0);
         Assert.True(H5F.close(m_c_class_file) >= 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(bStringPtr);
+        Marshal.FreeHGlobal(cStringPtr);
+        Marshal.FreeHGlobal(vdsStringPtr);
+        Marshal.FreeHGlobal(aClassFileNameStringPtr);
+        Marshal.FreeHGlobal(bClassFileNameStringPtr);
+        Marshal.FreeHGlobal(cClassFileNameStringPtr);
     }
 
     private static void cleanupVDS()

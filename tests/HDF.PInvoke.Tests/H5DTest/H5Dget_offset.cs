@@ -19,26 +19,31 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5Dget_offsetTest1()
     {
-        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null);
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
+        hid_t dset = H5D.create(m_v0_test_file, dsetStringPtr, H5T.IEEE_F64BE, H5DFixture.m_space_null);
+
         Assert.True(dset >= 0);
-
         Assert.True(H5D.get_offset(dset) > 0);
-
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "dset", H5T.IEEE_F64BE, H5DFixture.m_space_null);
+        dset = H5D.create(m_v2_test_file, dsetStringPtr, H5T.IEEE_F64BE, H5DFixture.m_space_null);
+
         Assert.True(dset >= 0);
-
         Assert.True(H5D.get_offset(dset) > 0);
-
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]

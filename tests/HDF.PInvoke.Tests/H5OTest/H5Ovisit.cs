@@ -20,22 +20,24 @@ using Xunit;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
-using System.Text;
 
 public partial class H5OTest
 {
     [Fact]
     public void H5OvisitTest1()
     {
-        Assert.True(H5G.create(m_v0_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
 
-        Assert.True(H5G.create(m_v2_test_file, "A/B/C/D", H5OFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file, "shortcut") >= 0);
+        Assert.True(H5G.create(m_v0_test_file, abcdStringPtr, H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+
+        Assert.True(H5G.create(m_v2_test_file, abcdStringPtr, H5OFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, shortcutStringPtr) >= 0);
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         // the callback is defined in H5LTest.cs
         H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
@@ -48,18 +50,23 @@ public partial class H5OTest
         Assert.True(al.Count == 10);
 
         hnd.Free();
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
     }
 
     [Fact]
     public void H5OvisitTest2()
     {
-        string path = string.Join("/", H5OFixture.m_utf8strings);
-        Assert.True(H5G.create(m_v0_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
-        Assert.True(H5G.create(m_v2_test_file, Encoding.UTF8.GetBytes(path), H5OFixture.m_lcpl_utf8) >= 0);
+        var path = string.Join("/", H5OFixture.m_utf8strings);
+        var pathStringPtr = Marshal.StringToCoTaskMemUTF8(path);
+
+        Assert.True(H5G.create(m_v0_test_file, pathStringPtr, H5OFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5G.create(m_v2_test_file, pathStringPtr, H5OFixture.m_lcpl_utf8) >= 0);
 
         ArrayList al = new ArrayList();
         GCHandle hnd = GCHandle.Alloc(al);
-        IntPtr op_data = (IntPtr)hnd;
+        nint op_data = (nint)hnd;
         // the callback is defined in H5LTest.cs
         H5O.iterate_t cb = H5OFixture.DelegateMethod;
 
@@ -72,5 +79,7 @@ public partial class H5OTest
         Assert.True(al.Count == 12);
 
         hnd.Free();
+
+        Marshal.FreeCoTaskMem(pathStringPtr);
     }
 }

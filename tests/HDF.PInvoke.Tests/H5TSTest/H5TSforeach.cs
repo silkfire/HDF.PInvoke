@@ -20,9 +20,12 @@ using hbool_t = System.UInt32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -52,24 +55,31 @@ public partial class H5TSTest
 
             var totalLength = 0;
 
-            Parallel.ForEach<string, TaskLocals>
+            Parallel.ForEach
                 (ls,
                  () =>
                  {
-                     TaskLocals tl = new TaskLocals();
-                     tl.handle = -1;
-                     tl.runningLength = 0;
+                     TaskLocals tl = new TaskLocals
+                                     {
+                                         handle = -1,
+                                         runningLength = 0
+                                     };
                      return tl;
                  },
                  (name, loop, taskLocals) =>
                  {
+                     var filenameStringPtr = Marshal.StringToHGlobalAnsi(name);
+
                      // handle is "thread-local"
-                     taskLocals.handle = H5F.create(name, H5F.ACC_TRUNC);
+                     taskLocals.handle = H5F.create(filenameStringPtr, H5F.ACC_TRUNC);
                      Assert.True(H5F.close(taskLocals.handle) >= 0);
-                     Assert.True(H5F.is_hdf5(name) > 0);
+                     Assert.True(H5F.is_hdf5(filenameStringPtr) > 0);
                      File.Delete(name);
                      taskLocals.handle = -1;
                      taskLocals.runningLength += name.Length;
+
+                     Marshal.FreeHGlobal(filenameStringPtr);
+
                      return taskLocals;
                  },
                  (taskLocals) => { Interlocked.Add(ref totalLength, taskLocals.runningLength); }

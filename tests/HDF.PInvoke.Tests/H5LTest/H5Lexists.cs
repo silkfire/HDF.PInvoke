@@ -17,31 +17,46 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
-using System;
-using System.Text;
+
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5LexistsTest1()
     {
-        Assert.True(H5G.close(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/B") > 0);
-        Assert.True(H5L.exists(m_v0_test_file, "A/C/B") < 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var abStringPtr = Marshal.StringToHGlobalAnsi("A/B");
+        var acbStringPtr = Marshal.StringToHGlobalAnsi("A/C/B");
 
-        Assert.True(H5G.close(H5G.create(m_v2_test_file, "A/B/C/D", H5LFixture.m_lcpl)) >= 0);
-        Assert.True(H5L.exists(m_v2_test_file, "A") > 0);
-        Assert.True(H5L.exists(m_v2_test_file, "A/B") > 0);
-        Assert.True(H5L.exists(m_v2_test_file, "A/C/B") < 0);
+        Assert.True(H5G.close(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.exists(m_v0_test_file, aStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, abStringPtr) > 0);
+        Assert.True(H5L.exists(m_v0_test_file, acbStringPtr) < 0);
+
+        Assert.True(H5G.close(H5G.create(m_v2_test_file, abcdStringPtr, H5LFixture.m_lcpl)) >= 0);
+        Assert.True(H5L.exists(m_v2_test_file, aStringPtr) > 0);
+        Assert.True(H5L.exists(m_v2_test_file, abStringPtr) > 0);
+        Assert.True(H5L.exists(m_v2_test_file, acbStringPtr) < 0);
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(abStringPtr);
+        Marshal.FreeHGlobal(acbStringPtr);
     }
 
     [Fact]
     public void H5LexistsTest2()
     {
-        Assert.True(H5L.exists(m_v0_test_file, ".") == 0);
-        Assert.True(H5L.exists(m_v2_test_file, ".") == 0);
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        Assert.True(H5L.exists(m_v0_test_file, dotStringPtr) == 0);
+        Assert.True(H5L.exists(m_v2_test_file, dotStringPtr) == 0);
+
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 
     [Fact]
@@ -49,14 +64,15 @@ public partial class H5LTest
     {
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            int size = Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]).Length;
-            byte[] buf = new byte[size + 1];
-            Array.Copy(Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i]), buf, size);
-            Assert.True(H5G.close(H5G.create(m_v0_test_file, buf, H5LFixture.m_lcpl_utf8)) >= 0);
-            Assert.True(H5L.exists(m_v0_test_file, buf) > 0);
+            var utf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[i]);
 
-            Assert.True(H5G.close(H5G.create(m_v2_test_file, buf, H5LFixture.m_lcpl_utf8)) >= 0);
-            Assert.True(H5L.exists(m_v2_test_file, buf) > 0);
+            Assert.True(H5G.close(H5G.create(m_v0_test_file, utf8StringPtr, H5LFixture.m_lcpl_utf8)) >= 0);
+            Assert.True(H5L.exists(m_v0_test_file, utf8StringPtr) > 0);
+
+            Assert.True(H5G.close(H5G.create(m_v2_test_file, utf8StringPtr, H5LFixture.m_lcpl_utf8)) >= 0);
+            Assert.True(H5L.exists(m_v2_test_file, utf8StringPtr) > 0);
+
+            Marshal.FreeCoTaskMem(utf8StringPtr);
         }
     }
 }

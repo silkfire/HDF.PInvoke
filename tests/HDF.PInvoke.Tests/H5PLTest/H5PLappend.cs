@@ -18,6 +18,7 @@ using uint32_t = System.UInt32;
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+using System.Runtime.InteropServices;
 using Xunit;
 
 public partial class H5PLTest
@@ -25,9 +26,13 @@ public partial class H5PLTest
     [Fact]
     public void H5PLappendTest1()
     {
-        Assert.True(H5PL.append("foo") >= 0);
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+
+        Assert.True(H5PL.append(fooStringPtr) >= 0);
         uint32_t listsize = 0;
         Assert.True(H5PL.size(ref listsize) >= 0);
         Assert.True(listsize >= 1);
+
+        Marshal.FreeHGlobal(fooStringPtr);
     }
 }

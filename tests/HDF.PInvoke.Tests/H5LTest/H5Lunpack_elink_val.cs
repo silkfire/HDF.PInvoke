@@ -17,7 +17,9 @@
 namespace HDF.PInvoke.Tests;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -27,149 +29,167 @@ public partial class H5LTest
     [Fact]
     public void H5Lunpack_elink_valTest1()
     {
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var v2ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v2_class_file_name);
+        var pathSeparatorStringPtr = Marshal.StringToHGlobalAnsi("/");
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+
         // v0 file format
 
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, "/", m_v0_test_file, "A/B/C", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, pathSeparatorStringPtr, m_v0_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
 
         H5L.info_t info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v0_test_file, "A/B/C", ref info) >= 0);
+        Assert.True(H5L.get_info(m_v0_test_file, abcStringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        IntPtr size = new IntPtr(info.u.val_size.ToInt32());
+        nint size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
-        IntPtr buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v0_test_file, "A/B/C", buf, size) >= 0);
+        nint buf = Marshal.AllocHGlobal(size.ToInt32());
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v0_test_file, abcStringPtr, buf, size) >= 0);
 
         uint flags = 0;
-        IntPtr filename = new IntPtr();
-        IntPtr obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        nint filenamePtr = nint.Zero, objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, objPathPtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v0_class_file_name);
-        Assert.True(Marshal.PtrToStringAnsi(obj_path) == "/");
+        Assert.Equal(H5LFixture.m_v0_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
+        Assert.Equal("/", Marshal.PtrToStringAnsi(objPathPtr));
 
         Marshal.FreeHGlobal(buf);
 
         // v2 file format
 
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, "/", m_v2_test_file, "A/B/C", H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, pathSeparatorStringPtr, m_v2_test_file, abcStringPtr, H5LFixture.m_lcpl) >= 0);
 
         info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v2_test_file, "A/B/C", ref info) >= 0);
+        Assert.True(H5L.get_info(m_v2_test_file, abcStringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        size = new IntPtr(info.u.val_size.ToInt32());
+        size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
         buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v2_test_file, "A/B/C", buf, size) >= 0);
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v2_test_file, abcStringPtr, buf, size) >= 0);
 
         flags = 0;
-        filename = new IntPtr();
-        obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        filenamePtr = nint.Zero;
+        objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, objPathPtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v2_class_file_name);
-        Assert.True(Marshal.PtrToStringAnsi(obj_path) == "/");
+        Assert.Equal(H5LFixture.m_v2_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
+        Assert.Equal("/", Marshal.PtrToStringAnsi(objPathPtr));
 
         Marshal.FreeHGlobal(buf);
+
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(v2ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(pathSeparatorStringPtr);
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 
     [Fact]
     public void H5Lunpack_elink_valTest2()
     {
+        var firstUtf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[0]);
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var v2ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v2_class_file_name);
+        var pathSeparatorStringPtr = Marshal.StringToHGlobalAnsi("/");
+
         // v0 file format
 
-        byte[] bytes = Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[0]);
-
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, Encoding.ASCII.GetBytes("/"), m_v0_test_file, bytes, H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, pathSeparatorStringPtr, m_v0_test_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         H5L.info_t info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v0_test_file, bytes, ref info) >= 0);
+        Assert.True(H5L.get_info(m_v0_test_file, firstUtf8StringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        IntPtr size = new IntPtr(info.u.val_size.ToInt32());
+        nint size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
-        IntPtr buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v0_test_file, bytes, buf, size) >= 0);
+        nint buf = Marshal.AllocHGlobal(size.ToInt32());
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v0_test_file, firstUtf8StringPtr, buf, size) >= 0);
 
         uint flags = 0;
-        IntPtr filename = new IntPtr();
-        IntPtr obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        nint filenamePtr = nint.Zero, objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, objPathPtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v0_class_file_name);
-        Assert.True(Marshal.PtrToStringAnsi(obj_path) == "/");
+        Assert.Equal(H5LFixture.m_v0_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
+        Assert.Equal("/", Marshal.PtrToStringAnsi(objPathPtr));
 
         Marshal.FreeHGlobal(buf);
 
         // v2 file format
 
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, Encoding.ASCII.GetBytes("/"), m_v2_test_file, bytes, H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, pathSeparatorStringPtr, m_v2_test_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v2_test_file, bytes, ref info) >= 0);
+        Assert.True(H5L.get_info(m_v2_test_file, firstUtf8StringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        size = new IntPtr(info.u.val_size.ToInt32());
+        size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
         buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v2_test_file, bytes, buf, size) >= 0);
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v2_test_file, firstUtf8StringPtr, buf, size) >= 0);
 
         flags = 0;
-        filename = new IntPtr();
-        obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        filenamePtr = nint.Zero;
+        objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, filenamePtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v2_class_file_name);
-        Assert.True(Marshal.PtrToStringAnsi(obj_path) == "/");
+        Assert.Equal(H5LFixture.m_v2_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
+        Assert.Equal("/", Marshal.PtrToStringAnsi(objPathPtr));
 
         Marshal.FreeHGlobal(buf);
+
+        Marshal.FreeCoTaskMem(firstUtf8StringPtr);
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(v2ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(pathSeparatorStringPtr);
     }
 
     [Fact]
     public void H5Lunpack_elink_valTest3()
     {
+        var firstUtf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[0]);
+        var v0ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v0_class_file_name);
+        var v2ClassFileNameStringPtr = Marshal.StringToHGlobalAnsi(H5LFixture.m_v2_class_file_name);
+        var pathSeparatorStringPtr = Marshal.StringToHGlobalAnsi("/");
+        
         // v0 file format
 
-        byte[] bytes = Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[0]);
+        Assert.True(H5G.close(H5G.create(H5LFixture.m_v0_class_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8)) >= 0);
 
-        Assert.True(H5G.close(H5G.create(H5LFixture.m_v0_class_file, bytes, H5LFixture.m_lcpl_utf8)) >= 0);
-
-        Assert.True(H5L.create_external(H5LFixture.m_v0_class_file_name, bytes, m_v0_test_file, bytes, H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5L.create_external(v0ClassFileNameStringPtr, firstUtf8StringPtr, m_v0_test_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         H5L.info_t info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v0_test_file, bytes, ref info) >= 0);
+        Assert.True(H5L.get_info(m_v0_test_file, firstUtf8StringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        IntPtr size = new IntPtr(info.u.val_size.ToInt32());
+        nint size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
-        IntPtr buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v0_test_file, bytes, buf, size) >= 0);
+        nint buf = Marshal.AllocHGlobal(size.ToInt32());
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v0_test_file, firstUtf8StringPtr, buf, size) >= 0);
 
         uint flags = 0;
-        IntPtr filename = new IntPtr();
-        IntPtr obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        nint filenamePtr = nint.Zero, objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, objPathPtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v0_class_file_name);
+        Assert.Equal(H5LFixture.m_v0_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
 
         // the elink value is packed like this:
         // <file name>\0<object path>\0
         // the whole thing is of info.u.val_size 
 
-        int count = size.ToInt32() - (int)(obj_path.ToInt64() + 1 - filename.ToInt64()) - 1;
+        int count = size.ToInt32() - (int)(objPathPtr.ToInt64() + 1 - filenamePtr.ToInt64()) - 1;
         byte[] obj_path_buf = new byte[count];
-        Marshal.Copy(obj_path, obj_path_buf, 0, count);
+        Marshal.Copy(objPathPtr, obj_path_buf, 0, count);
 
         Assert.True(Encoding.UTF8.GetString(obj_path_buf) == H5LFixture.m_utf8strings[0], $"{Encoding.UTF8.GetString(obj_path_buf)}");
 
@@ -177,38 +197,43 @@ public partial class H5LTest
 
         // v2 file format
 
-        Assert.True(H5G.close(H5G.create(H5LFixture.m_v2_class_file, bytes, H5LFixture.m_lcpl_utf8)) >= 0);
+        Assert.True(H5G.close(H5G.create(H5LFixture.m_v2_class_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8)) >= 0);
 
-        Assert.True(H5L.create_external(H5LFixture.m_v2_class_file_name, bytes, m_v2_test_file, bytes, H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5L.create_external(v2ClassFileNameStringPtr, firstUtf8StringPtr, m_v2_test_file, firstUtf8StringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         info = new H5L.info_t();
-        Assert.True(H5L.get_info(m_v2_test_file, bytes, ref info) >= 0);
+        Assert.True(H5L.get_info(m_v2_test_file, firstUtf8StringPtr, ref info) >= 0);
 
         Assert.True(info.type == H5L.type_t.EXTERNAL);
-        size = new IntPtr(info.u.val_size.ToInt32());
+        size = new nint(info.u.val_size.ToInt32());
         Assert.True(size.ToInt32() > 0);
 
         buf = Marshal.AllocHGlobal(size.ToInt32());
-        Assert.True(buf != IntPtr.Zero);
-        Assert.True(H5L.get_val(m_v2_test_file, bytes, buf, size) >= 0);
+        Assert.True(buf != nint.Zero);
+        Assert.True(H5L.get_val(m_v2_test_file, firstUtf8StringPtr, buf, size) >= 0);
 
         flags = 0;
-        filename = new IntPtr();
-        obj_path = new IntPtr();
-        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, ref filename, ref obj_path) >= 0);
+        filenamePtr = nint.Zero;
+        objPathPtr = nint.Zero;
+        Assert.True(H5L.unpack_elink_val(buf, size, ref flags, filenamePtr, objPathPtr) >= 0);
 
-        Assert.True(Marshal.PtrToStringAnsi(filename) == H5LFixture.m_v2_class_file_name);
+        Assert.Equal(H5LFixture.m_v2_class_file_name, Marshal.PtrToStringAnsi(filenamePtr));
 
         // the elink value is packed like this:
         // <file name>\0<object path>\0
         // the whole thing is of info.u.val_size 
 
-        count = size.ToInt32() - (int)(obj_path.ToInt64() + 1 - filename.ToInt64()) - 1;
+        count = size.ToInt32() - (int)(objPathPtr.ToInt64() + 1 - filenamePtr.ToInt64()) - 1;
         obj_path_buf = new byte[count];
-        Marshal.Copy(obj_path, obj_path_buf, 0, count);
+        Marshal.Copy(objPathPtr, obj_path_buf, 0, count);
 
         Assert.True(Encoding.UTF8.GetString(obj_path_buf) == H5LFixture.m_utf8strings[0], $"{Encoding.UTF8.GetString(obj_path_buf)}");
 
         Marshal.FreeHGlobal(buf);
+
+        Marshal.FreeCoTaskMem(firstUtf8StringPtr);
+        Marshal.FreeHGlobal(v0ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(v2ClassFileNameStringPtr);
+        Marshal.FreeHGlobal(pathSeparatorStringPtr);
     }
 }

@@ -20,8 +20,10 @@ using herr_t = System.Int32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
+
+using System.Runtime.InteropServices;
 
 public partial class H5ETest
 {
@@ -29,37 +31,45 @@ public partial class H5ETest
     public void H5EwalkTest1()
     {
         H5E.auto_t auto_cb = ErrorDelegateMethod;
-        Assert.True(H5E.set_auto(H5E.DEFAULT, auto_cb, IntPtr.Zero) >= 0);
+        Assert.True(H5E.set_auto(H5E.DEFAULT, auto_cb, nint.Zero) >= 0);
 
         H5E.walk_t walk_cb = WalkDelegateMethod;
-        IntPtr client_data = IntPtr.Zero;
-        Assert.True(H5E.walk(H5E.DEFAULT, H5E.direction_t.H5E_WALK_DOWNWARD, walk_cb, IntPtr.Zero) >= 0);
+        Assert.True(H5E.walk(H5E.DEFAULT, H5E.direction_t.H5E_WALK_DOWNWARD, walk_cb, nint.Zero) >= 0);
     }
 
     [Fact]
     public void H5EwalkTest2()
     {
+        var helloCStringPtr = Marshal.StringToHGlobalAnsi("hello.c");
+        var sqrtStringPtr = Marshal.StringToHGlobalAnsi("sqrt");
+        var sqrStringPtr = Marshal.StringToHGlobalAnsi("sqr");
+        var helloWorldStringPtr = Marshal.StringToHGlobalAnsi("Hello, World!");
+
         H5E.auto_t auto_cb = ErrorDelegateMethod;
-        Assert.True(H5E.set_auto(H5E.DEFAULT, auto_cb, IntPtr.Zero) >= 0);
+        Assert.True(H5E.set_auto(H5E.DEFAULT, auto_cb, nint.Zero) >= 0);
 
         H5E.walk_t walk_cb = WalkDelegateMethod;
-        IntPtr client_data = IntPtr.Zero;
 
-        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqrt", 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
+        Assert.True(H5E.push(H5E.DEFAULT, helloCStringPtr, sqrtStringPtr, 77, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, helloWorldStringPtr) >= 0);
+        Assert.True(H5E.push(H5E.DEFAULT, helloCStringPtr, sqrStringPtr, 78, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, helloWorldStringPtr) >= 0);
+        Assert.True(H5E.walk(H5E.DEFAULT, H5E.direction_t.H5E_WALK_DOWNWARD, walk_cb, nint.Zero) >= 0);
 
-        Assert.True(H5E.push(H5E.DEFAULT, "hello.c", "sqr", 78, H5E.ERR_CLS, H5E.NONE_MAJOR, H5E.NONE_MINOR, "Hello, World!") >= 0);
-
-        Assert.True(H5E.walk(H5E.DEFAULT, H5E.direction_t.H5E_WALK_DOWNWARD, walk_cb, IntPtr.Zero) >= 0);
+        Marshal.FreeHGlobal(helloCStringPtr);
+        Marshal.FreeHGlobal(sqrtStringPtr);
+        Marshal.FreeHGlobal(sqrStringPtr);
+        Marshal.FreeHGlobal(helloWorldStringPtr);
     }
 
-    internal static herr_t ErrorDelegateMethod(hid_t estack, IntPtr client_data)
+    private static herr_t ErrorDelegateMethod(hid_t estack, nint client_data)
     {
         return 0;
     }
 
-    internal static herr_t WalkDelegateMethod(uint n, ref H5E.error_t err_desc, IntPtr client_data )
+    private static herr_t WalkDelegateMethod(uint n, nint err_desc, nint client_data)
     {
-        Assert.True(err_desc.line > 0);
+        var errorDescStruct = Marshal.PtrToStructure<H5E.error_t>(err_desc);
+
+        Assert.True(errorDescStruct.line > 0);
 
         return 0;
     }

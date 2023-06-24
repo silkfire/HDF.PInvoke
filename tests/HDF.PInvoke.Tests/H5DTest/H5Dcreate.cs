@@ -20,23 +20,28 @@ using hid_t = System.Int64;
 
 using HDF5;
 using Xunit;
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5DcreateTest1()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
         hsize_t[] dims = { 1024, 2048 };
         hid_t space = H5S.create_simple(3, dims, null);
 
-        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.STD_I16LE, space);
+        hid_t dset = H5D.create(m_v0_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
-        dset = H5D.create(m_v2_test_file, "dset", H5T.STD_I16LE, space);
+        dset = H5D.create(m_v2_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
 
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]
@@ -55,18 +60,19 @@ public partial class H5DTest
         Assert.True(H5P.set_chunk(dcpl, 3, chunk) >= 0);
         Assert.True(H5P.set_deflate(dcpl, 9) >= 0);
 
-        hid_t dset = H5D.create(m_v0_test_file, "A/B/C", H5T.IEEE_F32BE,
-                                space, lcpl, dcpl);
+        var abcStringPtr = Marshal.StringToHGlobalAnsi("A/B/C");
+        hid_t dset = H5D.create(m_v0_test_file, abcStringPtr, H5T.IEEE_F32BE, space, lcpl, dcpl);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "A/B/C", H5T.IEEE_F32BE,
-                          space, lcpl, dcpl);
+        dset = H5D.create(m_v2_test_file, abcStringPtr, H5T.IEEE_F32BE, space, lcpl, dcpl);
         Assert.True(dset >= 0);
         Assert.True(H5D.close(dset) >= 0);
 
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5P.close(lcpl) >= 0);
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(abcStringPtr);
     }
 }

@@ -19,29 +19,42 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5GTest
 {
     [Fact]
     public void H5GopenTest1()
     {
-        hid_t group = H5G.open(H5GFixture.m_v0_class_file, ".");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t group = H5G.open(H5GFixture.m_v0_class_file, dotStringPtr);
         Assert.True(group >= 0);
         Assert.True(H5G.close(group) >= 0);
 
-        group = H5G.open(H5GFixture.m_v2_class_file, ".");
+        group = H5G.open(H5GFixture.m_v2_class_file, dotStringPtr);
         Assert.True(group >= 0);
         Assert.True(H5G.close(group) >= 0);
+
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 
     [Fact]
     public void H5GopenTest2()
     {
-        hid_t group = H5G.open(Utilities.RandomInvalidHandle(), ".");
+        var aStringPtr = Marshal.StringToHGlobalAnsi("A");
+        var dotStringPtr = Marshal.StringToHGlobalAnsi(".");
+
+        hid_t group = H5G.open(Utilities.RandomInvalidHandle(), dotStringPtr);
         Assert.True(group < 0);
 
-        group = H5G.open(Utilities.RandomInvalidHandle(), "A");
+        group = H5G.open(Utilities.RandomInvalidHandle(), aStringPtr);
         Assert.True(group < 0);
+
+        Marshal.FreeHGlobal(aStringPtr);
+        Marshal.FreeHGlobal(dotStringPtr);
     }
 }

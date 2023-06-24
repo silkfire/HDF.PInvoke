@@ -32,7 +32,7 @@ public partial class H5PTest
         Assert.True(fapl >= 0);
         H5AC.cache_image_config_t conf = new H5AC.cache_image_config_t();
         conf.version = H5AC.CURR_CACHE_IMAGE_CONFIG_VERSION;
-        IntPtr config_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(conf));
+        nint config_ptr = Marshal.AllocHGlobal(Marshal.SizeOf(conf));
         Marshal.StructureToPtr(conf, config_ptr, false);
         Assert.True(H5P.get_mdc_image_config(fapl, config_ptr) >= 0);
         Assert.True(H5P.close(fapl) >= 0);

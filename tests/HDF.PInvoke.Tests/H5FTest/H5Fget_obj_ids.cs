@@ -27,10 +27,10 @@ public partial class H5FTest
     [Fact]
     public void H5Fget_obj_idsTest1()
     {
-        IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
+        nint buf = H5.allocate_memory(new nint(10 * sizeof(hid_t)), 0);
 
-        Assert.True(H5F.get_obj_ids(H5FFixture.m_v0_class_file, H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
-        Assert.True(H5F.get_obj_ids(H5FFixture.m_v2_class_file, H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
+        Assert.True(H5F.get_obj_ids(H5FFixture.m_v0_class_file, H5F.OBJ_ALL, new nint(10), buf).ToInt32() > 0);
+        Assert.True(H5F.get_obj_ids(H5FFixture.m_v2_class_file, H5F.OBJ_ALL, new nint(10), buf).ToInt32() > 0);
 
         Assert.True(H5.free_memory(buf) >= 0);
     }
@@ -38,8 +38,8 @@ public partial class H5FTest
     [Fact]
     public void H5Fget_obj_idsTest2()
     {
-        IntPtr buf = H5.allocate_memory(new IntPtr(10 * sizeof(hid_t)), 0);
-        Assert.False(H5F.get_obj_ids(Utilities.RandomInvalidHandle(), H5F.OBJ_ALL, new IntPtr(10), buf).ToInt32() > 0);
+        nint buf = H5.allocate_memory(new nint(10 * sizeof(hid_t)), 0);
+        Assert.False(H5F.get_obj_ids(Utilities.RandomInvalidHandle(), H5F.OBJ_ALL, new nint(10), buf).ToInt32() > 0);
         Assert.True(H5.free_memory(buf) >= 0);
     }
 }

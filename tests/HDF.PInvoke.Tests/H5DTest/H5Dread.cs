@@ -33,7 +33,7 @@ public partial class H5DTest
         byte[] rdata = new byte[512];
 
         hid_t mem_type = H5T.copy(H5T.C_S1);
-        Assert.True(H5T.set_size(mem_type, new IntPtr(2)) >= 0);
+        Assert.True(H5T.set_size(mem_type, new nint(2)) >= 0);
 
         GCHandle hnd = GCHandle.Alloc(rdata, GCHandleType.Pinned);
         Assert.True(H5D.read(H5DFixture.m_v0_ascii_dset, mem_type, H5S.ALL, H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject()) >= 0);
@@ -71,7 +71,7 @@ public partial class H5DTest
         Assert.True(count > 0);
         Assert.True(H5S.close(fspace) >= 0);
 
-        IntPtr[] rdata = new IntPtr[count];
+        nint[] rdata = new nint[count];
         GCHandle hnd = GCHandle.Alloc(rdata, GCHandleType.Pinned);
         Assert.True(H5D.read(H5DFixture.m_v0_utf8_dset, mem_type, H5S.ALL, H5S.ALL, H5P.DEFAULT, hnd.AddrOfPinnedObject()) >= 0);
 

@@ -20,49 +20,60 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5DTest
 {
     [Fact]
     public void H5Dget_space_statusTest1()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+        
         hsize_t[] dims = { 1024, 2048 };
         hid_t space = H5S.create_simple(3, dims, null);
 
-        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.STD_I16LE, space);
+        hid_t dset = H5D.create(m_v0_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
         H5D.space_status_t status = H5D.space_status_t.ERROR;
         Assert.True(H5D.get_space_status(dset, ref status) >= 0);
         Assert.True(status == H5D.space_status_t.NOT_ALLOCATED);
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "dset", H5T.STD_I16LE, space);
+        dset = H5D.create(m_v2_test_file, dsetStringPtr, H5T.STD_I16LE, space);
         Assert.True(dset >= 0);
+
         status = H5D.space_status_t.ERROR;
         Assert.True(H5D.get_space_status(dset, ref status) >= 0);
         Assert.True(status == H5D.space_status_t.NOT_ALLOCATED);
         Assert.True(H5D.close(dset) >= 0);
-
         Assert.True(H5S.close(space) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]
     public void H5Dget_space_statusTest2()
     {
-        hid_t dset = H5D.create(m_v0_test_file, "dset", H5T.STD_I16LE, H5DFixture.m_space_null);
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
+        hid_t dset = H5D.create(m_v0_test_file, dsetStringPtr, H5T.STD_I16LE, H5DFixture.m_space_null);
         Assert.True(dset >= 0);
         H5D.space_status_t status = H5D.space_status_t.ERROR;
         Assert.True(H5D.get_space_status(dset, ref status) >= 0);
         Assert.True(status == H5D.space_status_t.NOT_ALLOCATED);
         Assert.True(H5D.close(dset) >= 0);
 
-        dset = H5D.create(m_v2_test_file, "dset", H5T.STD_I16LE, H5DFixture.m_space_null);
+        dset = H5D.create(m_v2_test_file, dsetStringPtr, H5T.STD_I16LE, H5DFixture.m_space_null);
         Assert.True(dset >= 0);
         status = H5D.space_status_t.ERROR;
         Assert.True(H5D.get_space_status(dset, ref status) >= 0);
         Assert.True(status == H5D.space_status_t.NOT_ALLOCATED);
         Assert.True(H5D.close(dset) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]

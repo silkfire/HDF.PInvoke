@@ -20,7 +20,10 @@ using hbool_t = System.UInt32;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
+using System.Runtime.InteropServices;
 
 public partial class H5SWMRTest
 {
@@ -32,10 +35,12 @@ public partial class H5SWMRTest
 
         hbool_t is_enabled = 1;
         string location = "mdc.log";
+        var locationStringPtr = Marshal.StringToHGlobalAnsi(location);
         hbool_t start_on_access = 0;
 
-        Assert.True(H5P.set_mdc_log_options(fapl, is_enabled, location, start_on_access) >= 0);
-
+        Assert.True(H5P.set_mdc_log_options(fapl, is_enabled, locationStringPtr, start_on_access) >= 0);
         Assert.True(H5P.close(fapl) >= 0);
+
+        Marshal.FreeHGlobal(locationStringPtr);
     }
 }

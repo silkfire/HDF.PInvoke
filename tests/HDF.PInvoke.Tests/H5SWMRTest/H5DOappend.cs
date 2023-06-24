@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 
 public partial class H5SWMRTest
 {
-    public herr_t DOappend_func(hid_t dataset_id, hsize_t[] cur_dims, IntPtr op_data)
+    public herr_t DOappend_func(hid_t dataset_id, hsize_t[] cur_dims, nint op_data)
     {
         Assert.True(op_data.ToInt32() == 99);
 
@@ -37,6 +37,8 @@ public partial class H5SWMRTest
     [Fact]
     public void H5DOappendTestSWMR1()
     {
+        var dsetStringPtr = Marshal.StringToHGlobalAnsi("dset");
+
         hsize_t[] dims = { 6, 0 };
         hsize_t[] maxdims = { 6, H5S.UNLIMITED };
         hsize_t[] chunk_dims = { 2, 5 };
@@ -54,9 +56,9 @@ public partial class H5SWMRTest
         hid_t dapl = H5P.create(H5P.DATASET_ACCESS);
         Assert.True(dapl >= 0);
         H5D.append_cb_t cb = DOappend_func;
-        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, new IntPtr(99)) >= 0);
+        Assert.True(H5P.set_append_flush(dapl, 2, boundary, cb, new nint(99)) >= 0);
 
-        hid_t dst = H5D.create(m_v3_test_file_swmr, "dset", H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl, dapl);
+        hid_t dst = H5D.create(m_v3_test_file_swmr, dsetStringPtr, H5T.NATIVE_INT, dsp, H5P.DEFAULT, dcpl, dapl);
         Assert.True(dst >= 0);
 
         GCHandle hnd = GCHandle.Alloc(cbuf, GCHandleType.Pinned);
@@ -68,7 +70,7 @@ public partial class H5SWMRTest
                 cbuf[j] = (i * 6 + j + 1) * -1;
             }
 
-            Assert.True(H5DO.append(dst, H5P.DEFAULT, 1, new IntPtr(1), H5T.NATIVE_INT, hnd.AddrOfPinnedObject()) >= 0);
+            Assert.True(H5DO.append(dst, H5P.DEFAULT, 1, new nint(1), H5T.NATIVE_INT, hnd.AddrOfPinnedObject()) >= 0);
         }
 
         hnd.Free();
@@ -77,11 +79,15 @@ public partial class H5SWMRTest
         Assert.True(H5P.close(dapl) >= 0);
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5S.close(dsp) >= 0);
+
+        Marshal.FreeHGlobal(dsetStringPtr);
     }
 
     [Fact]
     public void H5DOappendTestSWMR2()
     {
+        var dset1StringPtr = Marshal.StringToHGlobalAnsi("dset1");
+
         hsize_t[] dims = { 0 };
         hsize_t[] maxdims = { H5S.UNLIMITED };
         hsize_t[] chunk_dims = { 10 };
@@ -94,18 +100,19 @@ public partial class H5SWMRTest
         Assert.True(dcpl >= 0);
         Assert.True(H5P.set_chunk(dcpl, 1, chunk_dims) >= 0);
 
-        hid_t dst = H5D.create(m_v3_test_file_no_swmr, "dset1",
-                               H5T.NATIVE_UINT, dsp, H5P.DEFAULT, dcpl, H5P.DEFAULT);
+        hid_t dst = H5D.create(m_v3_test_file_no_swmr, dset1StringPtr, H5T.NATIVE_UINT, dsp, H5P.DEFAULT, dcpl, H5P.DEFAULT);
         Assert.True(dst >= 0);
 
         GCHandle hnd = GCHandle.Alloc(cbuf, GCHandleType.Pinned);
 
-        Assert.True(H5DO.append(dst, H5P.DEFAULT, 0, new IntPtr(3), H5T.NATIVE_UINT, hnd.AddrOfPinnedObject()) >= 0);
+        Assert.True(H5DO.append(dst, H5P.DEFAULT, 0, new nint(3), H5T.NATIVE_UINT, hnd.AddrOfPinnedObject()) >= 0);
 
         hnd.Free();
 
         Assert.True(H5D.close(dst) >= 0);
         Assert.True(H5P.close(dcpl) >= 0);
         Assert.True(H5S.close(dsp) >= 0);
+
+        Marshal.FreeHGlobal(dset1StringPtr);
     }
 }

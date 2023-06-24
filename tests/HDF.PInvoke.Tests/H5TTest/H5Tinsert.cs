@@ -19,8 +19,9 @@ using hsize_t = System.UInt64;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
-using System;
+
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -30,8 +31,12 @@ public partial class H5TTest
     [Fact]
     public void H5TinsertTest1()
     {
+        var keyStringPtr = Marshal.StringToHGlobalAnsi("key");
+        var valStringPtr = Marshal.StringToHGlobalAnsi("value");
+        var keyValStringPtr = Marshal.StringToHGlobalAnsi("KeyVal");
+
         // a fixed-length string type
-        hid_t fls = H5T.create(H5T.class_t.STRING, new IntPtr(16));
+        hid_t fls = H5T.create(H5T.class_t.STRING, new nint(16));
         Assert.True(fls >= 0);
         Assert.True(H5T.is_variable_str(fls) == 0);
 
@@ -41,10 +46,10 @@ public partial class H5TTest
         Assert.True(H5T.is_variable_str(vls) > 0);
 
         // a key-value compound
-        IntPtr size = new IntPtr(16 + IntPtr.Size);
+        nint size = new nint(16 + nint.Size);
         hid_t kvt = H5T.create(H5T.class_t.COMPOUND, size);
-        Assert.True(H5T.insert(kvt, "key", IntPtr.Zero, fls) >= 0);
-        Assert.True(H5T.insert(kvt, "value", new IntPtr(16), vls) >= 0);
+        Assert.True(H5T.insert(kvt, keyStringPtr, nint.Zero, fls) >= 0);
+        Assert.True(H5T.insert(kvt, valStringPtr, new nint(16), vls) >= 0);
         Assert.True(H5T.close(vls) >= 0);
         Assert.True(H5T.close(fls) >= 0);
 
@@ -53,18 +58,17 @@ public partial class H5TTest
         hid_t fsp = H5S.create_simple(1, new hsize_t[] { 3 }, null);
         Assert.True(fsp >= 0);
 
-        hid_t dset = H5D.create(H5TFixture.m_v2_class_file, "KeyVal", kvt, fsp);
+        hid_t dset = H5D.create(H5TFixture.m_v2_class_file, keyValStringPtr, kvt, fsp);
         Assert.True(dset >= 0);
         Assert.True(H5S.close(fsp) >= 0);
 
         // write a 3 elements
 
-        string[] keys = new string[]
-                        {
+        string[] keys = {
                             "Key0123456789ABC", "Key0123456789DEF", "Key0123456789GHI"
                         };
 
-        IntPtr[] values = new IntPtr[3];
+        nint[] values = new nint[3];
         values[0] = Marshal.StringToHGlobalAnsi("I am a managed String!");
         values[1] = Marshal.StringToHGlobalAnsi("I am also a managed String!");
         values[2] = Marshal.StringToHGlobalAnsi("I am another managed String!");
@@ -75,7 +79,7 @@ public partial class H5TTest
         for (int i = 0; i < 3; ++i)
         {
             writer.Write(Encoding.ASCII.GetBytes(keys[i]));
-            if (IntPtr.Size == 8)
+            if (nint.Size == 8)
             {
                 writer.Write(values[i].ToInt64());
             }
@@ -110,14 +114,14 @@ public partial class H5TTest
         {
             string k = Encoding.ASCII.GetString(reader.ReadBytes(16));
             Assert.Equal(k, keys[i]);
-            IntPtr ptr = IntPtr.Zero;
-            if (IntPtr.Size == 8)
+            nint ptr = nint.Zero;
+            if (nint.Size == 8)
             {
-                ptr = new IntPtr(reader.ReadInt64());
+                ptr = new nint(reader.ReadInt64());
             }
             else
             {
-                ptr = new IntPtr(reader.ReadInt32());
+                ptr = new nint(reader.ReadInt32());
             }
 
             string v = Marshal.PtrToStringAnsi(ptr);
@@ -128,5 +132,9 @@ public partial class H5TTest
 
         Assert.True(H5D.close(dset) >= 0);
         Assert.True(H5T.close(kvt) >= 0);
+
+        Marshal.FreeHGlobal(keyStringPtr);
+        Marshal.FreeHGlobal(valStringPtr);
+        Marshal.FreeHGlobal(keyValStringPtr);
     }
 }

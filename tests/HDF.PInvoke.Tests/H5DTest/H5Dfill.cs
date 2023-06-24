@@ -59,7 +59,7 @@ public partial class H5DTest
 
         double[] v = new double[5] { 0.0, 1.0, 2.0, 3.0, 4.0 };
         GCHandle v_hnd = GCHandle.Alloc(v, GCHandleType.Pinned);
-        Assert.True(H5D.fill(IntPtr.Zero, H5T.NATIVE_DOUBLE, v_hnd.AddrOfPinnedObject(), H5T.NATIVE_DOUBLE, space) >= 0);
+        Assert.True(H5D.fill(nint.Zero, H5T.NATIVE_DOUBLE, v_hnd.AddrOfPinnedObject(), H5T.NATIVE_DOUBLE, space) >= 0);
         v_hnd.Free();
 
         for (int i = 0; i < v.Length; ++i)

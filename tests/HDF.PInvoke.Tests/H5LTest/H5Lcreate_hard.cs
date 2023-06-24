@@ -18,35 +18,53 @@ namespace HDF.PInvoke.Tests;
 
 using HDF5;
 using Xunit;
-using System.Text;
+using System.Runtime.InteropServices;
 
 public partial class H5LTest
 {
     [Fact]
     public void H5Lcreate_hardTest1()
     {
-        Assert.True(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v0_test_file, "A/B/C/D", m_v0_test_file, "shortcut") >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+        var shortcutStringPtr = Marshal.StringToHGlobalAnsi("shortcut");
 
-        Assert.True(H5G.create(m_v2_test_file, "A/B/C/D", H5LFixture.m_lcpl) >= 0);
-        Assert.True(H5L.create_hard(m_v2_test_file, "A/B/C/D", m_v2_test_file, "shortcut") >= 0);
+        Assert.True(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, shortcutStringPtr) >= 0);
+
+        Assert.True(H5G.create(m_v2_test_file, abcdStringPtr, H5LFixture.m_lcpl) >= 0);
+        Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, shortcutStringPtr) >= 0);
+
+        Marshal.FreeHGlobal(abcdStringPtr);
+        Marshal.FreeHGlobal(shortcutStringPtr);
     }
 
     [Fact]
     public void H5Lcreate_hardTest2()
     {
-        Assert.True(H5G.create(m_v0_test_file, "A/B/C/D", H5LFixture.m_lcpl_utf8) >= 0);
+        var abcdStringPtr = Marshal.StringToHGlobalAnsi("A/B/C/D");
+
+        Assert.True(H5G.create(m_v0_test_file, abcdStringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.True(H5L.create_hard(m_v0_test_file, Encoding.ASCII.GetBytes("A/B/C/D"), m_v0_test_file, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i])) >= 0);
+            var utf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[i]);
+
+            Assert.True(H5L.create_hard(m_v0_test_file, abcdStringPtr, m_v0_test_file, utf8StringPtr) >= 0);
+
+            Marshal.FreeCoTaskMem(utf8StringPtr);
         }
 
-        Assert.True(H5G.create(m_v2_test_file, "A/B/C/D", H5LFixture.m_lcpl_utf8) >= 0);
+        Assert.True(H5G.create(m_v2_test_file, abcdStringPtr, H5LFixture.m_lcpl_utf8) >= 0);
 
         for (int i = 0; i < H5LFixture.m_utf8strings.Length; ++i)
         {
-            Assert.True(H5L.create_hard(m_v2_test_file, Encoding.ASCII.GetBytes("A/B/C/D"), m_v2_test_file, Encoding.UTF8.GetBytes(H5LFixture.m_utf8strings[i])) >= 0);
+            var utf8StringPtr = Marshal.StringToCoTaskMemUTF8(H5LFixture.m_utf8strings[i]);
+
+            Assert.True(H5L.create_hard(m_v2_test_file, abcdStringPtr, m_v2_test_file, utf8StringPtr) >= 0);
+
+            Marshal.FreeCoTaskMem(utf8StringPtr);
         }
+
+        Marshal.FreeHGlobal(abcdStringPtr);
     }
 }

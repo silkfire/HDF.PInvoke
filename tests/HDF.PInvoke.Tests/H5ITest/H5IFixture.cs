@@ -19,13 +19,15 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System;
 using System.IO;
 
 public sealed class H5IFixture : IDisposable
 {
-    internal static string[] m_utf8strings = new string[] { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
+    internal static string[] m_utf8strings = { "Ελληνικά", "日本語", "العربية", "экземпляр", "סקרן" };
     internal static hid_t m_v0_class_file = -1;
     internal static string m_v0_class_file_name;
     internal static hid_t m_v2_class_file = -1;
@@ -36,9 +38,9 @@ public sealed class H5IFixture : IDisposable
     public H5IFixture()
     {
         // create test files which persists across file tests
-        m_v0_class_file = Utilities.H5TempFile(ref m_v0_class_file_name, H5F.libver_t.EARLIEST);
+        m_v0_class_file = Utilities.H5TempFile(out m_v0_class_file_name, H5F.libver_t.EARLIEST);
         Assert.True(m_v0_class_file >= 0);
-        m_v2_class_file = Utilities.H5TempFile(ref m_v2_class_file_name);
+        m_v2_class_file = Utilities.H5TempFile(out m_v2_class_file_name);
         Assert.True(m_v2_class_file >= 0);
 
         m_lcpl = H5P.create(H5P.LINK_CREATE);
@@ -49,7 +51,7 @@ public sealed class H5IFixture : IDisposable
     }
 
     // Callback for H5I.search
-    public int DelegateMethod(IntPtr obj, hid_t id, IntPtr key)
+    public int DelegateMethod(nint obj, hid_t id, nint key)
     {
         return 0;
     }

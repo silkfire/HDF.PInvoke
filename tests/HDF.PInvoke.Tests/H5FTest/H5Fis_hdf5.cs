@@ -19,8 +19,11 @@ namespace HDF.PInvoke.Tests;
 using hid_t = System.Int64;
 
 using HDF5;
+
 using Xunit;
+
 using System.IO;
+using System.Runtime.InteropServices;
 
 public partial class H5FTest
 {
@@ -28,19 +31,30 @@ public partial class H5FTest
     public void H5Fis_hdf5Test1()
     {
         string fname = Path.GetTempFileName();
-        hid_t file = H5F.create(fname, H5F.ACC_TRUNC);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        hid_t file = H5F.create(fnameStringPtr, H5F.ACC_TRUNC);
         Assert.True(file >= 0);
         Assert.True(H5F.close(file) >= 0);
-        Assert.True(H5F.is_hdf5(fname) > 0);
+        Assert.True(H5F.is_hdf5(fnameStringPtr) > 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 
     [Fact]
     public void H5Fis_hdf5Test2()
     {
-        Assert.True(H5F.is_hdf5("") < 0);
+        var emptyFilenameStringPtr = Marshal.StringToHGlobalAnsi("");
+
+        Assert.True(H5F.is_hdf5(emptyFilenameStringPtr) < 0);
         string fname = Path.GetTempFileName();
-        Assert.True(H5F.is_hdf5(fname) == 0);
+        var fnameStringPtr = Marshal.StringToHGlobalAnsi(fname);
+
+        Assert.True(H5F.is_hdf5(fnameStringPtr) == 0);
         File.Delete(fname);
+
+        Marshal.FreeHGlobal(emptyFilenameStringPtr);
+        Marshal.FreeHGlobal(fnameStringPtr);
     }
 }

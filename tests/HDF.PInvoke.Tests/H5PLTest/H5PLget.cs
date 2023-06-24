@@ -19,21 +19,23 @@ using uint32_t = System.UInt32;
 
 using HDF5;
 using Xunit;
-using System;
-using System.Text;
+using System.Runtime.InteropServices;
 
 public partial class H5PLTest
 {
     [Fact]
     public void H5PLgetTest1()
     {
-        Assert.True(H5PL.append("foo") >= 0);
+        var fooStringPtr = Marshal.StringToHGlobalAnsi("foo");
+
+        Assert.True(H5PL.append(fooStringPtr) >= 0);
         uint32_t listsize = 0;
         Assert.True(H5PL.size(ref listsize) >= 0);
         Assert.True(listsize >= 0);
-        StringBuilder sb = new StringBuilder();
-        IntPtr size = new IntPtr(4);
-        Assert.False(H5PL.get(0, sb, size) == IntPtr.Zero);
+        var size = new nint(4);
+        Assert.False(H5PL.get(0, nint.Zero, size) == nint.Zero);
+
+        Marshal.FreeHGlobal(fooStringPtr);
     }
 
     [Fact]
@@ -42,8 +44,7 @@ public partial class H5PLTest
         uint32_t listsize = 0;
         Assert.True(H5PL.size(ref listsize) >= 0);
         Assert.True(listsize >= 0);
-        StringBuilder sb = new StringBuilder();
-        IntPtr size = new IntPtr(4);
-        Assert.False(H5PL.get(0, sb, size) == IntPtr.Zero);
+        var size = new nint(4);
+        Assert.False(H5PL.get(0, nint.Zero, size) == nint.Zero);
     }
 }
